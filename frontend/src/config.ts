@@ -1,24 +1,40 @@
 /** Global frontend configuration constants */
-// Seuil après lequel on ralentit la cadence de chargement (mais on ne coupe plus)
+
+// ========== API Configuration ==========
+/**
+ * REST HTTP endpoint for backend
+ * Used for: PGN fetching, player stats, etc.
+ * Loaded from VITE_BACKEND_URL env variable
+ * Default: http://localhost:8000 (matches backend default)
+ */
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
+/**
+ * WebSocket endpoint for real-time analysis
+ * Used for: game analysis streaming
+ * Loaded from VITE_WS_URL env variable
+ * Default: ws://localhost:8000 (matches backend default)
+ */
+export const WS_URL = import.meta.env.VITE_WS_URL
+
+export const API_ENDPOINTS = {
+  // Endpoints to fetch game PGN data from backend
+  game: {
+    live: (id: string) => `${BACKEND_URL}/game/live/${encodeURIComponent(id)}`,
+    daily: (id: string) => `${BACKEND_URL}/game/daily/${encodeURIComponent(id)}`,
+  },
+  // WebSocket endpoint for analysis
+  ws: {
+    analyze: () => `${WS_URL}/ws/analyze`,
+  },
+}
+
+// ========== Game Loading Configuration ==========
+// Throttling thresholds for progressive game loading
 export const THROTTLE_THRESHOLD = 5000
-// Débit maximal (éléments par seconde) au-delà du seuil
 export const THROTTLE_RATE = 1000
 export const FLUSH_MS = 250
 export const FLUSH_COUNT = 300
 export const CONCURRENCY = 2
 
-// ========== API Configuration ==========
-// URL de base du backend - utilise VITE_BACKEND_URL en env ou localhost par défaut
-// Pour changer facilement lors du déploiement:
-//   - Dev: http://localhost:5000
-//   - Prod: https://api.yourserver.com
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
-
-export const API_ENDPOINTS = {
-  // Endpoints pour récupérer les PGN (via notre backend)
-  game: {
-    live: (id: string) => `${BACKEND_URL}/game/live/${encodeURIComponent(id)}`,
-    daily: (id: string) => `${BACKEND_URL}/game/daily/${encodeURIComponent(id)}`,
-  },
-}
 
