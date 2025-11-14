@@ -21,6 +21,11 @@ from analyzer import (
     calculate_stats
 )
 
+from dotenv import load_dotenv
+import os
+load_dotenv()
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+
 # Configure logging for application monitoring
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -31,7 +36,7 @@ app = FastAPI(title="ChessChronicles Backend", version="1.0")
 # Configure CORS to allow frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,7 +51,7 @@ async def get_live_game_pgn(game_id: str):
     """Fetch PGN from a live Chess.com game"""
     try:
         api_url = f"https://www.chess.com/callback/live/game/{game_id}"
-        headers = {'User-Agent': 'ChronicleChess/1.0'}
+        headers = {'User-Agent': 'ChessChronicles/1.0'}
         response = requests.get(api_url, headers=headers, timeout=5)
         response.raise_for_status()
         if response.status_code == 200 and 'moveList' in response.text:
@@ -61,7 +66,7 @@ async def get_daily_game_pgn(game_id: str):
     """Fetch PGN from a daily Chess.com game"""
     try:
         api_url = f"https://www.chess.com/callback/daily/game/{game_id}"   
-        headers = {'User-Agent': 'ChronicleChess/1.0'}
+        headers = {'User-Agent': 'ChessChronicles/1.0'}
         response = requests.get(api_url, headers=headers, timeout=5)
         response.raise_for_status()
         if response.status_code == 200 and 'moveList' in response.text:
@@ -90,7 +95,7 @@ async def websocket_analyze(websocket: WebSocket):
         if not pgn_text:
             await websocket.send_json({
                 'type': 'analysis_error',
-                'error': 'PGN manquant'
+                'error': 'PGN missing'
             })
             await websocket.close()
             return
@@ -130,7 +135,7 @@ async def run_full_analysis(pgn_text: str, game_id: str, websocket: WebSocket):
         if not game:
             await websocket.send_json({
                 'type': 'analysis_error',
-                'error': 'PGN invalide'
+                'error': 'PGN invalid'
             })
             return
         
@@ -170,7 +175,7 @@ async def run_full_analysis(pgn_text: str, game_id: str, websocket: WebSocket):
         loop = asyncio.get_event_loop()
         engine = await loop.run_in_executor(
             None, 
-            lambda: StockfishEngine("/opt/homebrew/bin/stockfish", depth=20)
+            lambda: StockfishEngine(os.getenv("STOCKFISH_PATH"), depth=int(os.getenv("STOCKFISH_DEPTH")))
         )
 
         moves_analysis = []
@@ -337,6 +342,7 @@ async def health():
 
 if __name__ == "__main__":
     import uvicorn
-    # Start server on localhost:8000
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, 
+                host=os.getenv("SERVER_HOST"), 
+                port=int(os.getenv("SERVER_PORT")))
 
