@@ -1,0 +1,147 @@
+{
+  "app": { "title": "ChessChronicles" },
+  "search": { "placeholder": "e.g., MagnusCarlsen", "load": "Load games", "reload": "Reload", "loading": "Loading..." },
+  "filters": {
+    "heading": "Filters & Sorting",
+    "modes": "Game Type",
+    "results": "Result",
+    "color": "Color",
+    "month": "Month",
+    "opponent": "Opponent",
+    "sort": "Sort",
+    "asc": "ASC",
+    "desc": "DESC",
+    "all": "All",
+    "monthPlaceholder": "Choose a month",
+    "searchOpponent": "Search opponent",
+    "sortBy": {
+      "date": "Date",
+      "eloUser": "My Elo",
+      "eloOpponent": "Opponent Elo"
+    },
+    "perPage": "Per page",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "mode": { "bullet": "Bullet", "blitz": "Blitz", "rapid": "Rapid", "daily": "Daily" },
+  "result": { "win": "Win", "loss": "Loss", "draw": "Draw" },
+  "color": { "all": "All", "white": "White", "black": "Black" },
+  "list": {
+    "title": "Game List",
+    "total": "{{count}} total • page {{current}}/{{total}}",
+    "loading": "(loading…)",
+    "empty": "No games to display. Search for a username."
+  },
+  "card": {
+    "date": "Date",
+    "time": "Time",
+    "type": "Type",
+    "myElo": "My Elo at game time",
+    "view": "View game",
+    "analyze": "Analyze"
+  },
+  "home": {
+    "title": "ChessChronicles",
+    "subtitle": "Analyze your Chess.com games",
+    "usernameLabel": "Chess.com username",
+    "button": "Analyze",
+    "info1": "Enter your Chess.com username to view your games.",
+    "info2": "Select a game to analyze it in detail.",
+    "feature1": {
+      "title": "Analyze Your Games",
+      "desc": "Enter your Chess.com username to view all your games. Navigate through each move, check your statistics and identify key moments.",
+      "item1": "All your game archives",
+      "item2": "Filter by mode, color, result",
+      "item3": "Interactive board visualization",
+      "item4": "Move-by-move navigation"
+    },
+    "feature2": {
+      "title": "Master Games",
+      "desc": "Explore a gallery of the greatest chess games of all time. Analyze the strategies of the world's best players.",
+      "item1": "Famous historical games",
+      "item2": "Recent top player games",
+      "item3": "Categorized by type and level",
+      "item4": "Discover the most beautiful combinations"
+    },
+    "engine": {
+      "title": "Stockfish Analysis",
+      "desc": "Coming soon - Analyze your mistakes with Stockfish and get recommendations to improve your game.",
+      "badge": "In development"
+    },
+    "howItWorks": "How It Works",
+    "step1": {
+      "title": "Enter a username",
+      "desc": "Type your Chess.com username"
+    },
+    "step2": {
+      "title": "Explore your games",
+      "desc": "Filter and browse your complete history"
+    },
+    "step3": {
+      "title": "Analyze in detail",
+      "desc": "Visualize each move and improve"
+    },
+    "footer": "© 2025 ChessChronicles - Analyze your chess game"
+  },
+  "game": {
+    "title": "Game",
+    "player": "Player",
+    "date": "Date",
+    "moves": "Moves",
+    "noMoves": "No moves parsed",
+    "noPGN": "No game",
+    "result": {
+      "won_resignation": "won by resignation",
+      "won_checkmate": "won by checkmate",
+      "won_timeout": "won by timeout",
+      "draw_repetition": "drawn by repetition",
+      "draw_stalemate": "drawn by stalemate",
+      "draw_material": "drawn by insufficient material",
+      "draw_agreement": "drawn by agreement"
+    },
+    "fallback": {
+      "title": "Game not found",
+      "desc": "Try again with another ID or paste a PGN below.",
+      "idPlaceholder": "Game ID",
+      "retry": "Reload",
+      "cancelManual": "Cancel PGN",
+      "pgnPlaceholder": "Paste a complete PGN here",
+      "inject": "Use this PGN"
+    }
+  },
+  "loading": "Loading...",
+  "profile": {
+    "league": "League",
+    "followers": "Followers",
+    "joined": "Joined",
+    "lastOnline": "Last online",
+    "tacticsMax": "Tactics max",
+    "problems": "Problems",
+    "puzzleRush": "Puzzle Rush",
+    "best": "Best",
+    "live": "Live",
+    "offline": "Offline"
+  },
+  "nav": { "home": "Home", "player": "My Games", "game": "Analyze a Game", "legendary": "Legendary Games" }
+  ,
+  "legendary": {
+    "comingSoon": "This section is coming very soon..."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "desc": "Sorry, the page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to home"
+  },
+  "error": {
+    "details": "Details",
+    "hideDetails": "Hide details",
+    "offline": "Network connection unavailable. Please check your Internet and try again.",
+    "userNotFound": "User not found on Chess.com",
+    "statsUnavailable": "Statistics unavailable for this user",
+    "archiveNotFound": "Archive not found",
+    "tooManyRequests": "Too many requests. Please try again shortly.",
+    "server": "Chess.com service temporarily unavailable (server error)",
+    "http": "Communication error with Chess.com (HTTP {{status}})",
+    "unknown": "Unexpected network error while communicating with Chess.com"
+  }
+}

@@ -1,0 +1,60 @@
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { useLanguageSync } from '../hooks/useLanguageSync'
+
+export function Header() {
+  const { t } = useTranslation()
+  const location = useLocation()
+  const navigate = useNavigate()
+  // //TODO: Remove once the app is finished - Language switching via URL parameter
+  useLanguageSync()
+
+  const isActive = (path: string) => {
+    if (path === '/' && location.pathname === '/') return true
+    if (path !== '/' && location.pathname.startsWith(path)) return true
+    return false
+  }
+
+  const handleGameNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (location.pathname === '/game') {
+      e.preventDefault()
+      window.dispatchEvent(new CustomEvent('resetGameForm'))
+    } else if (location.pathname.match(/\/(live|daily)\/game\//)) {
+      e.preventDefault()
+      navigate('/game')
+    }
+  }
+
+  const navItems = [
+    { path: '/', label: t('nav.home') },
+    { path: '/player', label: t('nav.player') },
+    { path: '/game', label: t('nav.game', 'Analyser une partie'), onClick: handleGameNavClick },
+    { path: '/legendary', label: t('nav.legendary') },
+  ]
+
+  return (
+    <header className="sticky top-0 z-10 bg-surface/80 backdrop-blur border-b border-white/5">
+      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-4">
+        <Link to="/" className="flex items-center gap-2 text-xl font-semibold hover:text-primary transition-colors">
+          <span className="text-primary">♔</span> {t('app.title')}
+        </Link>
+        <nav className="ml-auto hidden md:flex gap-6 text-sm text-gray-300">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={item.onClick}
+              className={`transition-colors ${
+                isActive(item.path)
+                  ? 'text-white font-medium'
+                  : 'hover:text-white'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </header>
+  )
+}
