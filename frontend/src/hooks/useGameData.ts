@@ -4,7 +4,7 @@ import { fetchGameById } from '../api/chessCom'
 import { buildSyntheticPgn, decodeTcnToUciArray } from '../utils/tcnDecode'
 
 // i18next TFunction (loosely typed here to avoid signature conflicts)
-export function useGameData(id: string | undefined, t: (...args: any[]) => string, gameType: 'live' | 'daily' = 'live') {
+export function useGameData(id: string | undefined, t: (...args: any[]) => string, gameType: 'live' | 'daily' = 'live', pgnOverride?: string | null) {
   const [pgn, setPgn] = useState<string | undefined>()
   const [pgnHeadersRaw, setPgnHeadersRaw] = useState<Record<string, any> | undefined>(undefined)
   const [moveListEncoded, setMoveListEncoded] = useState<string | undefined>(undefined)
@@ -20,6 +20,14 @@ export function useGameData(id: string | undefined, t: (...args: any[]) => strin
   useEffect(() => { tRef.current = t }, [t])
 
   useEffect(() => {
+    if (pgnOverride) {
+      setPgn(pgnOverride)
+      setManualPgnFlag(true)
+      setLoading(false)
+      setError(null)
+      return
+    }
+
     if (!id || manualPgn || attemptedId === id) return
     let alive = true
     const ctrl = new AbortController()

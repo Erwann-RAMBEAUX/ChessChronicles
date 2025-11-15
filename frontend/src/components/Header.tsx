@@ -15,11 +15,12 @@ export function Header() {
   }
 
   const handleGameNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (location.pathname === '/game') {
-      e.preventDefault()
+    e.preventDefault()
+    // If we're already viewing a game (live or daily), dispatch reset event to clear it
+    if (location.pathname.match(/\/(live|daily)\/game\//)) {
       window.dispatchEvent(new CustomEvent('resetGameForm'))
-    } else if (location.pathname.match(/\/(live|daily)\/game\//)) {
-      e.preventDefault()
+    } else {
+      // Otherwise just navigate normally to /game
       navigate('/game')
     }
   }
