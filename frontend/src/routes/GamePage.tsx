@@ -225,7 +225,6 @@ function GameView({ pgn, id, username, state, gameType, loading, error }: { pgn:
               pgn={pgn}
               date={date}
               result={resultMessage}
-              moveQuality={isAnalyzing ? moveQualityMap : undefined}
               labels={{
                 moves: t('game.moves', 'Coups'),
                 loading: t('loading', 'Chargement...'),
@@ -382,33 +381,15 @@ export default function GamePage() {
             <GameView pgn={pgn || ''} id={id} username={username} state={state} gameType={gameType} loading={loading} error={error} />
           ) : (
             <GameFallback
-              fallbackId={fallbackId}
-              setFallbackId={setFallbackId}
               manualPgnInput={manualPgnInput}
               setManualPgnInput={setManualPgnInput}
-              selectedGameType={selectedGameType}
-              setSelectedGameType={setSelectedGameType}
               manualPgn={!!manualPgn}
               isError={!!error && !pgn}
-              onRetry={() => {
-                setManualPgn(null)
-                if (fallbackId) {
-                  navigate(`/${selectedGameType}/game/${encodeURIComponent(fallbackId)}`, { replace: true })
-                } else {
-                  retryFetch()
-                }
-              }}
               onCancelManual={() => {
                 setManualPgn(null)
-                // Optionally, you might want to retry fetching the original game if an ID was present
-                if (id) retryFetch()
               }}
               onInjectPGN={() => {
                 setManualPgn(manualPgnInput.trim())
-                // Navigate to a clean /game URL to show the injected PGN
-                if (location.pathname !== '/game') {
-                  navigate('/game', { replace: true })
-                }
               }}
             />
           )}

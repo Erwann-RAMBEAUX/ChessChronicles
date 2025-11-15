@@ -17,21 +17,7 @@ export function GameCard({ game }: { game: Game }) {
   const date = d.toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'fr-FR')
   const time = d.toLocaleTimeString(i18n.language === 'en' ? 'en-US' : 'fr-FR', { hour: '2-digit', minute: '2-digit' })
   const myRating = game[game.userColor].rating
-  // Validate external URL is a secure chess.com link
-  // (Secure URL can be calculated later if needed)
-  // Try to extract an id from the chess.com URL (live or daily)
-  const gameId = (() => {
-    try {
-      const u = new URL(game.url)
-      const parts = u.pathname.split('/').filter(Boolean)
-      const idx = parts.findIndex(p => p === 'game')
-      if (idx >= 0 && parts[idx + 2]) return parts[idx + 2] // e.g., /game/live/123
-      // fallback to uuid if provided
-      if (game.uuid) return game.uuid
-    } catch {}
-    // fallback hash based id
-    return encodeURIComponent(game.id)
-  })()
+
   return (
     <div className="card p-4 flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -56,8 +42,9 @@ export function GameCard({ game }: { game: Game }) {
         <button
           className="btn-ghost"
           onClick={() => {
-            navigate(`/${game.gameType}/game/${gameId}`, {
+            navigate('/game', {
               state: {
+                pgn: game.pgn,
                 username: game.userColor === 'white' ? game.white.username : game.black.username,
                 white: { username: game.white.username, rating: game.white.rating },
                 black: { username: game.black.username, rating: game.black.rating }
@@ -70,8 +57,9 @@ export function GameCard({ game }: { game: Game }) {
         <button
           className="btn-ghost"
           onClick={() => {
-            navigate(`/${game.gameType}/game/${gameId}`, {
+            navigate('/game', {
               state: {
+                pgn: game.pgn,
                 username: game.userColor === 'white' ? game.white.username : game.black.username,
                 analyze: true,
                 white: { username: game.white.username, rating: game.white.rating },

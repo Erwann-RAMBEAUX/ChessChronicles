@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Chessboard } from 'react-chessboard'
 import { PlayerBar } from './PlayerBar'
-import { BestMoveButton } from './BestMoveButton'
 import type { PlayerMeta } from '../hooks/usePlayerAvatars'
 
 interface BoardSectionProps {
@@ -43,9 +42,6 @@ export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFe
           <PlayerBar
             player={topPlayer}
           />
-          {bestMove && isBestMoveForTop && (
-            <BestMoveButton bestMove={bestMove} isVisible={true} />
-          )}
         </div>
         {/* Board without flip button */}
         <div ref={boardRef} className="flex justify-start">
@@ -61,9 +57,6 @@ export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFe
           <PlayerBar
             player={bottomPlayer}
           />
-          {bestMove && !isBestMoveForTop && (
-            <BestMoveButton bestMove={bestMove} isVisible={true} />
-          )}
         </div>
       </div>
     </div>

@@ -15,8 +15,6 @@ const router = createBrowserRouter([
   { path: '/player/:username', element: <ProfilePage /> },
   { path: '/legendary', element: <LegendaryPage /> },
   { path: '/game', element: <GamePage /> },
-  { path: '/live/game/:id', element: <GamePage /> },
-  { path: '/daily/game/:id', element: <GamePage /> },
   { path: '*', element: <NotFoundPage /> },
 ])
 

@@ -2,10 +2,6 @@ import React, { useRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SlArrowLeft, SlArrowRight, SlControlStart, SlControlEnd, SlControlPlay, SlControlPause } from 'react-icons/sl'
 
-// Type for move quality analysis data
-export interface MoveQualityData {
-  quality: 'theoretical' | 'excellent' | 'good' | 'inaccuracy' | 'mistake' | 'blunder' | 'unknown'
-}
 
 interface MovesPanelProps {
   moves: string[]
@@ -16,24 +12,12 @@ interface MovesPanelProps {
   pgn?: string
   date?: string
   result?: string
-  moveQuality?: Map<number, MoveQualityData> // New: quality data per move index (1-indexed)
   labels: {
     moves: string
     loading: string
     noMoves: string
     noPGN: string
   }
-}
-
-// Color mapping for move quality - TEXT ONLY
-const QUALITY_COLORS: Record<string, string> = {
-  theoretical: 'text-amber-400', // Brown/ochre
-  excellent: 'text-green-400', // Green
-  good: 'text-blue-400', // Blue
-  inaccuracy: 'text-orange-400', // Orange
-  mistake: 'text-red-400', // Red
-  blunder: 'text-red-500', // Crimson/dark red
-  unknown: '' // No color
 }
 
 /**
@@ -140,7 +124,7 @@ function getPieceSymbol(move: string, isWhite: boolean): string {
   return symbols[isWhite ? 'white' : 'black'][piece as keyof typeof symbols.white]
 }
 
-export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, loading, error, pgn, date, result, moveQuality, labels }) => {
+export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, loading, error, pgn, date, result, labels }) => {
   const { t } = useTranslation()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -228,13 +212,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
                 // To see black's move 0, we use index 2, etc.
                 const whiteIndex = (pair.number - 1) * 2 + 1 // 1-indexed: after white's move
                 const blackIndex = pair.number * 2 // 1-indexed: after black's move
-                
-                // Get quality data for these moves
-                const whiteQuality = moveQuality?.get(whiteIndex)?.quality || 'unknown'
-                const blackQuality = moveQuality?.get(blackIndex)?.quality || 'unknown'
-                
-                const whiteQualityClass = QUALITY_COLORS[whiteQuality] || ''
-                const blackQualityClass = QUALITY_COLORS[blackQuality] || ''
+            
                 
                 return (
                   <tr key={pair.number} className="hover:bg-white/5 transition-colors">
@@ -246,7 +224,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
                         className={`w-full text-left px-2 py-2 rounded font-mono transition-all flex items-center gap-2 text-base ${
                           index === whiteIndex
                             ? 'bg-white/15 text-white border border-white/30 font-semibold'
-                            : `text-gray-300 hover:text-gray-100 ${whiteQualityClass}`
+                            : `text-gray-300 hover:text-gray-100`
                         }`}
                       >
                         <span className="text-3xl leading-none">{getPieceSymbol(pair.white, true)}</span>
@@ -261,7 +239,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
                           className={`w-full text-left px-2 py-2 rounded font-mono transition-all flex items-center gap-2 text-base ${
                             index === blackIndex
                               ? 'bg-white/15 text-white border border-white/30 font-semibold'
-                              : `text-gray-300 hover:text-gray-100 ${blackQualityClass}`
+                              : `text-gray-300 hover:text-gray-100`
                           }`}
                         >
                           <span className="text-3xl leading-none">{getPieceSymbol(pair.black, false)}</span>
