@@ -11,7 +11,7 @@ import chess
 logger = logging.getLogger(__name__)
 
 # Theoretical opening moves - used to tag opening theory moves
-# TODO : Create a real databe for opening moves and extend this list significantly
+# Future: Consider integrating a dedicated opening database (e.g., ECO database)
 THEORETICAL_OPENINGS = {
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1": ["e2e4", "d2d4", "c2c4", "g1f3"],
     "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1": ["e7e5", "c7c5", "e7e6", "d7d5"],
@@ -74,12 +74,17 @@ class StockfishEngine:
         Returns: {'best_move': 'e2e4', 'score': 45} or {'error': '...'}
         """
         try:
+            # --- CORRECTION ICI ---
+            # Déterminer la perspective (qui doit jouer) à partir du FEN
+            # fen.split()[1] == 'w' (White) ou 'b' (Black)
+            perspective = 1 if fen.split()[1] == 'w' else -1
+            
             self._send_command(f"position fen {fen}")
             self._send_command(f"go depth {self.depth}")
             
             best_move = None
             score_cp = None
-            score_mate = None
+            score_mate = None # C'est le score du point de vue de Stockfish (absolu/blanc)
             
             # Parse engine output until bestmove found
             while True:
@@ -94,14 +99,28 @@ class StockfishEngine:
                         score_cp = int(score_cp_match.group(1))
                         score_mate = None
                     elif score_mate_match:
-                        score_mate = int(score_mate_match.group(1))
+                        # Le score 'mate' est RELATIF au côté qui doit jouer
+                        mate_relative = int(score_mate_match.group(1))
                         score_cp = None
+                        
+                        # --- CORRECTION ICI ---
+                        # Convertir le score mat relatif en score absolu (point de vue des Blancs)
+                        if perspective == 1:
+                            # C'est aux Blancs de jouer. 'mate 3' -> 3. 'mate -3' -> -3.
+                            score_mate = mate_relative
+                        else:
+                            # C'est aux Noirs de jouer. Nous devons inverser.
+                            # 'mate 3' (bon pour les Noirs) -> -3
+                            # 'mate -3' (mauvais pour les Noirs) -> 3
+                            score_mate = -mate_relative
                 
                 if line.startswith("bestmove"):
                     parts = line.split()
                     best_move = parts[1] if len(parts) >= 2 else None
                     break
             
+            # _normalize_score reçoit maintenant un score 'mate'
+            # qui est TOUJOURS du point de vue des Blancs
             final_score = self._normalize_score(score_cp, score_mate)
             
             return {
@@ -116,13 +135,21 @@ class StockfishEngine:
     def _normalize_score(self, score_cp: int, score_mate: int) -> int:
         """
         Normalize score to centipion scale.
-        Mate scores encoded as: 100000 - mate_moves (white) or -100000 - mate_moves (black)
+        score_mate EST ATTENDU du point de vue des BLANCS.
+        (positif = mat des blancs, négatif = mat des noirs)
+        
+        Mate scores encoded as: 100000 - mate_moves (white win) or -100000 + mate_moves (black win)
         """
         if score_mate is not None:
+            # score_mate est positif pour le mat des blancs, négatif pour le mat des noirs
             if score_mate > 0:
+                # Les Blancs gagnent en N coups: 
+                # E.g., mat en 3 coups (score_mate=3) = 99997
                 return 100000 - score_mate
             else:
-                return -100000 - score_mate
+                # Les Noirs gagnent en N coups:  
+                # E.g., mat des noirs en 3 coups (score_mate=-3) -> -100000 + 3 = -99997
+                return -100000 + abs(score_mate)
         elif score_cp is not None:
             return score_cp
         return 0
@@ -198,41 +225,63 @@ def get_evaluation_bar_data(eval_centipions: int) -> dict:
     Convert centipion evaluation to evaluation bar display data.
     Returns percentage position (0-100) for bar visualization.
     Clamped at ±500 cp for bar (±5 pawn advantage at extremes).
+    Special handling for mate scores (±99500+).
     """
-    score_pions = eval_centipions / 100.0
+    # Check if this is a mate score
+    is_mate = abs(eval_centipions) > 99500
     
-    # Determine advantage color and format score
-    if eval_centipions > 0:
-        advantage_color = 'white'
-        score_str = f"+{abs(score_pions):.2f}"
-    elif eval_centipions < 0:
-        advantage_color = 'black'
-        score_str = f"-{abs(score_pions):.2f}"
+    if is_mate:
+        # For mate scores, show decisive advantage (100% for winner, 0% for loser)
+        if eval_centipions > 99500:
+            advantage_color = 'white'
+            score_str = "M"  # Mate indicator
+            bar_percentage = 100
+            raw_score = 999.99  # Very high positive
+        else:  # eval_centipions < -99500
+            advantage_color = 'black'
+            score_str = "M"  # Mate indicator
+            bar_percentage = 0
+            raw_score = -999.99  # Very high negative
     else:
-        advantage_color = 'white'
-        score_str = "0.00"
-    
-    # Clamp score and convert to bar percentage (50% = equal)
-    clamped = max(-500, min(500, eval_centipions))
-    bar_percentage = 50 + (clamped / 500.0) * 50
+        # Normal centipion scores
+        score_pions = eval_centipions / 100.0
+        
+        # Determine advantage color and format score
+        if eval_centipions > 0:
+            advantage_color = 'white'
+            score_str = f"+{abs(score_pions):.2f}"
+        elif eval_centipions < 0:
+            advantage_color = 'black'
+            score_str = f"-{abs(score_pions):.2f}"
+        else:
+            advantage_color = 'white'
+            score_str = "0.00"
+        
+        # Clamp score and convert to bar percentage (50% = equal)
+        clamped = max(-500, min(500, eval_centipions))
+        bar_percentage = 50 + (clamped / 500.0) * 50
+        raw_score = score_pions
     
     return {
         'score': score_str,
         'centipions': eval_centipions,
         'advantage_color': advantage_color,
         'bar_percentage': bar_percentage,
-        'raw_score': score_pions
+        'raw_score': raw_score
     }
 
 
 def decode_stockfish_mate(eval_score: int) -> dict:
     """
     Detect mate sequences from Stockfish evaluation scores.
-    Scores above/below ±99500 indicate forced mate in N moves.
+    Format: 100000 - N (white wins in N moves), -100000 + N (black wins in N moves)
+    E.g., 99997 = white mate in 3, -99997 = black mate in 3
     """
     threshold = 99500
     
     if eval_score > threshold:
+        # White wins: 100000 - mate_in = eval_score
+        # So: mate_in = 100000 - eval_score
         moves_to_mate = 100000 - eval_score
         return {
             'is_mate_sequence': True,
@@ -240,7 +289,9 @@ def decode_stockfish_mate(eval_score: int) -> dict:
             'winning_side': 'white'
         }
     elif eval_score < -threshold:
-        moves_to_mate = 100000 + eval_score
+        # Black wins: -100000 + mate_in = eval_score
+        # So: mate_in = eval_score + 100000
+        moves_to_mate = eval_score + 100000
         return {
             'is_mate_sequence': True,
             'mate_in': moves_to_mate,
@@ -252,4 +303,3 @@ def decode_stockfish_mate(eval_score: int) -> dict:
             'mate_in': None,
             'winning_side': None
         }
-

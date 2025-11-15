@@ -18,7 +18,7 @@ export function GameCard({ game }: { game: Game }) {
   const time = d.toLocaleTimeString(i18n.language === 'en' ? 'en-US' : 'fr-FR', { hour: '2-digit', minute: '2-digit' })
   const myRating = game[game.userColor].rating
   // Validate external URL is a secure chess.com link
-  // (URL sécurisée calculable plus tard si nécessaire)
+  // (Secure URL can be calculated later if needed)
   // Try to extract an id from the chess.com URL (live or daily)
   const gameId = (() => {
     try {

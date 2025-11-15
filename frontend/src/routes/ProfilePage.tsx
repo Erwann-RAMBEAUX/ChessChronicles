@@ -16,7 +16,7 @@ export default function ProfilePage() {
   const { username: storeUsername, setUsername, error, loadGames, loading, abort } = useChessStore()
   const [hasInitialized, setHasInitialized] = useState(false)
 
-  // Synchroniser le paramètre URL avec le store et charger les jeux
+  // Synchronize URL parameter with store and load games
   useEffect(() => {
     if (paramUsername) {
       const decodedUsername = decodeURIComponent(paramUsername)
@@ -27,33 +27,33 @@ export default function ProfilePage() {
     setHasInitialized(true)
   }, [paramUsername, storeUsername, setUsername])
 
-  // Charger les jeux automatiquement quand l'username change
+  // Load games automatically when username changes
   useEffect(() => {
     if (storeUsername && storeUsername.trim() && hasInitialized) {
       loadGames()
     }
   }, [storeUsername, hasInitialized, loadGames])
 
-  // Cleanup : arrêter les requêtes quand on quitte la page
+  // Cleanup: stop requests when leaving page
   useEffect(() => {
     return () => {
       abort()
     }
   }, [abort])
 
-  // Arrêter les requêtes si on navigue hors de la page profile
+  // Stop requests if navigating outside profile page
   useEffect(() => {
     if (!location.pathname.startsWith('/player')) {
       abort()
     }
   }, [location.pathname, abort])
 
-  // Gérer la soumission de la SearchBar
+  // Handle SearchBar submission
   const handleSearchSubmit = (newUsername: string) => {
     if (newUsername.trim()) {
-      // Mettre à jour l'URL sans rechargement complet
+      // Update URL without full reload
       navigate(`/player/${encodeURIComponent(newUsername.trim())}`, { replace: false })
-      // Le useEffect ci-dessus détectera le changement d'URL et synchronisera le store
+      // The useEffect above will detect URL change and synchronize store
     }
   }
 

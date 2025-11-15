@@ -4,30 +4,30 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import HttpBackend from 'i18next-http-backend'
 
 /**
- * Détecte la langue préférée de l'utilisateur:
- * 1. D'abord vérifie le paramètre ?lang=fr dans l'URL
- * 2. Puis détecte la langue du navigateur (navigator.language)
- * 3. Si la langue détectée est FR ou EN, l'utilise
- * 4. Sinon par défaut c'est EN (pour internationalisation)
+ * Detects user's preferred language:
+ * 1. First checks ?lang=fr parameter in URL
+ * 2. Then detects browser language (navigator.language)
+ * 3. If detected language is FR or EN, uses it
+ * 4. Otherwise defaults to EN (for better internationalization)
  */
 function detectLanguage(): string {
   try {
-    // 1. Vérifier l'URL en premier
+    // 1. Check URL first
     const sp = new URLSearchParams(window.location.search)
     const urlLang = sp.get('lang') || sp.get('lng')
     if (urlLang && ['fr', 'en'].includes(urlLang)) {
       return urlLang
     }
 
-    // 2. Détecter la langue du navigateur
+    // 2. Detect browser language
     const browserLang = navigator.language?.toLowerCase() || ''
-    // navigator.language peut être 'fr-FR', 'en-US', etc.
+    // navigator.language can be 'fr-FR', 'en-US', etc.
     const langCode = browserLang.split('-')[0]
 
     if (langCode === 'fr') return 'fr'
     if (langCode === 'en') return 'en'
 
-    // 3. Par défaut EN (meilleure internationalisation)
+    // 3. Default to EN (better internationalization)
     return 'en'
   } catch {
     return 'en'
@@ -52,7 +52,6 @@ chain.init({
   detection: !isTest ? {
     lookupQuerystring: 'lang',
     order: ['querystring', 'navigator'],
-    // //TODO: Remove caches once the app is finished - We only want URL param + browser detection
     caches: [],
   } : undefined,
   backend: !isTest ? { loadPath: '/locales/{{lng}}/{{ns}}.json' } : undefined

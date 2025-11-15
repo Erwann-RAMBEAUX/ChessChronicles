@@ -9,7 +9,7 @@ type Props = {
 }
 
 /** Filter by result (single-select with All). */
-export function ResultsFilter({ value, onChange, title = 'Résultat' }: Props) {
+export function ResultsFilter({ value, onChange, title = 'Result' }: Props) {
   const { t } = useTranslation()
   const options: Option[] = [
     { value: 'all', label: t('filters.all') },

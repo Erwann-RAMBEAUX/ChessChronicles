@@ -5,7 +5,7 @@ import type { PlayerProfile, PlayerStats, TimeClassKey } from '../types'
 import { countryFromUrl, countryFlagEmoji } from '../types'
 import { FaTwitch } from 'react-icons/fa'
 
-// Icônes centralisées + rendu unifié
+// Centralized icons + unified rendering
 import { Icons } from '../icons'
 import { SvgIcon } from './SvgIcon'
 
@@ -26,7 +26,7 @@ export function ProfileSummary() {
     let cancelled = false
     const load = async () => {
       if (!username) { setProfile(null); setStats(null); return }
-      // reset d'affichage pour éviter de montrer des données précédentes pendant le chargement
+      // Reset display to avoid showing previous data during loading
       setProfile(null); setStats(null); setError(undefined); setLoading(true)
       try {
         const [p, s, str] = await Promise.all([
@@ -66,7 +66,7 @@ export function ProfileSummary() {
   const ratingBest = (k: TimeClassKey) => stats?.[k]?.best?.rating ?? '—'
   const bestDate = (k: TimeClassKey) => fmt(stats?.[k]?.best?.date)
 
-  // Icônes désormais rendues via SvgIcon (composant unique et normalisé)
+  // Icons now rendered via SvgIcon (single normalized component)
 
   // Optional: verify live status with Twitch Helix if env keys are set
   useEffect(() => {

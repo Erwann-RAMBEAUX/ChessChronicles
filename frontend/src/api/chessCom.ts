@@ -63,7 +63,7 @@ async function safeFetchJson<T>(url: string, signal: AbortSignal | undefined, co
 
 /** Try to fetch a single game payload by a chess.com game id. Uses our backend exclusively (Chess.com blocks browser requests). */
 export async function fetchGameById(id: string, signal?: AbortSignal, gameType: 'live' | 'daily' = 'live'): Promise<RawGame | null> {
-  // Utiliser uniquement notre backend (Chess.com bloque les requêtes navigateur)
+  // Use our backend only (Chess.com blocks browser requests)
   const url = gameType === 'daily' 
     ? API_ENDPOINTS.game.daily(id)
     : API_ENDPOINTS.game.live(id)
@@ -88,7 +88,7 @@ export async function fetchGameById(id: string, signal?: AbortSignal, gameType: 
       return null
     }
 
-    // Extraire les données des joueurs
+    // Extract player data
     const whitePlayer = playersData.bottom // white is always at bottom
     const blackPlayer = playersData.top   // black is always at top
 
@@ -96,7 +96,7 @@ export async function fetchGameById(id: string, signal?: AbortSignal, gameType: 
       return null
     }
 
-    // Construire le RawGame
+    // Build RawGame
     const raw: RawGame = {
       url: `https://www.chess.com/game/${gameType === 'daily' ? 'daily' : 'live'}/${id}`,
       pgn: gameData.pgn || undefined,
@@ -147,7 +147,7 @@ export async function* streamUserGames(
   const signal = options?.signal
   if (signal?.aborted) return
   const archives = await fetchArchives(username, signal)
-  // Plus récentes d'abord
+  // Most recent first
   const months = [...archives].reverse()
 
   let i = 0

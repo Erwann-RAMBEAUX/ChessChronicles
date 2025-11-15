@@ -20,7 +20,7 @@ export default function HomePage() {
       <Header />
 
       <main className="mx-auto max-w-7xl px-4 py-12">
-        {/* Section Héro */}
+        {/* Hero Section */}
         <div className="text-center space-y-6 mb-20">
           <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">
             {t('app.title')}

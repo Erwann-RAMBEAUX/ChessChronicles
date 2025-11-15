@@ -7,11 +7,11 @@ export interface UCI {
   promotion?: string
 }
 
-// Alphabet propriétaire (TCN) utilisé par Chess.com pour encoder les coups
+// Proprietary alphabet (TCN) used by Chess.com to encode moves
 const TCN_ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?{~}(^)[_]@#$,./&-*++='
 
 /**
- * Décode une chaîne TCN (moveList) en un tableau de mouvements UCI.
+ * Decodes a TCN string (moveList) into an array of UCI moves.
  */
 export function decodeTcnToUciArray(tcnString: string): UCI[] {
   const result: UCI[] = []
@@ -39,7 +39,7 @@ export function decodeTcnToUciArray(tcnString: string): UCI[] {
 }
 
 /**
- * Retourne seulement la section coups (sans headers) au format PGN à partir d'une moveList TCN encodée.
+ * Returns only the move section (without headers) in PGN format from an encoded moveList TCN.
  */
 export function getPgnMoveText(moveList: string): string {
   const uciMoves = decodeTcnToUciArray(moveList)
@@ -53,8 +53,8 @@ export function getPgnMoveText(moveList: string): string {
 }
 
 /**
- * Construit un PGN complet (headers + coups) à partir des headers existants (objet) et d'une moveList encodée.
- * Si des headers ne sont pas fournis, ils sont ignorés.
+ * Builds a complete PGN (headers + moves) from existing headers (object) and an encoded moveList.
+ * If headers are not provided, they are ignored.
  */
 export function buildSyntheticPgn(headers: Record<string, any> | undefined, moveListEncoded: string): string {
   const moveText = getPgnMoveText(moveListEncoded)

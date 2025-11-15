@@ -90,6 +90,7 @@
     "moves": "Moves",
     "noMoves": "No moves parsed",
     "noPGN": "No game",
+    "bestMove": "Best Move",
     "result": {
       "won_resignation": "won by resignation",
       "won_checkmate": "won by checkmate",
@@ -124,6 +125,20 @@
   },
   "nav": { "home": "Home", "player": "My Games", "game": "Analyze a Game", "legendary": "Legendary Games" }
   ,
+  "analysis": {
+    "title": "Analysis",
+    "progress": "Analysis",
+    "error": "Error",
+    "excellent": "Exc",
+    "good": "Good",
+    "theoretical": "Theo",
+    "inaccuracy": "Impr",
+    "mistake": "Err",
+    "blunder": "Blun"
+  },
+  "common": {
+    "close": "Close"
+  },
   "legendary": {
     "comingSoon": "This section is coming very soon..."
   },

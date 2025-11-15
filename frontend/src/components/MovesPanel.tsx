@@ -2,6 +2,11 @@ import React, { useRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SlArrowLeft, SlArrowRight, SlControlStart, SlControlEnd, SlControlPlay, SlControlPause } from 'react-icons/sl'
 
+// Type for move quality analysis data
+export interface MoveQualityData {
+  quality: 'theoretical' | 'excellent' | 'good' | 'inaccuracy' | 'mistake' | 'blunder' | 'unknown'
+}
+
 interface MovesPanelProps {
   moves: string[]
   index: number
@@ -11,6 +16,7 @@ interface MovesPanelProps {
   pgn?: string
   date?: string
   result?: string
+  moveQuality?: Map<number, MoveQualityData> // New: quality data per move index (1-indexed)
   labels: {
     moves: string
     loading: string
@@ -19,18 +25,29 @@ interface MovesPanelProps {
   }
 }
 
+// Color mapping for move quality - TEXT ONLY
+const QUALITY_COLORS: Record<string, string> = {
+  theoretical: 'text-amber-400', // Brown/ochre
+  excellent: 'text-green-400', // Green
+  good: 'text-blue-400', // Blue
+  inaccuracy: 'text-orange-400', // Orange
+  mistake: 'text-red-400', // Red
+  blunder: 'text-red-500', // Crimson/dark red
+  unknown: '' // No color
+}
+
 /**
- * Formate et traduit le résultat du jeu
+ * Formats and translates game result
  */
 function formatGameResult(result?: string, t?: any): string | null | undefined {
   if (!result) return undefined
   
   const lower = result.toLowerCase()
   
-  // Cas de victoires
+  // Victory cases
   if (lower.includes('won')) {
     if (lower.includes('resignation')) {
-      // Extraire le nom du gagnant
+      // Extract winner name
       const winner = result.split(' won')[0]
       return t ? `${winner} ${t('game.result.won_resignation')}` : result
     }
@@ -42,11 +59,11 @@ function formatGameResult(result?: string, t?: any): string | null | undefined {
       const winner = result.split(' won')[0]
       return t ? `${winner} ${t('game.result.won_timeout')}` : result
     }
-    // Autres victoires
+    // Other victories
     return result
   }
   
-  // Cas de nullité
+  // Draw cases
   if (lower.includes('draw')) {
     if (lower.includes('repetition')) {
       return t ? t('game.result.draw_repetition') : result
@@ -60,11 +77,11 @@ function formatGameResult(result?: string, t?: any): string | null | undefined {
     if (lower.includes('agreement')) {
       return t ? t('game.result.draw_agreement') : result
     }
-    // Autres cas de draw
+    // Other draw cases
     return null
   }
   
-  // En cours
+  // In progress
   if (lower.includes('ongoing')) {
     return null
   }
@@ -73,34 +90,34 @@ function formatGameResult(result?: string, t?: any): string | null | undefined {
 }
 
 /**
- * Extrait la pièce jouée d'un coup en notation algébrique
- * et retourne le symbole Unicode correspondant
+ * Extracts the piece from a move in algebraic notation
+ * and returns the corresponding Unicode symbol
  */
 function getPieceSymbol(move: string, isWhite: boolean): string {
   if (!move) return ''
   
-  // En notation algébrique standard:
-  // - 0-0 ou 0-0-0 = roque (king)
-  // - K = roi
-  // - Q = dame
-  // - R = tour
-  // - B = fou
-  // - N = cavalier
-  // - Pas de préfixe = pion
+  // Standard algebraic notation:
+  // - 0-0 or 0-0-0 = castling (king)
+  // - K = king
+  // - Q = queen
+  // - R = rook
+  // - B = bishop
+  // - N = knight
+  // - No prefix = pawn
   
-  let piece = 'pawn' // Défaut
+  let piece = 'pawn' // Default
   const firstChar = move[0]
   
-  // Détection du roque
+  // Castling detection
   if (move.includes('0-0') || move.includes('O-O')) piece = 'king'
   else if (firstChar === 'K') piece = 'king'
   else if (firstChar === 'Q') piece = 'queen'
   else if (firstChar === 'R') piece = 'rook'
   else if (firstChar === 'B') piece = 'bishop'
   else if (firstChar === 'N') piece = 'knight'
-  // Sinon c'est un pion (a-h suivi de numéro ou x ou =)
+  // Otherwise it's a pawn (a-h followed by number or x or =)
   
-  // Symboles Unicode des pièces
+  // Unicode piece symbols
   const symbols = {
     white: {
       king: '♚',
@@ -123,13 +140,13 @@ function getPieceSymbol(move: string, isWhite: boolean): string {
   return symbols[isWhite ? 'white' : 'black'][piece as keyof typeof symbols.white]
 }
 
-export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, loading, error, pgn, date, result, labels }) => {
+export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, loading, error, pgn, date, result, moveQuality, labels }) => {
   const { t } = useTranslation()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const playIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Auto-scroll vers le coup actif
+  // Auto-scroll to active move
   useEffect(() => {
     if (!scrollRef.current) return
     const activeElement = scrollRef.current.querySelector('[data-active="true"]')
@@ -138,7 +155,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
     }
   }, [index])
 
-  // Gestion du play/pause avec auto-avancement toutes les 0.5s
+  // Handle play/pause with auto-advance every 0.5s
   useEffect(() => {
     if (!isPlaying) {
       if (playIntervalRef.current) {
@@ -166,7 +183,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
     }
   }, [isPlaying, moves.length, setIndex])
 
-  // Organiser les coups par paires (White, Black)
+  // Organize moves by pairs (White, Black)
   const movePairs = []
   for (let i = 0; i < moves.length; i += 2) {
     movePairs.push({
@@ -178,7 +195,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
 
   return (
     <div className="card p-4 space-y-4 flex flex-col h-fit">
-      {/* Info de la partie (résultat seulement) */}
+      {/* Game info (result only) */}
       {result && formatGameResult(result, t) && (
         <div className="pb-3 border-b border-white/10">
           <p className="text-sm font-semibold text-white">{formatGameResult(result, t)}</p>
@@ -196,29 +213,40 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
           ref={scrollRef}
           className="flex-1 overflow-y-auto max-h-[450px] scrollbar-thin"
         >
-          <table className="w-full text-xs sm:text-sm border-collapse">
+          <table className="w-full text-sm sm:text-base border-collapse">
             <thead className="sticky top-0 bg-surface/80 backdrop-blur-sm border-b border-white/10">
               <tr>
-                <th className="w-12 text-left px-2 py-2.5 text-gray-400 font-medium">#</th>
-                <th className="flex-1 text-left px-2 py-2.5 text-gray-400 font-medium">White</th>
-                <th className="flex-1 text-left px-2 py-2.5 text-gray-400 font-medium">Black</th>
+                <th className="w-12 text-left px-2 py-2.5 text-gray-400 font-medium text-sm">#</th>
+                <th className="flex-1 text-left px-2 py-2.5 text-gray-400 font-medium text-sm">White</th>
+                <th className="flex-1 text-left px-2 py-2.5 text-gray-400 font-medium text-sm">Black</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {movePairs.map((pair) => {
-                const whiteIndex = (pair.number - 1) * 2 + 1 // Indices des coups blancs (1-indexed)
-                const blackIndex = pair.number * 2 // Indices des coups noirs (1-indexed)
+                // index represents the position AFTER the move is played
+                // So to see white's move 0, we use index 1
+                // To see black's move 0, we use index 2, etc.
+                const whiteIndex = (pair.number - 1) * 2 + 1 // 1-indexed: after white's move
+                const blackIndex = pair.number * 2 // 1-indexed: after black's move
+                
+                // Get quality data for these moves
+                const whiteQuality = moveQuality?.get(whiteIndex)?.quality || 'unknown'
+                const blackQuality = moveQuality?.get(blackIndex)?.quality || 'unknown'
+                
+                const whiteQualityClass = QUALITY_COLORS[whiteQuality] || ''
+                const blackQualityClass = QUALITY_COLORS[blackQuality] || ''
+                
                 return (
                   <tr key={pair.number} className="hover:bg-white/5 transition-colors">
-                    <td className="px-2 py-2 text-gray-500 font-mono">{pair.number}.</td>
+                    <td className="px-2 py-2 text-gray-500 font-mono text-sm">{pair.number}.</td>
                     <td className="px-2 py-2">
                       <button
                         onClick={() => setIndex(whiteIndex)}
                         data-active={index === whiteIndex}
-                        className={`w-full text-left px-2 py-2 rounded font-mono transition-all flex items-center gap-2 ${
+                        className={`w-full text-left px-2 py-2 rounded font-mono transition-all flex items-center gap-2 text-base ${
                           index === whiteIndex
                             ? 'bg-white/15 text-white border border-white/30 font-semibold'
-                            : 'text-gray-300 hover:bg-white/10 hover:text-gray-100'
+                            : `text-gray-300 hover:text-gray-100 ${whiteQualityClass}`
                         }`}
                       >
                         <span className="text-3xl leading-none">{getPieceSymbol(pair.white, true)}</span>
@@ -230,10 +258,10 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
                         <button
                           onClick={() => setIndex(blackIndex)}
                           data-active={index === blackIndex}
-                          className={`w-full text-left px-2 py-2 rounded font-mono transition-all flex items-center gap-2 ${
+                          className={`w-full text-left px-2 py-2 rounded font-mono transition-all flex items-center gap-2 text-base ${
                             index === blackIndex
                               ? 'bg-white/15 text-white border border-white/30 font-semibold'
-                              : 'text-gray-300 hover:bg-white/10 hover:text-gray-100'
+                              : `text-gray-300 hover:text-gray-100 ${blackQualityClass}`
                           }`}
                         >
                           <span className="text-3xl leading-none">{getPieceSymbol(pair.black, false)}</span>
@@ -252,24 +280,24 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
       )}
 
       <div className="pt-2 border-t border-white/5 space-y-3">
-        {/* Boutons de navigation avec icônes modernes */}
+        {/* Navigation buttons with modern icons */}
         <div className="flex gap-3 justify-center items-center">
-          {/* Premier coup */}
+          {/* First move */}
           <button
             onClick={() => setIndex(0)}
             disabled={index === 0 || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Premier coup"
+            title="First move"
           >
             <SlControlStart className="w-5 h-5 text-white" />
           </button>
 
-          {/* Coup précédent */}
+          {/* Previous move */}
           <button
             onClick={() => setIndex(i => Math.max(0, i - 1))}
             disabled={index === 0 || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Coup précédent"
+            title="Previous move"
           >
             <SlArrowLeft className="w-5 h-5 text-white" />
           </button>
@@ -279,7 +307,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             onClick={() => setIsPlaying(!isPlaying)}
             disabled={moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-primary/20 hover:bg-primary/30 disabled:opacity-40 disabled:hover:bg-primary/20 border border-primary/40 rounded transition-all"
-            title={isPlaying ? "Pause" : "Lecture"}
+            title={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
               <SlControlPause className="w-5 h-5 text-primary" />
@@ -288,22 +316,22 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             )}
           </button>
 
-          {/* Coup suivant */}
+          {/* Next move */}
           <button
             onClick={() => setIndex(i => Math.min(moves.length, i + 1))}
             disabled={index >= moves.length || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Coup suivant"
+            title="Next move"
           >
             <SlArrowRight className="w-5 h-5 text-white" />
           </button>
 
-          {/* Dernier coup */}
+          {/* Last move */}
           <button
             onClick={() => setIndex(moves.length)}
             disabled={index >= moves.length || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Dernier coup"
+            title="Last move"
           >
             <SlControlEnd className="w-5 h-5 text-white" />
           </button>

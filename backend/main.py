@@ -23,24 +23,38 @@ from analyzer import (
 
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+
+# Get environment variables with proper defaults
+allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000")
+allowed_origins = [origin.strip() for origin in allowed_origins_str.split(",") if origin.strip()]
 
 # Configure logging for application monitoring
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI application
-app = FastAPI(title="ChessChronicles Backend", version="1.0")
+app = FastAPI(
+    title="ChessChronicles Backend",
+    version="1.0",
+    description="Real-time chess analysis using Stockfish"
+)
 
 # Configure CORS to allow frontend communication
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "WebSocket"],
+    allow_headers=["Content-Type"],
 )
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for deployment monitoring"""
+    return {"status": "ok", "version": "1.0"}
 
 
 # REST API Routes
@@ -54,11 +68,10 @@ async def get_live_game_pgn(game_id: str):
         headers = {'User-Agent': 'ChessChronicles/1.0'}
         response = requests.get(api_url, headers=headers, timeout=5)
         response.raise_for_status()
-        if response.status_code == 200 and 'moveList' in response.text:
-            return response.text
-    except Exception as e:
-        logger.error(f"Failed to fetch live game PGN: {e}")
-    return ""
+        return response.json()
+    except requests.RequestException as e:
+        logger.error(f"Failed to fetch live game {game_id}: {e}")
+        return {"error": "Failed to fetch game"}
 
 
 @app.get("/game/daily/{game_id}")
@@ -69,11 +82,10 @@ async def get_daily_game_pgn(game_id: str):
         headers = {'User-Agent': 'ChessChronicles/1.0'}
         response = requests.get(api_url, headers=headers, timeout=5)
         response.raise_for_status()
-        if response.status_code == 200 and 'moveList' in response.text:
-            return response.text
-    except Exception as e:
-        logger.error(f"Failed to fetch daily game PGN: {e}")
-    return ""
+        return response.json()
+    except requests.RequestException as e:
+        logger.error(f"Failed to fetch daily game {game_id}: {e}")
+        return {"error": "Failed to fetch game"}
 
 
 # WebSocket Analysis Endpoint
@@ -171,12 +183,24 @@ async def run_full_analysis(pgn_text: str, game_id: str, websocket: WebSocket):
             'game_id': game_id
         })
         
-        # Initialize persistent Stockfish engine (depth=20 for accuracy)
+        # Initialize persistent Stockfish engine
         loop = asyncio.get_event_loop()
-        engine = await loop.run_in_executor(
-            None, 
-            lambda: StockfishEngine(os.getenv("STOCKFISH_PATH"), depth=int(os.getenv("STOCKFISH_DEPTH")))
-        )
+        stockfish_path = os.getenv("STOCKFISH_PATH", "/usr/bin/stockfish")
+        stockfish_depth = int(os.getenv("STOCKFISH_DEPTH", "20"))
+        
+        try:
+            engine = await loop.run_in_executor(
+                None, 
+                lambda: StockfishEngine(stockfish_path, depth=stockfish_depth)
+            )
+        except Exception as e:
+            logger.error(f"Failed to initialize Stockfish at {stockfish_path}: {e}")
+            await websocket.send_json({
+                'type': 'analysis_error',
+                'error': f'Stockfish initialization failed: {str(e)}'
+            })
+            await websocket.close()
+            return
 
         moves_analysis = []
         
@@ -219,8 +243,36 @@ async def run_full_analysis(pgn_text: str, game_id: str, websocket: WebSocket):
                         eval_jouee = analysis_after['score'] if 'error' not in analysis_after else eval_optimale
                     
                     # Calculate CPL (Centipion Loss): the evaluation difference after move
-                    cpl = (eval_optimale - eval_jouee) * perspective
-                    cpl = max(0, cpl)
+                    # Special handling for mate scores: don't compare mat vs centipion values
+                    is_optimal_mate = abs(eval_optimale) > 99500
+                    is_played_mate = abs(eval_jouee) > 99500
+                    
+                    if is_optimal_mate and is_played_mate:
+                        # Both are mate - compare who wins faster
+                        # Extract mate moves: white mat in N = 100000 - N, black mat in N = -100000 - N
+                        
+                        # --- CORRECTION (la même que la dernière fois, mais nécessaire) ---
+                        # Décode le score normalisé en nombre de coups
+                        # E.g., -99997 (mat en 3 noir) -> eval + 100000 = 3
+                        # E.g., 99997 (mat en 3 blanc) -> 100000 - eval = 3
+                        
+                        optimal_mate = (100000 - eval_optimale) if eval_optimale > 0 else (eval_optimale + 100000)
+                        played_mate = (100000 - eval_jouee) if eval_jouee > 0 else (eval_jouee + 100000)
+                        
+                        # --- FIN DE LA CORRECTION ---
+
+                        # CPL = how many more moves to mate (if slower) or 0 if faster
+                        cpl = max(0, played_mate - optimal_mate)
+                    elif is_optimal_mate and not is_played_mate:
+                        # Optimal is mate but played isn't - big mistake
+                        cpl = 500  # Cap CPL at 500 for practical purposes
+                    elif not is_optimal_mate and is_played_mate:
+                        # Played move leads to mate - treat as excellent
+                        cpl = 0
+                    else:
+                        # Normal position evaluation difference
+                        cpl = (eval_optimale - eval_jouee) * perspective
+                        cpl = max(0, cpl)
                     
                     # Check if move is in theoretical opening repertoire
                     is_opening = (move_data['fen_before'] in THEORETICAL_OPENINGS and 
@@ -345,4 +397,3 @@ if __name__ == "__main__":
     uvicorn.run(app, 
                 host=os.getenv("SERVER_HOST"), 
                 port=int(os.getenv("SERVER_PORT")))
-

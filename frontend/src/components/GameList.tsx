@@ -47,7 +47,7 @@ export function GameList() {
               const items: (number | 'gap')[] = []
               const last = totalPages
               if (last > 0) {
-                // toujours 1 au début
+                // Always 1 at start
                 items.push(1)
                 if (current === 1) {
                   if (last >= 2) items.push(2)
@@ -64,7 +64,7 @@ export function GameList() {
                   })
                   if (right < last - 1) items.push('gap')
                 }
-                // pousser 'last' une seule fois à la fin
+                // Push 'last' only once at end
                 if (last > 1 && !items.includes(last)) items.push(last)
               }
               return items.map((it, idx) =>

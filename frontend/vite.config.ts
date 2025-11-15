@@ -7,6 +7,23 @@ export default defineConfig({
   plugins: [svgr({ svgrOptions: { icon: true } }), react()],
   server: {
     port: 5173,
-    open: true
+    open: false
+  },
+  build: {
+    target: 'ES2020',
+    minify: 'terser',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-chess': ['chess.js', 'react-chessboard'],
+          'vendor-i18n': ['i18next', 'react-i18next']
+        }
+      }
+    }
+  },
+  preview: {
+    port: 5173
   }
 })

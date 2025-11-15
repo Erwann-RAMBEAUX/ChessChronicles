@@ -29,7 +29,7 @@ export type Game = RawGame & {
   userColor: 'white' | 'black'
   resultForUser: 'win' | 'loss' | 'draw'
   endDate: Date
-  gameType: 'live' | 'daily' // Type de partie pour router vers les bonnes endpoints
+  gameType: 'live' | 'daily' // Game type for routing to correct endpoints
 }
 
 export type Filters = {
@@ -60,7 +60,7 @@ export function derivePerspective(game: RawGame, username: string): Pick<Game, '
   const endDate = new Date(game.end_time * 1000)
   const id = `${game.url}#${game.end_time}`
   
-  // Déterminer le type de partie (live ou daily) basé sur time_class
+  // Determine game type (live or daily) based on time_class
   const gameType: 'live' | 'daily' = game.time_class === 'daily' ? 'daily' : 'live'
   
   return { userColor, resultForUser, opponent, endDate, id, gameType }

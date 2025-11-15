@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 /**
  * Hook to keep the language parameter in sync with the URL
- * //TODO: Remove once the app is finished (language switching is built into the UI)
+ * Supports URL-based language switching via lang parameter
  */
 export function useLanguageSync() {
   const [searchParams, setSearchParams] = useSearchParams()

@@ -108,7 +108,7 @@ export const useChessStore = create<State & Actions>()(
           })
         }
         try {
-          // Token bucket (rempli à THROTTLE_RATE/s) pour contrôler le débit
+          // Token bucket (filled at THROTTLE_RATE/s) to control flow rate
           let tokens = THROTTLE_RATE
           let lastRefill = Date.now()
           for await (const g of streamUserGames(username, { concurrency: CONCURRENCY, signal: ctl.signal })) {
@@ -120,7 +120,7 @@ export const useChessStore = create<State & Actions>()(
               // yield to browser
               await new Promise(r => setTimeout(r, 0))
             }
-            // Rate-limit au-delà du seuil
+            // Rate-limit beyond threshold
             const projected = get().games.length + buffer.length
             if (projected >= THROTTLE_THRESHOLD) {
               const now2 = Date.now()
@@ -133,7 +133,7 @@ export const useChessStore = create<State & Actions>()(
                 }
               }
               if (tokens <= 0) {
-                // attendre jusqu’à 1 tick (1 ms) et réévaluer; boucle pour ne pas oversleeper
+                // Wait until 1 tick (1 ms) and re-evaluate; loop to not oversleep
                 await new Promise(r => setTimeout(r, 1))
                 continue
               }

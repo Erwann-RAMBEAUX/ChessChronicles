@@ -6,7 +6,6 @@ export function Header() {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
-  // //TODO: Remove once the app is finished - Language switching via URL parameter
   useLanguageSync()
 
   const isActive = (path: string) => {

@@ -3,7 +3,7 @@ import { Chess } from 'chess.js'
 import { fetchGameById } from '../api/chessCom'
 import { buildSyntheticPgn, decodeTcnToUciArray } from '../utils/tcnDecode'
 
-// t: i18next TFunction (typé souple ici pour éviter conflit de signatures)
+// i18next TFunction (loosely typed here to avoid signature conflicts)
 export function useGameData(id: string | undefined, t: (...args: any[]) => string, gameType: 'live' | 'daily' = 'live') {
   const [pgn, setPgn] = useState<string | undefined>()
   const [pgnHeadersRaw, setPgnHeadersRaw] = useState<Record<string, any> | undefined>(undefined)
@@ -36,7 +36,7 @@ export function useGameData(id: string | undefined, t: (...args: any[]) => strin
           setMoveListEncoded(raw.moveListEncoded)
           setResultMessage(raw.resultMessage)
 
-          // Préférer le PGN brut si disponible, sinon le générer à partir de moveList
+          // Prefer raw PGN if available, otherwise generate from moveList
           if (raw.pgn) {
             setPgn(raw.pgn)
           } else if (raw.moveListEncoded) {
@@ -44,7 +44,7 @@ export function useGameData(id: string | undefined, t: (...args: any[]) => strin
               const synthetic = buildSyntheticPgn(raw.pgnHeadersRaw, raw.moveListEncoded)
               setPgn(synthetic)
               
-              // Décoder aussi en UCI pour preview
+              // Also decode to UCI for preview
               const uci = decodeTcnToUciArray(raw.moveListEncoded)
               const chess = new Chess()
               for (const mv of uci) { 
@@ -79,7 +79,7 @@ export function useGameData(id: string | undefined, t: (...args: any[]) => strin
     return () => { alive = false; ctrl.abort() }
   }, [id, manualPgn, attemptedId, gameType])
 
-  /** Injection manuelle d'un PGN (ou reconstruction à partir d'une entrée utilisateur). */
+  /** Manual PGN injection (or reconstruction from user input). */
   const setManualPgn = (rawPgn: string) => {
     setManualPgnFlag(true)
     setLoading(false)
@@ -91,16 +91,16 @@ export function useGameData(id: string | undefined, t: (...args: any[]) => strin
     setIndex(0)
   }
 
-  /** Permet de revenir en mode auto (et donc relancer un fetch si id défini). */
+  /** Return to auto mode (and restart fetch if id is defined). */
   const clearManualPgn = () => {
     setManualPgnFlag(false)
     setPgn(undefined)
     setIndex(0)
     setError(null)
-    setAttemptedId(null) // autorisera un nouveau fetch
+    setAttemptedId(null) // will allow a new fetch
   }
 
-  /** Relancer explicitement la récupération (reset échec). */
+  /** Explicitly restart fetching (reset on error). */
   const retryFetch = () => {
     if (pendingRef.current) {
       pendingRef.current.abort()
@@ -143,9 +143,9 @@ export function useGameData(id: string | undefined, t: (...args: any[]) => strin
       const applied = hist.slice(0, index)
       const last = applied[applied.length - 1]
       if (!last?.from || !last?.to) return {}
-      // Couleur jaune clair pour la case de destination
+      // Light yellow for destination square
       const styleFrom = { background: 'rgba(184, 200, 81, 0.8)' }
-      // Couleur vert plus foncé pour la case d'origine (pièce qui a bougé)
+      // Darker green for origin square (piece that moved)
       const styleTo = { background: 'rgba(121, 154, 70, 0.8)' }
       return { [last.from]: styleFrom, [last.to]: styleTo }
     } catch { return {} }

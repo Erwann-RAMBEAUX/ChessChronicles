@@ -26,106 +26,121 @@ interface EvaluationBarProps {
   eval_data?: EvaluationData | null;
   position_status?: PositionStatus | null;
   mate_info?: MateInfo | null;
+  orientation?: 'white' | 'black';
+  finalResult?: string | null; // e.g., "1-0", "0-1", "1/2-1/2"
 }
 
 /**
- * Barre d'évaluation comme Chess.com
- * Affiche:
- * - Barre visuelle blanc vs noir
- * - Score numérique
- * - Indicateurs d'échec/mat
- * - Prédictions de mat forcé
+ * Vertical evaluation bar like Chess.com
+ * Displays a vertical bar with:
+ * - White vs black percentage
+ * - Numeric score at top and bottom
+ * - Orients based on board (white at bottom or top)
  */
 export function EvaluationBar({
   eval_data,
   position_status,
   mate_info,
+  orientation = 'white',
+  finalResult,
 }: EvaluationBarProps) {
   if (!eval_data) {
+    return null;
+  }
+
+  // If game is finished, show final result
+  if (finalResult && (finalResult === '1-0' || finalResult === '0-1' || finalResult === '1/2-1/2')) {
     return (
-      <div className="w-full h-20 bg-gray-100 rounded flex items-center justify-center">
-        <p className="text-gray-400">En attente d'analyse...</p>
+      <div className="h-full flex flex-col rounded border border-gray-300 overflow-hidden bg-gray-900">
+        {/* White section */}
+        <div
+          className="bg-white transition-all duration-300 ease-out flex flex-col items-center justify-center"
+          style={{ height: finalResult === '1-0' ? '100%' : finalResult === '1/2-1/2' ? '50%' : '0%', minHeight: '2px' }}
+        >
+          {(finalResult === '1-0' || finalResult === '1/2-1/2') && (
+            <span className="text-xs font-bold text-gray-800">
+              {finalResult === '1-0' ? '1-0' : '½'}
+            </span>
+          )}
+        </div>
+
+        {/* Black section */}
+        <div
+          className="bg-gray-900 transition-all duration-300 ease-out flex flex-col items-center justify-center"
+          style={{ height: finalResult === '0-1' ? '100%' : finalResult === '1/2-1/2' ? '50%' : '0%', minHeight: '2px' }}
+        >
+          {(finalResult === '0-1' || finalResult === '1/2-1/2') && (
+            <span className="text-xs font-bold text-white">
+              {finalResult === '0-1' ? '0-1' : '½'}
+            </span>
+          )}
+        </div>
       </div>
     );
   }
 
-  const barPercentage = eval_data.bar_percentage;
+  // bar_percentage from backend: 50 = equal, 0-50 = black advantage, 50-100 = white advantage
+  // This is ALWAYS from white's perspective
+  const backendBarPercentage = eval_data.bar_percentage;
+  
+  // Determine who is winning and format the score appropriately
+  const isWhiteWinning = eval_data.raw_score > 0.1;
+  const isBlackWinning = eval_data.raw_score < -0.1;
+  const isEqual = Math.abs(eval_data.raw_score) <= 0.1;
+  const scoreDisplay = Math.abs(eval_data.raw_score).toFixed(1);
+
+  // Check for mate sequence
+  const isMateSequence = mate_info?.is_mate_sequence;
+  const mateDisplay = isMateSequence ? `M${mate_info?.mate_in}` : null;
+  const displayText = mateDisplay || scoreDisplay;
+
+  // When orientation is 'white': white at BOTTOM, black at TOP
+  // When orientation is 'black': black at BOTTOM, white at TOP
+  // backendBarPercentage is always white's percentage
+  const whiteBottomPercent = backendBarPercentage;
+  const blackTopPercent = 100 - whiteBottomPercent;
 
   return (
-    <div className="w-full space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-      {/* Barre d'avantage */}
-      <div className="flex items-center space-x-2">
-        {/* Étiquette blanc */}
-        <span className="text-xs font-bold text-white bg-gray-800 px-2 py-1 rounded">
-          ⚪
-        </span>
-
-        {/* Barre */}
-        <div className="flex-1 h-8 rounded border border-gray-300 overflow-hidden flex bg-white">
-          {/* Section blanche */}
-          <div
-            className="bg-white transition-all duration-300 ease-out"
-            style={{ width: `${barPercentage}%` }}
-          />
-          {/* Section noire */}
-          <div
-            className="bg-gray-900 transition-all duration-300 ease-out"
-            style={{ width: `${100 - barPercentage}%` }}
-          />
-        </div>
-
-        {/* Étiquette noir */}
-        <span className="text-xs font-bold text-white bg-gray-800 px-2 py-1 rounded">
-          ⚫
-        </span>
+    <div className="h-full flex flex-col rounded border border-gray-300 overflow-hidden bg-gray-900">
+      {/* Top section */}
+      <div
+        className={`${orientation === 'white' ? 'bg-gray-900' : 'bg-white'} transition-all duration-300 ease-out flex flex-col items-center justify-start pt-1`}
+        style={{ height: `${orientation === 'white' ? blackTopPercent : whiteBottomPercent}%`, minHeight: '2px' }}
+      >
+        {/* Show score in top section if appropriate */}
+        {orientation === 'white' && (
+          isBlackWinning || isEqual) && blackTopPercent > 12 && (
+          <span className="text-xs font-bold text-white">
+            {displayText}
+          </span>
+        )}
+        {orientation === 'black' && (
+          isWhiteWinning || isEqual) && whiteBottomPercent > 12 && (
+          <span className="text-xs font-bold text-gray-800">
+            {displayText}
+          </span>
+        )}
       </div>
 
-      {/* Score et indicateurs */}
-      <div className="flex items-center justify-between">
-        {/* Score principal */}
-        <div
-          className={`text-lg font-bold px-3 py-1 rounded ${
-            eval_data.advantage_color === 'white'
-              ? 'bg-gray-800 text-white'
-              : 'bg-white text-gray-800 border border-gray-300'
-          }`}
-        >
-          {eval_data.score}
-        </div>
-
-        {/* Indicateurs d'état */}
-        <div className="flex items-center space-x-2">
-          {/* Check */}
-          {position_status?.is_check && !position_status?.is_checkmate && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs font-semibold">
-              ♔ CHECK
-            </span>
-          )}
-
-          {/* Checkmate */}
-          {position_status?.is_checkmate && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-red-500 text-white text-xs font-semibold">
-              ♔ CHECKMATE
-            </span>
-          )}
-
-          {/* Stalemate */}
-          {position_status?.is_stalemate && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold">
-              PAT
-            </span>
-          )}
-        </div>
+      {/* Bottom section */}
+      <div
+        className={`${orientation === 'white' ? 'bg-white' : 'bg-gray-900'} transition-all duration-300 ease-out flex flex-col items-center justify-end pb-1`}
+        style={{ height: `${orientation === 'white' ? whiteBottomPercent : blackTopPercent}%`, minHeight: '2px' }}
+      >
+        {/* Show score in bottom section if appropriate */}
+        {orientation === 'white' && (
+          isWhiteWinning || isEqual) && whiteBottomPercent > 12 && (
+          <span className="text-xs font-bold text-gray-800">
+            {displayText}
+          </span>
+        )}
+        {orientation === 'black' && (
+          isBlackWinning || isEqual) && blackTopPercent > 12 && (
+          <span className="text-xs font-bold text-white">
+            {displayText}
+          </span>
+        )}
       </div>
-
-      {/* Prédiction de mat */}
-      {mate_info?.is_mate_sequence && mate_info?.display_text && (
-        <div className="mt-2 p-2 bg-purple-50 border border-purple-200 rounded">
-          <p className="text-center text-sm font-bold text-purple-700">
-            🔮 {mate_info.display_text}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

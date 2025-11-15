@@ -39,7 +39,7 @@ export function OpponentFilter({ query, suggestions, onChange, title = 'Adversai
               key={s}
               className="block w-full text-left px-2 py-1 rounded hover:bg-white/10"
               onMouseDown={(e) => {
-                // sélectionner avant le blur, éviter changement de focus
+                // Select before blur, avoid focus change
                 e.preventDefault()
                 onChange(s)
                 setOpen(false)

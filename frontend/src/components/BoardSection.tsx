@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Chessboard } from 'react-chessboard'
 import { PlayerBar } from './PlayerBar'
+import { BestMoveButton } from './BestMoveButton'
 import type { PlayerMeta } from '../hooks/usePlayerAvatars'
 
 interface BoardSectionProps {
@@ -9,9 +10,11 @@ interface BoardSectionProps {
   lastMoveSquares: Record<string, any>
   topPlayer: PlayerMeta
   bottomPlayer: PlayerMeta
+  bestMove?: string | null // Best move suggestion for current position
+  isBestMoveForTop?: boolean // Whether best move is for top player
 }
 
-export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFen, lastMoveSquares, topPlayer, bottomPlayer }) => {
+export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFen, lastMoveSquares, topPlayer, bottomPlayer, bestMove, isBestMoveForTop }) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const boardRef = useRef<HTMLDivElement | null>(null)
   const [size, setSize] = useState(0)
@@ -36,10 +39,15 @@ export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFe
   return (
     <div ref={ref} className="card p-4 space-y-3 w-fit">
       <div className="flex flex-col items-start gap-3">
-        <PlayerBar
-          player={topPlayer}
-        />
-        {/* Plateau sans bouton flip */}
+        <div className="flex items-center gap-3 w-full">
+          <PlayerBar
+            player={topPlayer}
+          />
+          {bestMove && isBestMoveForTop && (
+            <BestMoveButton bestMove={bestMove} isVisible={true} />
+          )}
+        </div>
+        {/* Board without flip button */}
         <div ref={boardRef} className="flex justify-start">
           <Chessboard
             position={chessFen}
@@ -49,9 +57,14 @@ export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFe
             customSquareStyles={lastMoveSquares as any}
           />
         </div>
-        <PlayerBar
-          player={bottomPlayer}
-        />
+        <div className="flex items-center gap-3 w-full">
+          <PlayerBar
+            player={bottomPlayer}
+          />
+          {bestMove && !isBestMoveForTop && (
+            <BestMoveButton bestMove={bestMove} isVisible={true} />
+          )}
+        </div>
       </div>
     </div>
   )

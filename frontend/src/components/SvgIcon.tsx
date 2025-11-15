@@ -47,7 +47,7 @@ export function SvgIcon({ component, raw, url, className, title }: SvgIconProps)
     if (url) {
       const cached = svgCache.get(url)
       if (cached) {
-        // éviter setState synchrone dans l'effet; file dans microtask
+        // Avoid synchronous setState in effect; queue in microtask
         Promise.resolve().then(() => { if (!cancelled) setSvgText(cached) })
         return
       }

@@ -22,7 +22,7 @@ export function MonthFilter({ months, value, onChange, title = 'Mois', allLabel 
       month: 'long', 
       year: 'numeric' 
     }).format(date)
-    // Capitaliser la première lettre du mois
+    // Capitalize first letter of month
     return formatted.charAt(0).toUpperCase() + formatted.slice(1)
   }
   

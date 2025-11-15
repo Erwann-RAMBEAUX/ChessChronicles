@@ -103,6 +103,7 @@
     "moves": "Coups",
     "noMoves": "Aucun coup parsé",
     "noPGN": "Aucune partie",
+    "bestMove": "Meilleur Coup",
     "result": {
       "won_resignation": "a gagné par abandon",
       "won_checkmate": "a gagné par échec et mat",
@@ -136,6 +137,20 @@
     "offline": "Hors ligne"
   },
   "nav": { "home": "Accueil", "player": "Mes parties", "game": "Analyser une partie", "legendary": "Parties Légendaires" },
+  "analysis": {
+    "title": "Analyse",
+    "progress": "Analyse",
+    "error": "Erreur",
+    "excellent": "Exc",
+    "good": "Bons",
+    "theoretical": "Theo",
+    "inaccuracy": "Impr",
+    "mistake": "Err",
+    "blunder": "Blun"
+  },
+  "common": {
+    "close": "Fermer"
+  },
   "legendary": {
     "comingSoon": "Cette section arrive très bientôt..."
   },

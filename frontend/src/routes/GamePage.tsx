@@ -1,13 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { SlLoop } from 'react-icons/sl'
+import { BiSearch } from 'react-icons/bi'
 import { Header } from '../components/Header'
 import { BoardSection } from '../components/BoardSection'
 import { MovesPanel } from '../components/MovesPanel'
 import { GameFallback } from '../components/GameFallback'
+import { EvaluationBar } from '../components/EvaluationBar'
 import { useGameData } from '../hooks/useGameData'
 import { usePlayerAvatars } from '../hooks/usePlayerAvatars'
+import { useAnalysis } from '../hooks/useAnalysis'
 
 type NavState = {
   username?: string
@@ -22,7 +25,6 @@ export default function GamePage() {
   const location = useLocation()
   const navigate = useNavigate()
   
-  // Récupérer le gameType depuis le chemin URL
   const pathname = location.pathname
   const gameType = pathname.startsWith('/live/') ? 'live' : 'daily'
   
@@ -36,7 +38,7 @@ export default function GamePage() {
   const [manualPgnInput, setManualPgnInput] = useState('')
   const [selectedGameType, setSelectedGameType] = useState<'live' | 'daily'>(gameType)
   const [isAnalyzing, setIsAnalyzing] = useState(state.analyze || false)
-  const [analyzedPlayer, setAnalyzedPlayer] = useState(state.username || '')
+  const [analyzedPlayer, setAnalyzedPlayer] = useState(state.username || 'both')
   const { whiteMeta, blackMeta } = usePlayerAvatars({
     stateWhite: state.white,
     stateBlack: state.black,
@@ -46,7 +48,13 @@ export default function GamePage() {
     headerBlackElo: headers.BlackElo,
   })
 
-  // Réinitialiser le formulaire quand on arrive sur /game sans ID
+  // WebSocket analysis
+  const { progress, result, isAnalyzing: wsIsAnalyzing, error: analysisError, startAnalysis, stopAnalysis } = useAnalysis()
+
+  // Track if analysis has been started to prevent re-triggering
+  const analysisStartedRef = useRef(false)
+
+  // Reset form when navigating to /game without ID
   useEffect(() => {
     if (!id && pathname === '/game') {
       clearManualPgn()
@@ -56,7 +64,7 @@ export default function GamePage() {
     }
   }, [id, pathname, gameType, clearManualPgn])
 
-  // Écouter l'événement de réinitialisation du formulaire (quand on reclique sur "Analyser" depuis /game)
+  // Listen for form reset event
   useEffect(() => {
     const handleResetForm = () => {
       clearManualPgn()
@@ -69,25 +77,38 @@ export default function GamePage() {
     return () => window.removeEventListener('resetGameForm', handleResetForm)
   }, [gameType, clearManualPgn])
 
-  // Gérer le mode analyse
+  // Start analysis automatically
   useEffect(() => {
-    if (isAnalyzing && !analyzedPlayer && headers.White && headers.Black) {
-      // Si on est en mode analyse mais qu'on n'a pas de joueur, il faut en choisir un
-      // Si on vient du profil via state.username, on l'utilise
-      if (state.username) {
-        setAnalyzedPlayer(state.username)
-      }
-      // Sinon il faut attendre le choix de l'utilisateur
+    if (isAnalyzing && pgn && id && !wsIsAnalyzing && !analysisStartedRef.current) {
+      analysisStartedRef.current = true
+      startAnalysis(pgn, id, 'both')
     }
-  }, [isAnalyzing, analyzedPlayer, headers.White, headers.Black, state.username])
+  }, [isAnalyzing, pgn, id, wsIsAnalyzing])
 
-  // Déterminer orientation automatiquement après chargement PGN
+  // Set board orientation based on username
   useEffect(() => {
-    if (!username || !headers.White || !headers.Black) return
-    const u = username.toLowerCase()
-    if (headers.White.toLowerCase() === u) setOrientation('white')
-    else if (headers.Black.toLowerCase() === u) setOrientation('black')
-  }, [username, headers.White, headers.Black])
+    if (!username) return
+    
+    // Try to match with headers first
+    if (headers.White && headers.Black) {
+      const u = username.toLowerCase()
+      if (headers.White.toLowerCase() === u) {
+        setOrientation('white')
+        return
+      }
+      if (headers.Black.toLowerCase() === u) {
+        setOrientation('black')
+        return
+      }
+    }
+    
+    // Fallback: try to match with state
+    if (state.white?.username?.toLowerCase() === username.toLowerCase()) {
+      setOrientation('white')
+    } else if (state.black?.username?.toLowerCase() === username.toLowerCase()) {
+      setOrientation('black')
+    }
+  }, [username, headers.White, headers.Black, state.white, state.black])
 
   const date = useMemo(() => {
     const d = headers.Date
@@ -96,6 +117,134 @@ export default function GamePage() {
     if (!isNaN(parsed.getTime())) return parsed.toLocaleString(i18n.language === 'en' ? 'en-US' : 'fr-FR')
     return d
   }, [headers.Date, i18n.language])
+
+  // Get evaluation data for current move from analysis results
+  const currentMoveEvaluation = useMemo(() => {
+    if (!result || index <= 0) return null
+    
+    // index represents the move number AFTER it's played
+    // index 1 = after white's move 0
+    // index 2 = after black's move 0
+    // index 3 = after white's move 1
+    // index 4 = after black's move 1, etc.
+    
+    // Convert to 0-indexed
+    const moveIndexZeroBased = index - 1
+    const movingColor = moveIndexZeroBased % 2 === 0 ? 'white' : 'black'
+    const playerMoves = movingColor === 'white' ? result.white.moves : result.black.moves
+    
+    // Calculate which move number for this player (0-indexed within their moves)
+    const playerMoveIndex = Math.floor(moveIndexZeroBased / 2)
+    
+    // Get the move data
+    const moveData = playerMoves[playerMoveIndex]
+    if (!moveData || !moveData.eval_after_move) return null
+    
+    const eval_data = moveData.eval_after_move
+    const raw_score = eval_data.raw_score
+    
+    return {
+      score: raw_score >= 0 ? `+${raw_score.toFixed(2)}` : raw_score.toFixed(2),
+      centipions: Math.round(raw_score * 100),
+      advantage_color: eval_data.advantage_color,
+      bar_percentage: eval_data.bar_percentage,
+      raw_score: raw_score
+    }
+  }, [result, index])
+
+  // Get mate info for current move
+  const currentMoveMateInfo = useMemo(() => {
+    if (!result || index <= 0) return null
+    
+    // Same logic as evaluation data
+    const moveIndexZeroBased = index - 1
+    const movingColor = moveIndexZeroBased % 2 === 0 ? 'white' : 'black'
+    const playerMoves = movingColor === 'white' ? result.white.moves : result.black.moves
+    
+    // Calculate which move number for this player (0-indexed within their moves)
+    const playerMoveIndex = Math.floor(moveIndexZeroBased / 2)
+    
+    // Get the move data
+    const moveData = playerMoves[playerMoveIndex]
+    if (!moveData || !moveData.mate_info) return null
+    
+    const mate_data = moveData.mate_info
+    return {
+      is_mate_sequence: mate_data.is_mate_sequence,
+      mate_in: mate_data.mate_in,
+      winning_side: mate_data.winning_side,
+      display_text: mate_data.is_mate_sequence ? `M${mate_data.mate_in}` : ''
+    }
+  }, [result, index])
+
+  // Detect if current move is checkmate (indicated by # in SAN)
+  const currentMoveIsCheckmate = useMemo(() => {
+    if (!result || index <= 0) return false
+    
+    const moveIndexZeroBased = index - 1
+    const movingColor = moveIndexZeroBased % 2 === 0 ? 'white' : 'black'
+    const playerMoves = movingColor === 'white' ? result.white.moves : result.black.moves
+    const playerMoveIndex = Math.floor(moveIndexZeroBased / 2)
+    
+    const moveData = playerMoves[playerMoveIndex]
+    if (!moveData) return false
+    
+    // Check if move notation ends with # (checkmate)
+    return moveData.san?.endsWith('#') || false
+  }, [result, index])
+
+  // Determine checkmate result (1-0 for white win, 0-1 for black win)
+  const checkmateResult = useMemo(() => {
+    if (!currentMoveIsCheckmate || index <= 0) return null
+    
+    // If checkmate happened, the player who just moved won
+    const moveIndexZeroBased = index - 1
+    const movingColor = moveIndexZeroBased % 2 === 0 ? 'white' : 'black'
+    
+    return movingColor === 'white' ? '1-0' : '0-1'
+  }, [currentMoveIsCheckmate, index])
+
+  // Build move quality map (1-indexed) for MovesPanel coloring
+  const moveQualityMap = useMemo(() => {
+    if (!result) return new Map()
+    
+    const map = new Map()
+    
+    // Add white moves
+    result.white.moves.forEach((moveData, playerMoveIndex) => {
+      const moveIndex = playerMoveIndex * 2 + 1 // 1-indexed: after white's move
+      map.set(moveIndex, { quality: moveData.quality })
+    })
+    
+    // Add black moves
+    result.black.moves.forEach((moveData, playerMoveIndex) => {
+      const moveIndex = playerMoveIndex * 2 + 2 // 1-indexed: after black's move
+      map.set(moveIndex, { quality: moveData.quality })
+    })
+    
+    return map
+  }, [result])
+
+  // Get best move for current position (if available)
+  const currentBestMove = useMemo(() => {
+    if (!result || index <= 0) return null
+    
+    const moveIndexZeroBased = index - 1
+    const movingColor = moveIndexZeroBased % 2 === 0 ? 'white' : 'black'
+    const playerMoves = movingColor === 'white' ? result.white.moves : result.black.moves
+    
+    const playerMoveIndex = Math.floor(moveIndexZeroBased / 2)
+    const moveData = playerMoves[playerMoveIndex]
+    
+    return moveData?.best_move || null
+  }, [result, index])
+
+  // Determine which player made the last move
+  const lastMovingColor = useMemo(() => {
+    if (index <= 0) return null
+    const moveIndexZeroBased = index - 1
+    return moveIndexZeroBased % 2 === 0 ? 'white' : 'black'
+  }, [index])
 
   return (
     <div className="min-h-screen">
@@ -138,17 +287,36 @@ export default function GamePage() {
           {pgn && (
             <>
               <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
-                {/* Board Section */}
-                <BoardSection
-                  orientation={orientation}
-                  chessFen={chessAt.fen()}
-                  lastMoveSquares={lastMoveSquares}
-                  topPlayer={orientation === 'white' ? (blackMeta) : (whiteMeta)}
-                  bottomPlayer={orientation === 'white' ? whiteMeta : blackMeta}
-                />
+                <div className="flex gap-4 items-stretch">
+                  {/* Evaluation Bar - on the left of the board */}
+                  {result && (
+                    <div className="w-12 rounded border border-gray-300 overflow-hidden">
+                      <EvaluationBar
+                        eval_data={currentMoveEvaluation}
+                        mate_info={currentMoveMateInfo}
+                        orientation={orientation}
+                        finalResult={checkmateResult || resultMessage}
+                      />
+                    </div>
+                  )}
+                  
+                  <div className="flex flex-col gap-4 h-full">
+                    {/* Board Section */}
+                    <BoardSection
+                      orientation={orientation}
+                      chessFen={chessAt.fen()}
+                      lastMoveSquares={lastMoveSquares}
+                      topPlayer={orientation === 'white' ? (blackMeta) : (whiteMeta)}
+                      bottomPlayer={orientation === 'white' ? whiteMeta : blackMeta}
+                      bestMove={currentBestMove}
+                      isBestMoveForTop={lastMovingColor === (orientation === 'white' ? 'black' : 'white')}
+                    />
+                  </div>
+                </div>
                 
-                {/* Flip Button - centered between board and moves */}
-                <div className="flex items-center justify-center">
+                {/* Control Buttons - Flip and Analyze */}
+                <div className="flex flex-col items-center justify-center gap-2">
+                  {/* Flip Button */}
                   <button
                     onClick={() => setOrientation(o => o === 'white' ? 'black' : 'white')}
                     className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-white/10 border border-white/20 hover:border-white/40 rounded transition-all"
@@ -156,131 +324,130 @@ export default function GamePage() {
                   >
                     <SlLoop className="w-4 h-4 text-gray-300 hover:text-white rotate-90" />
                   </button>
+                  
+                  {/* Analyze Button */}
+                  {id && !isAnalyzing && (
+                    <button
+                      onClick={() => {
+                        setIsAnalyzing(true)
+                      }}
+                      className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-white/10 border border-white/20 hover:border-white/40 rounded transition-all"
+                      title="Analyser cette partie"
+                    >
+                      <BiSearch className="w-4 h-4 text-gray-300 hover:text-white" />
+                    </button>
+                  )}
                 </div>
 
-                {/* Moves Panel */}
-                <MovesPanel
-                  moves={effectiveMoves}
-                  index={index}
-                  setIndex={setIndex}
-                  loading={loading}
-                  error={error}
-                  pgn={pgn}
-                  date={date}
-                  result={resultMessage}
-                  labels={{
-                    moves: t('game.moves', 'Coups'),
-                    loading: t('loading', 'Chargement...'),
-                    noMoves: t('game.noMoves', 'Aucun coup parsé'),
-                    noPGN: t('game.noPGN', 'Aucune partie')
-                  }}
-                />
+                {/* Moves Panel + Analysis Table */}
+                <div className="flex flex-row gap-4 flex-1 min-w-0 h-full">
+                  {/* Moves Panel */}
+                  <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+                    <MovesPanel
+                      moves={effectiveMoves}
+                      index={index}
+                      setIndex={setIndex}
+                      loading={loading}
+                      error={error}
+                      pgn={pgn}
+                      date={date}
+                      result={resultMessage}
+                      moveQuality={isAnalyzing ? moveQualityMap : undefined}
+                      labels={{
+                        moves: t('game.moves', 'Coups'),
+                        loading: t('loading', 'Chargement...'),
+                        noMoves: t('game.noMoves', 'Aucun coup parsé'),
+                        noPGN: t('game.noPGN', 'Aucune partie')
+                      }}
+                    />
+                    
+                    {/* Progress Bar - Under Moves Panel */}
+                    {isAnalyzing && wsIsAnalyzing && (
+                      <div className="w-full mt-2 space-y-1">
+                        <div className="flex items-center justify-between px-1">
+                          <span className="text-xs text-gray-400">
+                            {t('analysis.progress', 'Analyse')}: {Math.round(progress?.progress || 0)}%
+                          </span>
+                        </div>
+                        <div className="w-full h-0.5 bg-gray-700 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary transition-all duration-300"
+                            style={{ width: `${progress?.progress || 0}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Analysis Stats Table - Beside Moves Panel */}
+                  {isAnalyzing && result && (
+                    <div className="card p-6 space-y-4 max-w-[280px] min-w-0 overflow-auto">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold text-lg">
+                          {t('analysis.title', 'Analyse')}
+                        </h3>
+                      </div>
+
+                      {/* Analysis Stats Table */}
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b border-gray-600">
+                              <th className="text-center py-2 px-2 text-gray-400 text-sm font-semibold">{result.white.player.split(' ')[0]}</th>
+                              <th className="text-center py-2 px-2 text-gray-400 text-xs"></th>
+                              <th className="text-center py-2 px-2 text-gray-400 text-sm font-semibold">{result.black.player.split(' ')[0]}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="border-b border-gray-700 hover:bg-gray-800/50">
+                              <td className="text-center py-2 px-2 text-green-400 font-semibold text-lg">{result.white.stats.excellent}</td>
+                              <td className="text-center py-2 px-2 text-2xl">⭐</td>
+                              <td className="text-center py-2 px-2 text-green-400 font-semibold text-lg">{result.black.stats.excellent}</td>
+                            </tr>
+                            <tr className="border-b border-gray-700 hover:bg-gray-800/50">
+                              <td className="text-center py-2 px-2 text-blue-400 font-semibold text-lg">{result.white.stats.good}</td>
+                              <td className="text-center py-2 px-2 text-2xl">✓</td>
+                              <td className="text-center py-2 px-2 text-blue-400 font-semibold text-lg">{result.black.stats.good}</td>
+                            </tr>
+                            <tr className="border-b border-gray-700 hover:bg-gray-800/50">
+                              <td className="text-center py-2 px-2 text-purple-400 font-semibold text-lg">{result.white.stats.theoretical}</td>
+                              <td className="text-center py-2 px-2 text-2xl">📖</td>
+                              <td className="text-center py-2 px-2 text-purple-400 font-semibold text-lg">{result.black.stats.theoretical}</td>
+                            </tr>
+                            <tr className="border-b border-gray-700 hover:bg-gray-800/50">
+                              <td className="text-center py-2 px-2 text-yellow-400 font-semibold text-lg">{result.white.stats.inaccuracy}</td>
+                              <td className="text-center py-2 px-2 text-2xl">⚠️</td>
+                              <td className="text-center py-2 px-2 text-yellow-400 font-semibold text-lg">{result.black.stats.inaccuracy}</td>
+                            </tr>
+                            <tr className="border-b border-gray-700 hover:bg-gray-800/50">
+                              <td className="text-center py-2 px-2 text-orange-400 font-semibold text-lg">{result.white.stats.mistake}</td>
+                              <td className="text-center py-2 px-2 text-2xl">❌</td>
+                              <td className="text-center py-2 px-2 text-orange-400 font-semibold text-lg">{result.black.stats.mistake}</td>
+                            </tr>
+                            <tr className="hover:bg-gray-800/50">
+                              <td className="text-center py-2 px-2 text-red-400 font-semibold text-lg">{result.white.stats.blunder}</td>
+                              <td className="text-center py-2 px-2 text-2xl">💥</td>
+                              <td className="text-center py-2 px-2 text-red-400 font-semibold text-lg">{result.black.stats.blunder}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Error Display */}
+                      {analysisError && (
+                        <div className="p-2 bg-red-900/20 border border-red-500/50 rounded text-red-200 text-xs mt-2">
+                          {t('analysis.error', 'Erreur')}: {analysisError}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Analyze Button */}
-              {id && !isAnalyzing && (
-                <div className="flex justify-center mt-6">
-                  <button
-                    onClick={() => {
-                      setIsAnalyzing(true)
-                    }}
-                    className="btn-primary"
-                  >
-                    {t('game.analyze', 'Analyser cette partie')}
-                  </button>
-                </div>
-              )}
-
-              {/* Player Selection for Analysis */}
-              {isAnalyzing && !analyzedPlayer && (
-                <div className="card p-6 space-y-4 flex justify-center">
-                  <div className="space-y-4 w-full max-w-md">
-                    <h2 className="font-semibold text-lg">
-                      {t('analysis.selectPlayer', 'Sélectionner le joueur à analyser')}
-                    </h2>
-                    <div className="flex gap-2 flex-col">
-                      {headers.White && (
-                        <button
-                          onClick={() => setAnalyzedPlayer(headers.White)}
-                          className="btn-primary"
-                        >
-                          {headers.White} (Blanc)
-                        </button>
-                      )}
-                      {headers.Black && (
-                        <button
-                          onClick={() => setAnalyzedPlayer(headers.Black)}
-                          className="btn-primary"
-                        >
-                          {headers.Black} (Noir)
-                        </button>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => {
-                        setIsAnalyzing(false)
-                        setAnalyzedPlayer('')
-                      }}
-                      className="btn-secondary w-full"
-                    >
-                      {t('common.cancel', 'Annuler')}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Analysis Display */}
-              {isAnalyzing && analyzedPlayer && (
-                <div className="card p-6 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="font-semibold text-lg">
-                      {t('analysis.title', 'Analyse de')} {analyzedPlayer}
-                    </h2>
-                    <button
-                      onClick={() => {
-                        setIsAnalyzing(false)
-                        setAnalyzedPlayer('')
-                      }}
-                      className="btn-ghost text-sm"
-                    >
-                      ✕ {t('common.close', 'Fermer')}
-                    </button>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-xs text-gray-400">
-                      <span>{t('analysis.progress', 'Analyse en cours')}</span>
-                      <span>0%</span>
-                    </div>
-                    <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                      <div className="h-full w-0 bg-primary transition-all duration-300"></div>
-                    </div>
-                  </div>
-
-                  {/* Stats Placeholder */}
-                  <div className="grid grid-cols-5 gap-2 mt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-400">0</div>
-                      <div className="text-xs text-gray-400">{t('analysis.excellent', 'Excellents')}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-400">0</div>
-                      <div className="text-xs text-gray-400">{t('analysis.good', 'Bons')}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-yellow-400">0</div>
-                      <div className="text-xs text-gray-400">{t('analysis.inaccuracy', 'Imprécis')}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-400">0</div>
-                      <div className="text-xs text-gray-400">{t('analysis.mistake', 'Erreurs')}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-red-400">0</div>
-                      <div className="text-xs text-gray-400">{t('analysis.blunder', 'Blunders')}</div>
-                    </div>
-                  </div>
+              {/* Analysis Display & Moves Panel Side by Side */}
+              {isAnalyzing && (
+                <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
+                  {/* Empty - analysis is now integrated with moves panel above */}
                 </div>
               )}
             </>
