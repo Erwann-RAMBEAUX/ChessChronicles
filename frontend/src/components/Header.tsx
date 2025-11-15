@@ -35,7 +35,8 @@ export function Header() {
     <header className="sticky top-0 z-10 bg-surface/80 backdrop-blur border-b border-white/5">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-4">
         <Link to="/" className="flex items-center gap-2 text-xl font-semibold hover:text-primary transition-colors">
-          <span className="text-primary">♔</span> {t('app.title')}
+          <img src="/favicon.ico" alt="ChessChronicles logo" className="h-8 w-8" />
+          {t('app.title')}
         </Link>
         <nav className="ml-auto hidden md:flex gap-6 text-sm text-gray-300">
           {navItems.map((item) => (
