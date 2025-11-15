@@ -3,7 +3,7 @@ ChessChronicles Backend - FastAPI Server
 Real-time chess game analysis using Stockfish engine with CPL (Centipion Loss) classification.
 WebSocket endpoint for streaming analysis results to frontend.
 """
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, Request
 from fastapi.middleware.cors import CORSMiddleware
 import chess
 import chess.pgn
@@ -40,6 +40,14 @@ app = FastAPI(
     version="1.0",
     description="Real-time chess analysis using Stockfish"
 )
+
+# Middleware to log incoming requests
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log incoming HTTP requests"""
+    logger.info(f"Incoming request: {request.method} {request.url.path}")
+    response = await call_next(request)
+    return response
 
 # Configure CORS to allow frontend communication
 app.add_middleware(

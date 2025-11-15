@@ -13,13 +13,16 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends stockfish && \
     rm -rf /var/lib/apt/lists/*
 
+# Définir la variable d'environnement pour le chemin de Stockfish dans le conteneur
+ENV STOCKFISH_PATH=/usr/games/stockfish
+
 # Étape 3: Copier et installer les dépendances Python
 # Copier d'abord le fichier des dépendances pour profiter de la mise en cache de Docker
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Étape 4: Copier le code source de l'application
-COPY . .docker logs chesschronicles-api
+COPY . .
 
 # Étape 5: Commande pour lancer l'application
 # Render définit automatiquement la variable d'environnement PORT.
