@@ -265,7 +265,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             onClick={() => setIndex(0)}
             disabled={index === 0 || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="First move"
+            title={t('game.firstMove', 'Premier coup')}
           >
             <SlControlStart className="w-5 h-5 text-white" />
           </button>
@@ -275,7 +275,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             onClick={() => setIndex(i => Math.max(0, i - 1))}
             disabled={index === 0 || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Previous move"
+            title={t('game.previousMove', 'Coup précédent')}
           >
             <SlArrowLeft className="w-5 h-5 text-white" />
           </button>
@@ -285,7 +285,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             onClick={() => setIsPlaying(!isPlaying)}
             disabled={moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-primary/20 hover:bg-primary/30 disabled:opacity-40 disabled:hover:bg-primary/20 border border-primary/40 rounded transition-all"
-            title={isPlaying ? "Pause" : "Play"}
+            title={isPlaying ? t('game.pause', 'Pause') : t('game.play', 'Lecture')}
           >
             {isPlaying ? (
               <SlControlPause className="w-5 h-5 text-primary" />
@@ -299,7 +299,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             onClick={() => setIndex(i => Math.min(moves.length, i + 1))}
             disabled={index >= moves.length || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Next move"
+            title={t('game.nextMove', 'Coup suivant')}
           >
             <SlArrowRight className="w-5 h-5 text-white" />
           </button>
@@ -309,7 +309,7 @@ export const MovesPanel: React.FC<MovesPanelProps> = ({ moves, index, setIndex, 
             onClick={() => setIndex(moves.length)}
             disabled={index >= moves.length || moves.length === 0}
             className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 border border-white/20 rounded transition-all"
-            title="Last move"
+            title={t('game.lastMove', 'Dernier coup')}
           >
             <SlControlEnd className="w-5 h-5 text-white" />
           </button>

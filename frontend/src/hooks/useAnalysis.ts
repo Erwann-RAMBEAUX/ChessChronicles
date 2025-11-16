@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { Chess } from 'chess.js'
+import { useChessStore } from '../store'
 
 export interface AnalysisProgress {
   type: 'start' | 'progress' | 'complete' | 'error'
   totalMoves?: number
   white?: string
   black?: string
-  gameId?: string
   moveIndex?: number
   progress?: number
   movesAnalyzed?: number
@@ -42,7 +43,6 @@ export interface PlayerStats {
 }
 
 export interface AnalysisResult {
-  gameId: string
   white: {
     player: string
     stats: PlayerStats
@@ -56,19 +56,34 @@ export interface AnalysisResult {
 }
 
 export function useAnalysis() {
+  const { stockfishVersion, stockfishDepth } = useChessStore()
   const [progress, setProgress] = useState<AnalysisProgress | null>(null)
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [isAnalyzing, setIsAnalyzingState] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const wsRef = useRef<WebSocket | null>(null)
+  const engineRef = useRef<any | null>(null)
   const isAnalyzingRef = useRef(false)
   const hasStartedRef = useRef(false)
 
-  const startAnalysis = useCallback((pgn: string, gameId: string, analyzedPlayer: string) => {
-    // Prevent multiple simultaneous analyses
-    if (isAnalyzingRef.current || hasStartedRef.current) {
-      return
+  // simple helper to parse UCI "info" lines
+  const parseUciScore = (line: string) => {
+    // lines contain "score cp <n>" or "score mate <n>"
+    const parts = line.split(' ')
+    const idx = parts.indexOf('score')
+    if (idx === -1) return null
+    if (parts[idx + 1] === 'cp') {
+      const cp = parseInt(parts[idx + 2], 10)
+      return { cp }
     }
+    if (parts[idx + 1] === 'mate') {
+      const m = parseInt(parts[idx + 2], 10)
+      return { mate: m }
+    }
+    return null
+  }
+
+  const startAnalysis = useCallback(async (pgn: string, analyzedPlayer: string) => {
+    if (isAnalyzingRef.current || hasStartedRef.current) return
 
     hasStartedRef.current = true
     setProgress(null)
@@ -77,130 +92,189 @@ export function useAnalysis() {
     setIsAnalyzingState(true)
     isAnalyzingRef.current = true
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'localhost:8000'
-    // Remove http:// or https:// if present in VITE_BACKEND_URL
-    const cleanBackendUrl = backendUrl.replace(/^https?:\/\//, '')
-    const wsUrl = `${protocol}//${cleanBackendUrl}/ws/analyze`
-
     try {
-      wsRef.current = new WebSocket(wsUrl)
+      // Prepare moves and players
+      const chess = new Chess()
+      chess.loadPgn(pgn)
+      const histVerbose = chess.history({ verbose: true }) as Array<any>
+      const uciMoves = histVerbose.map(m => `${m.from}${m.to}${m.promotion ? m.promotion : ''}`)
+      const whitePlayer = (chess.header().White as string) || 'White'
+      const blackPlayer = (chess.header().Black as string) || 'Black'
 
-      wsRef.current.onopen = () => {
-        wsRef.current?.send(
-          JSON.stringify({
-            pgn,
-            game_id: gameId
-          })
-        )
+      setProgress({ type: 'start', totalMoves: uciMoves.length, white: whitePlayer, black: blackPlayer })
+
+      // spawn engine as a Web Worker served from public/stockfish/
+      const enginePath = stockfishVersion === 'lite' 
+        ? '/stockfish/stockfish-17.1-lite-single.js' 
+        : '/stockfish/stockfish-17.1-single.js'
+      const engine = new Worker(enginePath)
+      engineRef.current = engine
+
+      let pendingResolve: ((v: any) => void) | null = null
+      let lastInfo: string | null = null
+
+      engine.onmessage = (e: MessageEvent) => {
+        const line = typeof e.data === 'string' ? e.data : (e.data && e.data.data) || ''
+        // some builds send lines with trailing newlines; normalize
+        try { console.debug('[stockfish] ->', line) } catch {}
+        lastInfo = line
+        // bestmove signals end of a query
+        if (line.startsWith('bestmove') && pendingResolve) {
+          pendingResolve(lastInfo)
+          pendingResolve = null
+        }
       }
 
-      wsRef.current.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
+      // init
+      engine.postMessage('uci')
+      engine.postMessage('isready')
 
-          switch (data.type) {
-            case 'analysis_start':
-              setProgress({
-                type: 'start',
-                totalMoves: data.total_moves,
-                white: data.white,
-                black: data.black,
-                gameId: data.game_id
-              })
-              break
-
-            case 'analysis_progress':
-              setProgress({
-                type: 'progress',
-                moveIndex: data.move_index,
-                progress: data.progress,
-                movesAnalyzed: data.moves_analyzed
-              })
-              break
-
-            case 'analysis_complete':
-              setResult({
-                gameId: data.game_id,
-                white: {
-                  player: data.white.player,
-                  stats: data.white.stats,
-                  moves: data.white.moves
-                },
-                black: {
-                  player: data.black.player,
-                  stats: data.black.stats,
-                  moves: data.black.moves
+      const evaluatePosition = (movesSlice: string[], depth = stockfishDepth, timeoutMs = 10000) => {
+        return new Promise<{ cp: number | null; mate: number | null; bestmove?: string | null }>((resolve) => {
+          let lastLines = ''
+          const onMessage = (e: MessageEvent) => {
+            const line = typeof e.data === 'string' ? e.data : (e.data && e.data.data) || ''
+            if (!line) return
+            // accumulate
+            lastLines = (lastLines ? lastLines + '\n' : '') + line
+            // if bestmove reached, parse and resolve
+            if (line.startsWith('bestmove')) {
+              // parse bestmove
+              const parts = line.split(' ')
+              const bestmove = parts[1] || null
+              // try to find last score in accumulated lines
+              const lines = lastLines.split('\n')
+              let bestScore: { cp?: number; mate?: number } | null = null
+              for (let i = lines.length - 1; i >= 0; i--) {
+                const parsed = parseUciScore(lines[i])
+                if (parsed && (parsed.cp !== undefined || parsed.mate !== undefined)) {
+                  bestScore = parsed
+                  break
                 }
-              })
-              setProgress({
-                type: 'complete'
-              })
-              setIsAnalyzingState(false)
-              isAnalyzingRef.current = false
-              hasStartedRef.current = false
-              break
-
-            case 'analysis_error':
-              setError(data.error)
-              setProgress({
-                type: 'error',
-                error: data.error
-              })
-              setIsAnalyzingState(false)
-              isAnalyzingRef.current = false
-              hasStartedRef.current = false
-              break
+              }
+              engine.removeEventListener('message', onMessage)
+              if (!bestScore) return resolve({ cp: null, mate: null, bestmove })
+              return resolve({ cp: bestScore.cp ?? null, mate: bestScore.mate ?? null, bestmove })
+            }
           }
-        } catch (e) {
-          console.error('Error parsing analysis message:', e)
-        }
-      }
 
-      wsRef.current.onerror = (event) => {
-        const errorMsg = 'Erreur de connexion WebSocket'
-        console.error('WebSocket error:', event)
-        setError(errorMsg)
-        setProgress({
-          type: 'error',
-          error: errorMsg
+          // attach one-time listener
+          engine.addEventListener('message', onMessage)
+
+          // send position and go
+          const posCmd = movesSlice.length ? `position startpos moves ${movesSlice.join(' ')}` : 'position startpos'
+          try {
+            engine.postMessage(posCmd)
+            engine.postMessage(`go depth ${depth}`)
+          } catch (err) {
+            engine.removeEventListener('message', onMessage)
+            return resolve({ cp: null, mate: null, bestmove: null })
+          }
+
+          // timeout fallback
+          const to = setTimeout(() => {
+            engine.removeEventListener('message', onMessage)
+            // try to parse any gathered info
+            const lines = lastLines.split('\n')
+            let bestScore: { cp?: number; mate?: number } | null = null
+            for (let i = lines.length - 1; i >= 0; i--) {
+              const parsed = parseUciScore(lines[i])
+              if (parsed && (parsed.cp !== undefined || parsed.mate !== undefined)) {
+                bestScore = parsed
+                break
+              }
+            }
+            clearTimeout(to)
+            resolve({ cp: bestScore?.cp ?? null, mate: bestScore?.mate ?? null, bestmove: null })
+          }, timeoutMs)
         })
-        setIsAnalyzingState(false)
-        isAnalyzingRef.current = false
-        hasStartedRef.current = false
       }
 
-      wsRef.current.onclose = () => {
-        if (isAnalyzingRef.current && !result) {
-          const errorMsg = 'Connection closed'
-          setError(errorMsg)
-          setProgress({
-            type: 'error',
-            error: errorMsg
-          })
-          setIsAnalyzingState(false)
-          isAnalyzingRef.current = false
-          hasStartedRef.current = false
+      const whiteMoves: MoveAnalysis[] = []
+      const blackMoves: MoveAnalysis[] = []
+
+      for (let i = 0; i < uciMoves.length; i++) {
+        if (!isAnalyzingRef.current) break
+
+        // evaluate position BEFORE the move (and capture engine best move)
+        const beforeSlice = uciMoves.slice(0, i)
+        const beforeEval = await evaluatePosition(beforeSlice)
+
+        // evaluate position AFTER the actual move
+        const afterSlice = uciMoves.slice(0, i + 1)
+        const afterEval = await evaluatePosition(afterSlice)
+
+        // Build MoveAnalysis entry
+        const san = histVerbose[i]?.san || ''
+        const color = i % 2 === 0 ? 'white' : 'black'
+
+  // compute raw score in pawns (cp/100) and a bar percentage (0-100) where 50 == equal
+  const rawScore = afterEval.cp !== null ? afterEval.cp / 100 : (afterEval.mate !== null ? (afterEval.mate > 0 ? 9999 : -9999) : 0)
+  const advantage_color = rawScore >= 0 ? 'white' : 'black'
+  // Use centipawns for percentage mapping to keep direction consistent
+  const cp = afterEval.cp !== null ? afterEval.cp : (afterEval.mate !== null ? (afterEval.mate > 0 ? 20000 : -20000) : 0)
+  const MAX_CP = 2000 // cap at ±2000 centipawns (20 pawns) for scaling
+  const cpClamped = Math.max(-MAX_CP, Math.min(MAX_CP, cp))
+  const bar_percentage = Math.round(50 + (cpClamped / MAX_CP) * 50)
+
+        const moveAnalysis: MoveAnalysis = {
+          index: i + 1,
+          san,
+          color: color as 'white' | 'black',
+          quality: 'unknown',
+          best_move: beforeEval.bestmove ?? null,
+          eval_after_move: {
+            advantage_color: advantage_color as 'white' | 'black',
+            bar_percentage: typeof bar_percentage === 'number' ? bar_percentage : 50,
+            raw_score: rawScore
+          },
+          mate_info: afterEval.mate !== null ? { is_mate_sequence: true, mate_in: Math.abs(afterEval.mate), winning_side: afterEval.mate > 0 ? 'white' : 'black' } : { is_mate_sequence: false, mate_in: null, winning_side: null }
         }
+
+        // set best_move if available from bestFromBefore evaluation (we didn't capture bestmove string, so leave null)
+  // debug log per move
+  try { console.debug('[analysis] move', i + 1, san, { cp: afterEval.cp, mate: afterEval.mate, rawScore, bestmove: beforeEval.bestmove ?? null, bar_percentage }) } catch {}
+
+  // push into respective color
+        if (color === 'white') whiteMoves.push(moveAnalysis)
+        else blackMoves.push(moveAnalysis)
+
+  // progress update
+  const prog = Math.round(((i + 1) / uciMoves.length) * 100)
+  try { console.debug('[analysis] progress', i + 1, '/', uciMoves.length, prog + '%') } catch {}
+  setProgress({ type: 'progress', moveIndex: i + 1, progress: prog, movesAnalyzed: i + 1 })
       }
+
+      const assembled: AnalysisResult = {
+        white: { player: whitePlayer, stats: { theoretical: 0, excellent: 0, good: 0, inaccuracy: 0, mistake: 0, blunder: 0, unknown: 0, total: whiteMoves.length }, moves: whiteMoves },
+        black: { player: blackPlayer, stats: { theoretical: 0, excellent: 0, good: 0, inaccuracy: 0, mistake: 0, blunder: 0, unknown: 0, total: blackMoves.length }, moves: blackMoves }
+      }
+
+  try { console.debug('[analysis] complete result', assembled) } catch {}
+  setResult(assembled)
+      setProgress({ type: 'complete' })
+      setIsAnalyzingState(false)
+      isAnalyzingRef.current = false
+      hasStartedRef.current = false
+      // terminate engine
+      try { engine.terminate && engine.terminate(); engineRef.current = null } catch {}
     } catch (e) {
-      const errorMsg = e instanceof Error ? e.message : 'Connection error'
-      console.error('Analysis error:', errorMsg)
+      const errorMsg = e instanceof Error ? e.message : 'Analysis error'
       setError(errorMsg)
-      setProgress({
-        type: 'error',
-        error: errorMsg
-      })
+      setProgress({ type: 'error', error: errorMsg })
       setIsAnalyzingState(false)
       isAnalyzingRef.current = false
       hasStartedRef.current = false
     }
-  }, [result])
+  }, [stockfishVersion, stockfishDepth])
 
   const stopAnalysis = useCallback(() => {
-    if (wsRef.current) {
-      wsRef.current.close()
-    }
+    try {
+      if (engineRef.current) {
+        engineRef.current.terminate && engineRef.current.terminate()
+        engineRef.current = null
+      }
+    } catch {}
     setIsAnalyzingState(false)
     isAnalyzingRef.current = false
     hasStartedRef.current = false
@@ -208,9 +282,12 @@ export function useAnalysis() {
 
   useEffect(() => {
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close()
-      }
+      try {
+        if (engineRef.current) {
+          engineRef.current.terminate && engineRef.current.terminate()
+          engineRef.current = null
+        }
+      } catch {}
     }
   }, [])
 

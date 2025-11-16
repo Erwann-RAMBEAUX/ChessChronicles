@@ -35,14 +35,16 @@ export function GameCard({ game }: { game: Game }) {
           </button>
           <div className="text-sm text-gray-400">{t('card.type')}: {game.time_class}</div>
         </div>
-        <div className={`ml-auto px-2 py-1 rounded text-xs ${game.resultForUser==='win'?'bg-green-500/20 text-green-300': game.resultForUser==='loss'?'bg-red-500/20 text-red-300':'bg-yellow-500/20 text-yellow-300'}`}>{game.resultForUser}</div>
+        <div className={`ml-auto px-2 py-1 rounded text-xs ${game.resultForUser==='win'?'bg-green-500/20 text-green-300': game.resultForUser==='loss'?'bg-red-500/20 text-red-300':'bg-yellow-500/20 text-yellow-300'}`}>
+          {t(`result.${game.resultForUser}`)}
+        </div>
       </div>
       <div className="text-sm text-gray-300">{t('card.myElo')}: {typeof myRating === 'number' ? myRating : '—'}</div>
       <div className="flex gap-2">
         <button
           className="btn-ghost"
           onClick={() => {
-            navigate('/game', {
+            navigate('/analyze', {
               state: {
                 pgn: game.pgn,
                 username: game.userColor === 'white' ? game.white.username : game.black.username,
@@ -57,7 +59,7 @@ export function GameCard({ game }: { game: Game }) {
         <button
           className="btn-ghost"
           onClick={() => {
-            navigate('/game', {
+            navigate('/analyze', {
               state: {
                 pgn: game.pgn,
                 username: game.userColor === 'white' ? game.white.username : game.black.username,

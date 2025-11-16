@@ -1,21 +1,27 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useLanguageSync } from '../hooks/useLanguageSync'
+import { useChessStore } from '../store'
 
 export function Header() {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
+  const { clearCurrentGame } = useChessStore()
   useLanguageSync()
 
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true
+    // Special case: /game is active for both /game and /analyze
+    if (path === '/game' && (location.pathname === '/game' || location.pathname === '/analyze')) return true
     if (path !== '/' && location.pathname.startsWith(path)) return true
     return false
   }
 
   const handleGameNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
+    // Toujours effacer les données de la partie en cours du store
+    clearCurrentGame()
     // If we're already viewing a game (live or daily), dispatch reset event to clear it
     if (location.pathname.match(/\/(live|daily)\/game\//)) {
       window.dispatchEvent(new CustomEvent('resetGameForm'))

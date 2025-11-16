@@ -9,11 +9,9 @@ interface BoardSectionProps {
   lastMoveSquares: Record<string, any>
   topPlayer: PlayerMeta
   bottomPlayer: PlayerMeta
-  bestMove?: string | null // Best move suggestion for current position
-  isBestMoveForTop?: boolean // Whether best move is for top player
 }
 
-export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFen, lastMoveSquares, topPlayer, bottomPlayer, bestMove, isBestMoveForTop }) => {
+export const BoardSection: React.FC<BoardSectionProps> = ({ orientation, chessFen, lastMoveSquares, topPlayer, bottomPlayer}) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const boardRef = useRef<HTMLDivElement | null>(null)
   const [size, setSize] = useState(0)

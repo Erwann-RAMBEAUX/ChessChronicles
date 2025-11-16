@@ -4,8 +4,11 @@ import { fetchProfile, fetchStats, fetchStreamerInfo } from '../api/chessCom'
 import type { PlayerProfile, PlayerStats, TimeClassKey } from '../types'
 import { countryFromUrl, countryFlagEmoji } from '../types'
 import { FaTwitch } from 'react-icons/fa'
-
-// Centralized icons + unified rendering
+import { SiStackblitz } from 'react-icons/si'
+import { FiSun } from 'react-icons/fi'
+import { FaStopwatch } from 'react-icons/fa6'
+import { RiPuzzle2Fill } from "react-icons/ri";
+import { GiBulletBill } from "react-icons/gi";
 import { Icons } from '../icons'
 import { SvgIcon } from './SvgIcon'
 
@@ -13,7 +16,7 @@ import pawnUrl from '../assets/pawn.svg'
 import { useTranslation } from 'react-i18next'
 
 export function ProfileSummary() {
-  const { username } = useChessStore()
+  const { username, error: storeError } = useChessStore()
   const [profile, setProfile] = useState<PlayerProfile | null>(null)
   const [stats, setStats] = useState<PlayerStats | null>(null)
   const [loading, setLoading] = useState(false)
@@ -98,7 +101,8 @@ export function ProfileSummary() {
     return () => { cancelled = true; clearInterval(id) }
   }, [twitch?.url])
 
-  if (!username || error === 'error.userNotFound') return null
+  // Ne pas afficher si pas d'username, ou si erreur userNotFound dans le store ou dans le composant
+  if (!username || error === 'error.userNotFound' || storeError === 'error.userNotFound') return null
 
   return (
     <div className="card p-4">
@@ -111,10 +115,10 @@ export function ProfileSummary() {
         />
         <div>
           <div className="font-semibold flex items-center gap-2">
-            <span>{username || 'Utilisateur'}</span>
+            <span>{username || t('profile.user', 'Utilisateur')}</span>
             {flag && <span title={cc} className="text-lg">{flag}</span>}
             {twitch?.url && twitch.url.includes('twitch.tv') && (
-              <a href={twitch.url} target="_blank" rel="noopener noreferrer" className="h-7 w-7 rounded flex items-center justify-center" title="Ouvrir Twitch" style={{ backgroundColor: '#9146FF' }}>
+              <a href={twitch.url} target="_blank" rel="noopener noreferrer" className="h-7 w-7 rounded flex items-center justify-center" title={t('profile.openTwitch', 'Ouvrir Twitch')} style={{ backgroundColor: '#9146FF' }}>
                 <FaTwitch className="text-white text-sm" />
               </a>
             )}
@@ -139,7 +143,7 @@ export function ProfileSummary() {
       <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {/* Bullet */}
         <StatsTile
-          icon={<SvgIcon {...Icons.bullet} title={t('mode.bullet')} className="h-6 w-6 text-yellow-400" />}
+          icon={<GiBulletBill title={t('mode.bullet')} className="h-6 w-6 text-yellow-400" />}
           label={t('mode.bullet')}
           current={ratingLast('chess_bullet')}
           best={ratingBest('chess_bullet')}
@@ -148,7 +152,7 @@ export function ProfileSummary() {
         />
         {/* Blitz */}
         <StatsTile
-          icon={<SvgIcon {...Icons.blitz} title={t('mode.blitz')} className="h-6 w-6 text-yellow-400" />}
+          icon={<SiStackblitz title={t('mode.blitz')} className="h-6 w-6 text-yellow-400" />}
           label={t('mode.blitz')}
           current={ratingLast('chess_blitz')}
           best={ratingBest('chess_blitz')}
@@ -157,7 +161,7 @@ export function ProfileSummary() {
         />
         {/* Rapid */}
         <StatsTile
-          icon={<SvgIcon {...Icons.rapid} title={t('mode.rapid')} className="h-6 w-6 text-green-400" />}
+          icon={<FaStopwatch title={t('mode.rapid')} className="h-6 w-6 text-green-400" />}
           label={t('mode.rapid')}
           current={ratingLast('chess_rapid')}
           best={ratingBest('chess_rapid')}
@@ -166,7 +170,7 @@ export function ProfileSummary() {
         />
         {/* Daily */}
         <StatsTile
-          icon={<div className="relative inline-flex items-center"><SvgIcon {...Icons.daily} title={t('mode.daily')} className="h-6 w-6 text-yellow-400" /></div>}
+          icon={<FiSun title={t('mode.daily')} className="h-6 w-6 text-yellow-400" />}
           label={t('mode.daily')}
           current={ratingLast('chess_daily')}
           best={ratingBest('chess_daily')}
@@ -175,7 +179,7 @@ export function ProfileSummary() {
         />
         {/* Problems (Tactics) */}
         <div className="flex items-center gap-3 bg-white/5 rounded px-3 py-2">
-          <SvgIcon {...Icons.puzzle} title={t('profile.problems')} className="h-6 w-6" />
+          <RiPuzzle2Fill title={t('profile.problems')} className="h-6 w-6 text-orange-400" style={{transform: 'rotate(45deg) scaleX(-1)'}} />
           <div className="flex-1">
             <div className="text-xs text-gray-400">{t('profile.problems')}</div>
             <div className="font-semibold">{stats?.tactics?.highest?.rating ?? '—'}</div>
@@ -193,7 +197,7 @@ export function ProfileSummary() {
         </div>
       </div>
 
-  {loading && <div className="mt-2 text-xs text-gray-400">{i18n.language==='en' ? '(loading...)' : 'Chargement…'}</div>}
+  {loading && <div className="mt-2 text-xs text-gray-400">{t('loading', 'Chargement...')}</div>}
     </div>
   )
 }

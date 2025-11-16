@@ -1,6 +1,7 @@
 import { useFilteredGames, useChessStore } from '../store'
 import { GameCard } from './GameCard'
-import { Dropdown, type Option } from './ui/Dropdown'
+import { Dropdown } from './ui/Dropdown'
+import type { Option } from './ui/Dropdown'
 import { useTranslation } from 'react-i18next'
 
 export function GameList() {

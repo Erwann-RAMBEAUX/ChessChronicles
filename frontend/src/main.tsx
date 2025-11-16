@@ -6,6 +6,7 @@ import LegendaryPage from './routes/LegendaryPage'
 import NotFoundPage from './routes/NotFoundPage'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import GamePage from './routes/GamePage'
+import AnalyzePage from './routes/AnalyzePage'
 import './index.css'
 import './i18n'
 
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
   { path: '/player/:username', element: <ProfilePage /> },
   { path: '/legendary', element: <LegendaryPage /> },
   { path: '/game', element: <GamePage /> },
+  { path: '/analyze', element: <AnalyzePage /> },
   { path: '*', element: <NotFoundPage /> },
 ])
 

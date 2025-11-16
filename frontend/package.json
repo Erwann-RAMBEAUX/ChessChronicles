@@ -24,8 +24,6 @@
     "react-i18next": "^16.0.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^6.30.1",
-    "stockfish": "^17.1.0",
-    "stockfish.js": "^10.0.2",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

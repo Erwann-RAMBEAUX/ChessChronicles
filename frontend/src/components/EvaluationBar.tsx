@@ -1,148 +1,106 @@
-import React from 'react';
+import React, { useMemo } from 'react'
 
-interface EvaluationData {
-  score: string;
-  centipions: number;
-  advantage_color: 'white' | 'black';
-  bar_percentage: number;
-  raw_score: number;
+interface Props {
+  eval_data?: any | null
+  mate_info?: any | null
+  orientation?: 'white' | 'black'
+  finalResult?: string | null
+  className?: string
+  style?: React.CSSProperties
 }
 
-interface MateInfo {
-  is_mate_sequence: boolean;
-  mate_in: number | null;
-  winning_side: 'white' | 'black' | null;
-  display_text: string;
+const styles = {
+  evaluationBar: 'relative w-full h-full flex flex-col overflow-hidden rounded',
+  overBar: 'w-full transition-[height] duration-250',
+  evaluationText: 'absolute left-1/2 -translate-x-1/2 text-xs font-semibold pointer-events-none'
 }
 
-interface PositionStatus {
-  is_check: boolean;
-  is_checkmate: boolean;
-  is_stalemate: boolean;
-  status: 'check' | 'checkmate' | 'stalemate' | 'normal';
-}
+export function EvaluationBar({ eval_data, mate_info, orientation = 'white', finalResult, className = '', style = {} }: Props) {
+  if (!eval_data && !mate_info) return null
 
-interface EvaluationBarProps {
-  eval_data?: EvaluationData | null;
-  position_status?: PositionStatus | null;
-  mate_info?: MateInfo | null;
-  orientation?: 'white' | 'black';
-  finalResult?: string | null; // e.g., "1-0", "0-1", "1/2-1/2"
-}
+  // Build a small evaluation object compatible with the root logic
+  const evaluation = useMemo(() => {
+    // mate takes precedence
+    if (mate_info?.is_mate_sequence) {
+      const mateIn = mate_info.mate_in ?? 0
+      const winning = mate_info.winning_side
+      const signed = winning === 'white' ? Math.abs(mateIn) : -Math.abs(mateIn)
+      return { type: 'mate', value: signed }
+    }
 
-/**
- * Vertical evaluation bar like Chess.com
- * Displays a vertical bar with:
- * - White vs black percentage
- * - Numeric score at top and bottom
- * - Orients based on board (white at bottom or top)
- */
-export function EvaluationBar({
-  eval_data,
-  position_status,
-  mate_info,
-  orientation = 'white',
-  finalResult,
-}: EvaluationBarProps) {
-  if (!eval_data) {
-    return null;
-  }
+    // centipawn: convert raw_score (pawns) to centipawns
+    const raw = (eval_data?.raw_score ?? 0)
+    const cp = Math.round(raw * 100)
+    return { type: 'centipawn', value: cp }
+  }, [eval_data, mate_info])
 
-  // If game is finished, show final result
+  // Format evaluation text
+  const evaluationText = useMemo(() => {
+    if (evaluation.type === 'mate') {
+      return `M${Math.abs(evaluation.value)}`
+    }
+    const v = (evaluation.value ?? 0) / 100
+    return v >= 0 ? `+${v.toFixed(2)}` : v.toFixed(2)
+  }, [evaluation])
+
+  // Determine the bar height (overBarHeight) using same formula as root
+  const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v))
+
+  const overBarHeight = useMemo(() => {
+    if (evaluation.type === 'centipawn') {
+      // evaluation.value is in centipawns
+      return clamp(50 - (evaluation.value / 20), 5, 95)
+    } else {
+      // mate
+      const moveColour = orientation === 'white' ? 'white' : 'black'
+      return evaluation.value === 0 ? (moveColour === 'white' ? 0 : 100) : (evaluation.value > 0 ? 0 : 100)
+    }
+  }, [evaluation, orientation])
+
+  const flipped = orientation === 'black'
+
+  const textBottom = overBarHeight > 50 === flipped
+
+  // If finalResult, show final result similar to previous behaviour — keep full height
   if (finalResult && (finalResult === '1-0' || finalResult === '0-1' || finalResult === '1/2-1/2')) {
     return (
-      <div className="h-full flex flex-col rounded border border-gray-300 overflow-hidden bg-gray-900">
-        {/* White section */}
+      <div className={`${styles.evaluationBar} ${className}`} style={{ backgroundColor: flipped ? '#0c0c0c' : '#fff', ...style }}>
         <div
-          className="bg-white transition-all duration-300 ease-out flex flex-col items-center justify-center"
-          style={{ height: finalResult === '1-0' ? '100%' : finalResult === '1/2-1/2' ? '50%' : '0%', minHeight: '2px' }}
-        >
-          {(finalResult === '1-0' || finalResult === '1/2-1/2') && (
-            <span className="text-xs font-bold text-gray-800">
-              {finalResult === '1-0' ? '1-0' : '½'}
-            </span>
-          )}
-        </div>
+          className={styles.overBar}
+          style={{
+            backgroundColor: flipped ? '#fff' : '#0c0c0c',
+            height: flipped ? `calc(100% - ${overBarHeight}%)` : `${overBarHeight}%`
+          }}
+        />
 
-        {/* Black section */}
-        <div
-          className="bg-gray-900 transition-all duration-300 ease-out flex flex-col items-center justify-center"
-          style={{ height: finalResult === '0-1' ? '100%' : finalResult === '1/2-1/2' ? '50%' : '0%', minHeight: '2px' }}
+        <span
+          className={styles.evaluationText}
+          style={textBottom ? { bottom: '7px', color: overBarHeight > 50 ? '#fff' : '#000' } : { top: '7px', color: overBarHeight > 50 ? '#fff' : '#000' }}
         >
-          {(finalResult === '0-1' || finalResult === '1/2-1/2') && (
-            <span className="text-xs font-bold text-white">
-              {finalResult === '0-1' ? '0-1' : '½'}
-            </span>
-          )}
-        </div>
+          {finalResult === '1-0' ? '1-0' : finalResult === '0-1' ? '0-1' : '½'}
+        </span>
       </div>
-    );
+    )
   }
 
-  // bar_percentage from backend: 50 = equal, 0-50 = black advantage, 50-100 = white advantage
-  // This is ALWAYS from white's perspective
-  const backendBarPercentage = eval_data.bar_percentage;
-  
-  // Determine who is winning and format the score appropriately
-  const isWhiteWinning = eval_data.raw_score > 0.1;
-  const isBlackWinning = eval_data.raw_score < -0.1;
-  const isEqual = Math.abs(eval_data.raw_score) <= 0.1;
-  const scoreDisplay = Math.abs(eval_data.raw_score).toFixed(1);
-
-  // Check for mate sequence
-  const isMateSequence = mate_info?.is_mate_sequence;
-  const mateDisplay = isMateSequence ? `M${mate_info?.mate_in}` : null;
-  const displayText = mateDisplay || scoreDisplay;
-
-  // When orientation is 'white': white at BOTTOM, black at TOP
-  // When orientation is 'black': black at BOTTOM, white at TOP
-  // backendBarPercentage is always white's percentage
-  const whiteBottomPercent = backendBarPercentage;
-  const blackTopPercent = 100 - whiteBottomPercent;
-
   return (
-    <div className="h-full flex flex-col rounded border border-gray-300 overflow-hidden bg-gray-900">
-      {/* Top section */}
+    <div className={`${styles.evaluationBar} ${className}`} style={{ backgroundColor: flipped ? '#0c0c0c' : '#fff', ...style }}>
       <div
-        className={`${orientation === 'white' ? 'bg-gray-900' : 'bg-white'} transition-all duration-300 ease-out flex flex-col items-center justify-start pt-1`}
-        style={{ height: `${orientation === 'white' ? blackTopPercent : whiteBottomPercent}%`, minHeight: '2px' }}
-      >
-        {/* Show score in top section if appropriate */}
-        {orientation === 'white' && (
-          isBlackWinning || isEqual) && blackTopPercent > 12 && (
-          <span className="text-xs font-bold text-white">
-            {displayText}
-          </span>
-        )}
-        {orientation === 'black' && (
-          isWhiteWinning || isEqual) && whiteBottomPercent > 12 && (
-          <span className="text-xs font-bold text-gray-800">
-            {displayText}
-          </span>
-        )}
-      </div>
+        className={styles.overBar}
+        style={{
+          backgroundColor: flipped ? '#fff' : '#0c0c0c',
+          height: flipped ? `calc(100% - ${overBarHeight}%)` : `${overBarHeight}%`
+        }}
+      />
 
-      {/* Bottom section */}
-      <div
-        className={`${orientation === 'white' ? 'bg-white' : 'bg-gray-900'} transition-all duration-300 ease-out flex flex-col items-center justify-end pb-1`}
-        style={{ height: `${orientation === 'white' ? whiteBottomPercent : blackTopPercent}%`, minHeight: '2px' }}
+      <span
+        className={styles.evaluationText}
+        style={textBottom ? { bottom: '7px', color: overBarHeight > 50 ? '#fff' : '#000' } : { top: '7px', color: overBarHeight > 50 ? '#fff' : '#000' }}
       >
-        {/* Show score in bottom section if appropriate */}
-        {orientation === 'white' && (
-          isWhiteWinning || isEqual) && whiteBottomPercent > 12 && (
-          <span className="text-xs font-bold text-gray-800">
-            {displayText}
-          </span>
-        )}
-        {orientation === 'black' && (
-          isBlackWinning || isEqual) && blackTopPercent > 12 && (
-          <span className="text-xs font-bold text-white">
-            {displayText}
-          </span>
-        )}
-      </div>
+        {evaluationText}
+      </span>
     </div>
-  );
+  )
 }
 
-export default EvaluationBar;
+export default EvaluationBar

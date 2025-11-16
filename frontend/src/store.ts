@@ -18,6 +18,17 @@ type State = {
   pageSize: number
   loadId?: number
   abortCtl?: AbortController | null
+  // Stockfish settings
+  stockfishVersion: 'lite' | 'normal'
+  stockfishDepth: number
+  // Current game data (persisted for refresh)
+  currentGame?: {
+    pgn: string
+    username?: string
+    analyze?: boolean
+    white?: { username: string; rating?: number }
+    black?: { username: string; rating?: number }
+  }
 }
 
 /** Store actions for UI and data flow */
@@ -29,6 +40,10 @@ type Actions = {
   updateFilters: (p: Partial<Filters>) => void
   setPage: (n: number) => void
   setPageSize: (n: number) => void
+  setStockfishVersion: (v: 'lite' | 'normal') => void
+  setStockfishDepth: (d: number) => void
+  setCurrentGame: (game?: State['currentGame']) => void
+  clearCurrentGame: () => void
 }
 
 /** Initial/default filter configuration */
@@ -48,26 +63,33 @@ export const useChessStore = create<State & Actions>()(
       username: '',
       games: [],
       loading: false,
-  error: undefined,
-  errorDetails: undefined,
+      error: undefined,
+      errorDetails: undefined,
       filters: defaultFilters,
       suggestions: [],
       page: 1,
       pageSize: 15,
       abortCtl: null,
-  setUsername: (u) => set({ username: u, page: 1, error: undefined, errorDetails: undefined }),
-  reset: () => set({ games: [], loading: false, error: undefined, errorDetails: undefined, filters: defaultFilters, suggestions: [], page: 1 }),
-  abort: () => {
-    try {
-      get().abortCtl?.abort()
-    } catch {
-      // abort may fail silently
-    }
-    set({ abortCtl: null })
-  },
+      stockfishVersion: 'lite',
+      stockfishDepth: 16,
+      currentGame: undefined,
+      setUsername: (u) => set({ username: u, page: 1, error: undefined, errorDetails: undefined }),
+      reset: () => set({ games: [], loading: false, error: undefined, errorDetails: undefined, filters: defaultFilters, suggestions: [], page: 1 }),
+      setCurrentGame: (game) => set({ currentGame: game }),
+      clearCurrentGame: () => set({ currentGame: undefined }),
+      abort: () => {
+        try {
+          get().abortCtl?.abort()
+        } catch {
+          // abort may fail silently
+        }
+        set({ abortCtl: null })
+      },
       updateFilters: (p) => set((s) => ({ filters: { ...s.filters, ...p }, page: 1 })),
       setPage: (n) => set({ page: Math.max(1, Math.floor(n) || 1) }),
-  setPageSize: (n) => set({ pageSize: Math.max(1, Math.floor(n) || 15), page: 1 }),
+      setPageSize: (n) => set({ pageSize: Math.max(1, Math.floor(n) || 15), page: 1 }),
+      setStockfishVersion: (v) => set({ stockfishVersion: v }),
+      setStockfishDepth: (d) => set({ stockfishDepth: Math.max(1, Math.min(30, d)) }), // Clamp depth between 1 and 30
       loadGames: async () => {
         const username = get().username.trim()
         if (!username) return
@@ -161,7 +183,15 @@ export const useChessStore = create<State & Actions>()(
         }
       },
     }),
-    { name: 'chesschronicles-store', partialize: (s) => ({ username: s.username }) }
+    { 
+      name: 'chesschronicles-store', 
+      partialize: (s) => ({ 
+        username: s.username,
+        stockfishVersion: s.stockfishVersion,
+        stockfishDepth: s.stockfishDepth,
+        currentGame: s.currentGame
+      }) 
+    }
   )
 )
 

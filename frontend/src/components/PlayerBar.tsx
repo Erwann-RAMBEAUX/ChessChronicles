@@ -5,12 +5,9 @@ import type { PlayerMeta } from '../hooks/usePlayerAvatars'
 
 interface PlayerBarProps {
   player: PlayerMeta
-  secondary?: string
-  align?: 'top' | 'bottom'
-  className?: string
 }
 
-export const PlayerBar: React.FC<PlayerBarProps> = ({ player, secondary, className }) => {
+export const PlayerBar: React.FC<PlayerBarProps> = ({ player}) => {
   const navigate = useNavigate()
   const rating = player.rating
   
@@ -23,7 +20,7 @@ export const PlayerBar: React.FC<PlayerBarProps> = ({ player, secondary, classNa
   return (
     <button
       onClick={handleClick}
-      className={`font-semibold flex items-center gap-3 text-gray-100 bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/30 px-3 py-2 rounded-lg transition-colors ${className || ''}`}
+      className={`font-semibold flex items-center gap-3 text-gray-100 bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/30 px-3 py-2 rounded-lg transition-colors`}
     >
       <img
         src={player.avatar || pawnSvg}
@@ -41,7 +38,6 @@ export const PlayerBar: React.FC<PlayerBarProps> = ({ player, secondary, classNa
           </p>
         )}
       </div>
-      {secondary && <span className="text-gray-400 text-xs ml-2 flex-shrink-0">{secondary}</span>}
     </button>
   )
 }

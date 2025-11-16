@@ -1,6 +1,13 @@
 {
   "app": { "title": "ChessChronicles" },
-  "search": { "placeholder": "Ex: MagnusCarlsen", "load": "Charger les parties", "reload": "Recharger", "loading": "Chargement..." },
+  "search": { 
+    "placeholder": "Ex: MagnusCarlsen", 
+    "load": "Charger les parties", 
+    "reload": "Recharger", 
+    "loading": "Chargement...",
+    "profile": "Profil",
+    "playerPlaceholder": "Nom d'un joueur..."
+  },
   "filters": {
     "heading": "Filtres & Options de Tri",
     "modes": "Type de Partie",
@@ -104,6 +111,16 @@
     "noMoves": "Aucun coup parsé",
     "noPGN": "Aucune partie",
     "bestMove": "Meilleur Coup",
+    "analyze": "Analyser une partie",
+    "or": "Ou",
+    "flipBoard": "Retourner le plateau",
+    "analyzeGame": "Analyser cette partie",
+    "firstMove": "Premier coup",
+    "previousMove": "Coup précédent",
+    "nextMove": "Coup suivant",
+    "lastMove": "Dernier coup",
+    "play": "Lecture",
+    "pause": "Pause",
     "result": {
       "won_resignation": "a gagné par abandon",
       "won_checkmate": "a gagné par échec et mat",
@@ -111,16 +128,39 @@
       "draw_repetition": "nulle par répétition",
       "draw_stalemate": "nulle par pat",
       "draw_material": "nulle par matériel insuffisant",
-      "draw_agreement": "nulle par accord"
+      "draw_agreement": "nulle par accord",
+      "whiteWins": "Les blancs gagnent",
+      "blackWins": "Les noirs gagnent",
+      "white": "Les blancs",
+      "black": "Les noirs",
+      "playerWins": "{{player}} a gagné",
+      "draw": "Partie nulle"
+    },
+    "termination": {
+      "by": "par",
+      "checkmate": "échec et mat",
+      "time": "au temps",
+      "resignation": "abandon",
+      "stalemate": "pat",
+      "insufficient": "matériel insuffisant",
+      "repetition": "répétition",
+      "fiftyMoves": "règle des 50 coups",
+      "agreement": "accord mutuel"
     },
     "fallback": {
       "title": "Partie introuvable",
       "desc": "Réessayez avec un autre ID ou collez un PGN ci-dessous.",
-      "idPlaceholder": "Identifiant de la partie",
-      "retry": "Recharger",
       "cancelManual": "Annuler PGN",
       "pgnPlaceholder": "Collez un PGN complet ici",
-      "inject": "Utiliser ce PGN"
+      "inject": "Analyser ce PGN",
+      "invalidPgn": "PGN invalide",
+      "analyzeDesc": "Collez un PGN pour commencer l'analyse."
+    },
+    "error": {
+      "noMovesFound": "Aucun coup trouvé dans le PGN. Vérifiez le format.",
+      "illegalMove": "Le PGN contient des coups invalides.",
+      "invalidMove": "Coup invalide dans le PGN.",
+      "invalidPgnFormat": "Format PGN invalide."
     }
   },
   "loading": "Chargement...",
@@ -134,7 +174,9 @@
     "puzzleRush": "Puzzle Rush",
     "best": "Meilleur",
     "live": "Live",
-    "offline": "Hors ligne"
+    "offline": "Hors ligne",
+    "user": "Utilisateur",
+    "openTwitch": "Ouvrir Twitch"
   },
   "nav": { "home": "Accueil", "player": "Mes parties", "game": "Analyser une partie", "legendary": "Parties Légendaires" },
   "analysis": {
@@ -146,10 +188,19 @@
     "theoretical": "Theo",
     "inaccuracy": "Impr",
     "mistake": "Err",
-    "blunder": "Blun"
+    "blunder": "Blun",
+    "settings": {
+      "title": "Réglages de l'analyse",
+      "version": "Version de Stockfish",
+      "lite": "Lite",
+      "normal": "Normale",
+      "depth": "Profondeur (1-30)"
+    }
   },
   "common": {
-    "close": "Fermer"
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "save": "Enregistrer"
   },
   "legendary": {
     "comingSoon": "Cette section arrive très bientôt..."

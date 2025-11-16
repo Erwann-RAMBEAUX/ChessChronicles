@@ -112,6 +112,8 @@ export function countryFromUrl(url?: string): string | undefined {
 export function countryFlagEmoji(cc?: string): string | undefined {
   if (!cc) return undefined
   const code = cc.toUpperCase()
+  // Si le code est XX, retourner le drapeau international
+  if (code === 'XX') return '🌐'
   if (code.length !== 2) return undefined
   const A = 0x1f1e6
   return String.fromCodePoint(A + (code.charCodeAt(0) - 65)) + String.fromCodePoint(A + (code.charCodeAt(1) - 65))

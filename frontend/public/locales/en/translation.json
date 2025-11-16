@@ -1,6 +1,13 @@
 {
   "app": { "title": "ChessChronicles" },
-  "search": { "placeholder": "e.g., MagnusCarlsen", "load": "Load games", "reload": "Reload", "loading": "Loading..." },
+  "search": { 
+    "placeholder": "e.g., MagnusCarlsen", 
+    "load": "Load games", 
+    "reload": "Reload", 
+    "loading": "Loading...",
+    "profile": "Profile",
+    "playerPlaceholder": "Player name..."
+  },
   "filters": {
     "heading": "Filters & Sorting",
     "modes": "Game Type",
@@ -91,6 +98,16 @@
     "noMoves": "No moves parsed",
     "noPGN": "No game",
     "bestMove": "Best Move",
+    "analyze": "Analyze a game",
+    "or": "Or",
+    "flipBoard": "Flip board",
+    "analyzeGame": "Analyze this game",
+    "firstMove": "First move",
+    "previousMove": "Previous move",
+    "nextMove": "Next move",
+    "lastMove": "Last move",
+    "play": "Play",
+    "pause": "Pause",
     "result": {
       "won_resignation": "won by resignation",
       "won_checkmate": "won by checkmate",
@@ -98,16 +115,39 @@
       "draw_repetition": "drawn by repetition",
       "draw_stalemate": "drawn by stalemate",
       "draw_material": "drawn by insufficient material",
-      "draw_agreement": "drawn by agreement"
+      "draw_agreement": "drawn by agreement",
+      "whiteWins": "White wins",
+      "blackWins": "Black wins",
+      "white": "White",
+      "black": "Black",
+      "playerWins": "{{player}} won",
+      "draw": "Draw"
+    },
+    "termination": {
+      "by": "by",
+      "checkmate": "checkmate",
+      "time": "timeout",
+      "resignation": "resignation",
+      "stalemate": "stalemate",
+      "insufficient": "insufficient material",
+      "repetition": "repetition",
+      "fiftyMoves": "50-move rule",
+      "agreement": "mutual agreement"
     },
     "fallback": {
       "title": "Game not found",
       "desc": "Try again with another ID or paste a PGN below.",
-      "idPlaceholder": "Game ID",
-      "retry": "Reload",
       "cancelManual": "Cancel PGN",
       "pgnPlaceholder": "Paste a complete PGN here",
-      "inject": "Use this PGN"
+      "inject": "Analyze this PGN",
+      "invalidPgn": "Invalid PGN",
+      "analyzeDesc": "Paste a PGN to start analysis."
+    },
+    "error": {
+      "noMovesFound": "No moves found in PGN. Check the format.",
+      "illegalMove": "The PGN contains invalid moves.",
+      "invalidMove": "Invalid move in PGN.",
+      "invalidPgnFormat": "Invalid PGN format."
     }
   },
   "loading": "Loading...",
@@ -121,7 +161,9 @@
     "puzzleRush": "Puzzle Rush",
     "best": "Best",
     "live": "Live",
-    "offline": "Offline"
+    "offline": "Offline",
+    "user": "User",
+    "openTwitch": "Open Twitch"
   },
   "nav": { "home": "Home", "player": "My Games", "game": "Analyze a Game", "legendary": "Legendary Games" }
   ,
@@ -134,10 +176,19 @@
     "theoretical": "Theo",
     "inaccuracy": "Impr",
     "mistake": "Err",
-    "blunder": "Blun"
+    "blunder": "Blun",
+    "settings": {
+      "title": "Analysis Settings",
+      "version": "Stockfish Version",
+      "lite": "Lite",
+      "normal": "Normal",
+      "depth": "Depth (1-30)"
+    }
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "legendary": {
     "comingSoon": "This section is coming very soon..."
