@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# OPTIONNEL : Empêcher Google de perdre du temps sur la page qui redirige
+# Le * au début gère /fr/analyze, /en/analyze, etc.
+Disallow: /*/analyze
+
+# CORRECTION : Mettez l'URL complète de votre site ici
+Sitemap: https://chesschronicles.com/sitemap.xml
