@@ -114,7 +114,8 @@
     },
     "video": {
       "title": "Video Demo",
-      "subtitle": "Learn how to use all features in 2 minutes"
+      "subtitle": "Learn how to use all features in 2 minutes",
+      "iframeTitle": "Video demo Chess Chronicles"
     },
     "faq": {
       "title": "Frequently Asked Questions",

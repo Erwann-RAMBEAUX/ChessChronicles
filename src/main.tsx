@@ -15,7 +15,6 @@ import './index.css';
 
 
 const router = createBrowserRouter([
-  { path: '/', element: <Navigate to={`/${i18n.language || 'en'}`} replace /> },
   {
     path: '/:lng',
     element: <LanguageProvider />,
@@ -30,6 +29,16 @@ const router = createBrowserRouter([
       { path: '*', element: <NotFoundPage /> },
     ],
   },
+
+  {
+    path: '/',
+    element: <LanguageProvider />,
+  },
+
+  {
+    path: '*',
+    element: <LanguageProvider />,
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

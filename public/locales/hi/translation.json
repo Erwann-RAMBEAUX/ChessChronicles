@@ -1,0 +1,375 @@
+{
+    "app": {
+        "title": "Chess Chronicles",
+        "logoAlt": "Chess Chronicles logo"
+    },
+    "search": {
+        "placeholder": "Udaharan: MagnusCarlsen",
+        "load": "Khel Load Karein",
+        "reload": "Reload Karein",
+        "loading": "Load ho raha hai...",
+        "profile": "Profile",
+        "playerPlaceholder": "Khiladi ka naam..."
+    },
+    "filters": {
+        "heading": "Filters aur Sort Options",
+        "open": "Dikhaein",
+        "close": "Chupayein",
+        "modes": "Khel ka Prakar",
+        "results": "Parinam",
+        "color": "Rang",
+        "month": "Mahina",
+        "opponent": "Pratidwandi",
+        "sort": "Sort Karein",
+        "asc": "Aroh (ASC)",
+        "desc": "Avroh (DESC)",
+        "all": "Sabhi",
+        "perPage": "Prati page",
+        "prev": "Pichla",
+        "next": "Agla",
+        "monthPlaceholder": "Ek mahina chunein",
+        "searchOpponent": "Pratidwandi khojein",
+        "sortBy": {
+            "date": "Tareekh",
+            "eloUser": "Mera Elo",
+            "eloOpponent": "Pratidwandi ka Elo"
+        }
+    },
+    "mode": {
+        "bullet": "Bullet",
+        "blitz": "Blitz",
+        "rapid": "Rapid",
+        "daily": "Dainik (Daily)"
+    },
+    "result": {
+        "win": "Jeet",
+        "loss": "Haar",
+        "draw": "Draw"
+    },
+    "color": {
+        "all": "Sabhi",
+        "white": "Safed",
+        "black": "Kala"
+    },
+    "list": {
+        "title": "Khelon ki Soochi",
+        "total": "Kul {{count}} • page {{current}}/{{total}}",
+        "loading": "(load ho raha hai…)",
+        "empty": "Dikhane ke liye koi khel nahi. Username khojein."
+    },
+    "card": {
+        "date": "Tareekh",
+        "time": "Samay",
+        "type": "Prakar",
+        "myElo": "Khel ke samay mera Elo",
+        "view": "Khel Dekhein",
+        "analyze": "Vishleshan Karein"
+    },
+    "home": {
+        "title": "Chess Chronicles",
+        "subtitle": "Apne Chess.com khelon ka vishleshan karein",
+        "usernameLabel": "Chess.com Username",
+        "button": "Vishleshan Karein",
+        "info1": "Apne khel dekhne ke liye apna Chess.com username darj karein.",
+        "info2": "Vistar se vishleshan karne ke liye ek khel chunein.",
+        "feature1": {
+            "title": "Apne Khelon ka Vishleshan Karein",
+            "desc": "Apne sabhi khel dekhne ke liye apna Chess.com username darj karein. Har chaal ko dekhein, apne stats check karein aur mukhya palo ki pehchan karein.",
+            "item1": "Aapke sabhi khelon ka archive",
+            "item2": "Mode, rang aur parinam se filter karein",
+            "item3": "Interactive board visualization",
+            "item4": "Move-by-move navigation"
+        },
+        "feature2": {
+            "title": "Master Games",
+            "desc": "Har samay ke sabse behtareen shatranj khelon ki gallery dekhein. Duniya ke behtareen khiladiyon ki ran-neeti ka vishleshan karein.",
+            "item1": "Mashhoor aitihasik khel",
+            "item2": "Top khiladiyon ke haal hi ke khel",
+            "item3": "Prakar aur star ke anusar shrenibaddh",
+            "item4": "Sabse sundar combinations khojein"
+        },
+        "engine": {
+            "title": "Stockfish Vishleshan",
+            "desc": "Jald aa raha hai - Stockfish ke saath apni galtiyon ka vishleshan karein aur apna khel sudharne ke liye sujhav prapt karein.",
+            "badge": "Vikas mein (In Development)"
+        },
+        "howItWorks": "Yeh Kaise Kaam Karta Hai",
+        "step1": {
+            "title": "Username Darj Karein",
+            "desc": "Apna Chess.com username type karein"
+        },
+        "step2": {
+            "title": "Apne Khel Khojein",
+            "desc": "Filter karein aur apni poori history browse karein"
+        },
+        "step3": {
+            "title": "Vistar se Vishleshan",
+            "desc": "Har chaal ko visualize karein aur sudhar karein"
+        },
+        "about": {
+            "title": "Chess Chronicles kyun use karein?",
+            "p1": "Chess Chronicles ek saral avashyakta se paida hua: shatranj vishleshan ko adhik sulabh aur drishya banana. Classoc interface ke vipreet, hum spashtata aur upyog mein aasani par dhyan dete hain.",
+            "p2": "Hamara tool Chess.com par khele gaye aapke khelon ko automatically prapt karta hai aur aapko unhe chaal-dar-chaal replay karne ki anumati deta hai. Yeh baar-baar hone wali galtiyon ko pehchanne, apni opening ka adhyayan karne aur yeh samajhne ke liye adarsh tool hai ki aap kyun jeete ya haare.",
+            "p3": "Chahe aap ek shuruati hon jo 1000 Elo tak pahunchna chahta hai ya ek anubhavi khiladi, pragati ki kunji vishleshan mein hai. Chess Chronicles aapko bina kisi vichlan ke adhyayan ka vatavaran pradan karta hai."
+        },
+        "video": {
+            "title": "Video Demo",
+            "subtitle": "2 minute mein sabhi suvidhaon ka upyog karna seekhein",
+            "iframeTitle": "Video demo Chess Chronicles"
+        },
+        "faq": {
+            "title": "Aksar Puche Jane Wale Sawal (FAQ)",
+            "q1": "Kya yeh tool muft hai?",
+            "a1": "Haan, Chess Chronicles poori tarah se muft aur open-source hai. Hamara lakshya sabhi khiladiyon ke liye high-quality shatranj vishleshan tools tak pahunch ko loktantrik banana hai, chahe unka star ya budget kuch bhi ho.",
+            "q2": "Kya mujhe Chess.com Premium account ki zaroorat hai?",
+            "a2": "Nahi, bilkul nahi. Chess Chronicles ki mukhya takat aapko Chess.com par Diamond ya Platinum subscription ki avashyakta ke bina apne khelon ka gehrai se vishleshan karne ki anumati dena hai. Yeh tool kisi bhi public account ke saath kaam karta hai.",
+            "q3": "Kya main kisi anya khiladi ke khelon ka vishleshan kar sakta hoon?",
+            "a3": "Haan! Yeh seekhne ka ek shandar tarika hai. Aap kisi bhi khiladi ka username darj kar sakte hain (jaise: 'MagnusCarlsen', 'Hikaru', ya aapka sthaniya pratidwandi) unke khel, pasandida opening aur endgame takneekon ka adhyayan karne ke liye.",
+            "q4": "Kya computer vishleshan uplabdh hai?",
+            "a4": "Haan. Hum optimized WebAssembly takneek ke madhyam se Stockfish 16+ ko integrate karte hain. Engine aapki machine par local roop se chalta hai, jo tez aur niji vishleshan sunishchit karta hai. Aap real-time mulyankan (advantage bar) aur sujhai gayi behtareen lines dekh sakte hain.",
+            "q5": "Main is tool ke saath apna Elo kaise sudhar sakta hoon?",
+            "a5": "Sujhaya gaya tarika hai: 1. Chess.com par apne khel khelein. 2. Unhe turant yahan import karein. 3. Engine ke bina apni galtiyon ko khojne ki koshish karein. 4. Apni parikalpanaon ko satyapit karne ke liye Stockfish saksham karein. Is prakriya ko dohrana Elo points prapt karne ka sabse pakka tarika hai.",
+            "q6": "Kya yeh tool mobile par kaam karta hai?",
+            "a6": "Bilkul. Interface poori tarah se responsive hai aur smartphone aur tablet par poori tarah se anukulit ho jata hai, jisse aap chalte-firte ya apne sofe se aaram se apne khelon ka vishleshan kar sakte hain."
+        },
+        "footer": {
+            "text": "© 2025 Chess Chronicles - Apne shatranj khel ka vishleshan karein",
+            "social": {
+                "github": "GitHub",
+                "twitter": "Twitter",
+                "discord": "Discord"
+            },
+            "product": {
+                "title": "Product",
+                "features": "Visheshataein",
+                "pricing": "Pricing",
+                "changelog": "Changelog"
+            },
+            "legal": {
+                "title": "Kanooni",
+                "privacy": "Gopniyata (Privacy)",
+                "terms": "Shartein (Terms)"
+            }
+        },
+        "releaseBadge": "v1.0 Ab Uplabdh Hai",
+        "hero": {
+            "badge": "Apna khel sudharein"
+        },
+        "features": {
+            "tagline": "Aapke khel ka vishleshan karne ke liye tools ka poora set",
+            "cards": {
+                "progress": {
+                    "title": "Pragati Vishleshan",
+                    "desc": "Apne Elo ke vikas ko track karein aur apne lambe samay ke khelne ke trends ko samjhein."
+                },
+                "stockfish": {
+                    "title": "Stockfish Engine",
+                    "desc": "Duniya ke sabse shaktishali engine ke saath sateek galti ki pehchan."
+                },
+                "pgnviewer": {
+                    "title": "PGN Viewer",
+                    "desc": "Ek smooth aur intuitive interface ke saath har chaal ko phir se dekhein."
+                }
+            },
+            "deepDive": {
+                "title": "Vistar mein Visheshataein",
+                "pgn": {
+                    "title": "Turant PGN Import",
+                    "desc": "Koi bhi PGN copy-paste karein ya seedhe Chess.com se import karein. Hamara mazboot parser sabhi variations aur tippaniyon ko sambhalta hai."
+                },
+                "analysis": {
+                    "title": "Chaal-dar-Chaal Vishleshan",
+                    "desc": "Khel ke itihas mein aasani se navigate karein. Aapko iski gunvatta par tatkal feedback dene ke liye har chaal ka mulyankan kiya jata hai."
+                },
+                "stats": {
+                    "title": "Khel ke Aankde (Statistics)",
+                    "desc": "Har vishleshan kiye gaye khel ke liye apni sateekta, galtiyon ki sankhya, blunders aur shandar chaalon (brilliant moves) ko visualize karein."
+                }
+            }
+        },
+        "privacy": {
+            "badges": {
+                "openSource": "Open Source",
+                "free": "100% Muft",
+                "noAds": "Koi Vigyapan Nahi"
+            }
+        },
+        "seo": {
+            "introTitle": "Shatranj mein sudhar karne ke liye antim tool",
+            "introText": "Chess Chronicles sirf ek aur PGN viewer nahi hai. Yeh aapke shatranj khel ko sudharne ke liye samarpit ek poora platform hai. Chess.com se apne khelon ko import karke, aap apne khel ke har charan: openings, middlegame aur endgames ka vishleshan karne ke liye design kiye gaye shaktishali tools ke suite tak pahunch prapt karte hain.",
+            "whyAnalyzeTitle": "Vishleshan pragati ki kunji kyun hai?",
+            "whyAnalyzeText": "Grandmasters lagatar kehte hain: apne khud ke khelon ka vishleshan karna pragati ka sabse prabhavi tarika hai. Yeh samajhna ki koi chaal galti kyun thi, ek chuuke hue tactical mauke ki pehchan karna, ya yeh mehsoos karna ki endgame jeeta hua tha, khel ki aapki samajh ko mool roop se badal deta hai. Hamara tool is prakriya ko saral, drishya aur sabhi ke liye sulabh banata hai.",
+            "stockfishTitle": "Aapke browser mein Stockfish ki shakti",
+            "stockfishText": "Hum WebAssembly ke madhyam se seedhe aapke browser mein duniya ke sabse shaktishali shatranj engine, Stockfish ke navintam version ka upyog karte hain. Iska matlab hai ki aapko jatil software install kiye bina Grandmaster-level ke vishleshan ka labh milta hai. Apne blunders, asuddhiyon (inaccuracies) ka pata lagayein aur un 'behtareen chaalon' ko khojein jo aapko khelni chahiye thi.",
+            "beginnersTitle": "Shuruatiyon ke liye",
+            "beginnersText": "Ab apne khelon mein khoye nahi. Un lamhon ko pehchanein jahan aap muft mein material dete hain aur aam opening traps se bachan seekhein. Saaf interface aapko zaroori cheezon par dhyan kendrit karne mein madad karta hai.",
+            "advancedTitle": "Club Players ke liye",
+            "advancedText": "Apne opening repertoire ko sudharein aur labh (advantage) ko convert karne par kaam karein. Apne sacrifices ki mazbooti aur apne endgames ki sateekta ko satyapit karne ke liye vishleshan ka upyog karein.",
+            "privacyTitle": "Gopniyata aur Muft",
+            "privacyText": "Chess Chronicles ek junooni open-source project hai. Hum aapka vyaktigat data store nahi karte hain aur tool poori tarah se muft hai. Aapki pragati hamari ekmatra prathmikta hai."
+        },
+        "community": {
+            "title": "Community mein shamil hon",
+            "desc": "Chess Chronicles ek jeevant project hai. GitHub par code mein yogdan dein, suvidhaon ka sujhav dein, ya bas apne doston ke saath apne behtareen vishleshan kiye gaye khel share karein."
+        }
+    },
+    "game": {
+        "title": "Khel",
+        "player": "Khiladi",
+        "date": "Tareekh",
+        "moves": "Chaalein",
+        "noMoves": "Koi chaal parse nahi hui",
+        "noPGN": "Koi khel nahi",
+        "bestMove": "Behtareen Chaal",
+        "analyze": "Ek khel ka vishleshan karein",
+        "or": "Ya",
+        "flipBoard": "Board paltein",
+        "analyzeGame": "Is khel ka vishleshan karein",
+        "firstMove": "Pehli chaal",
+        "previousMove": "Pichli chaal",
+        "nextMove": "Agli chaal",
+        "lastMove": "Aakhri chaal",
+        "play": "Play",
+        "pause": "Pause",
+        "result": {
+            "won_resignation": "istife (resignation) se jeeta",
+            "won_checkmate": "checkmate se jeeta",
+            "won_timeout": "samay samapti (timeout) se jeeta",
+            "draw_repetition": "dobara (repetition) se draw",
+            "draw_stalemate": "stalemate se draw",
+            "draw_material": "aparyapt samagri se draw",
+            "draw_agreement": "sahmati se draw",
+            "whiteWins": "Safed ki jeet",
+            "blackWins": "Kala ki jeet",
+            "white": "Safed",
+            "black": "Kala",
+            "playerWins": "{{player}} jeeta",
+            "draw": "Draw"
+        },
+        "termination": {
+            "by": "dwara",
+            "checkmate": "checkmate",
+            "time": "timeout",
+            "resignation": "istifa (resignation)",
+            "stalemate": "stalemate",
+            "insufficient": "aparyapt samagri",
+            "repetition": "repetition",
+            "fiftyMoves": "50-move niyam",
+            "agreement": "aapsi sahmati"
+        },
+        "fallback": {
+            "title": "Khel nahi mila",
+            "desc": "Doosre ID ke saath phir koshish karein ya neeche PGN paste karein.",
+            "cancelManual": "PGN Cancel Karein",
+            "pgnPlaceholder": "Yahan ek poora PGN paste karein",
+            "inject": "Is PGN ka vishleshan karein",
+            "invalidPgn": "Amanaya (Invalid) PGN",
+            "pgnLabel": "PGN",
+            "analyzeDesc": "Vishleshan shuru karne ke liye PGN paste karein."
+        },
+        "error": {
+            "noMovesFound": "PGN mein koi chaal nahi mili. Format check karein.",
+            "illegalMove": "PGN mein amanaya chaalein hain.",
+            "invalidMove": "PGN mein amanaya chaal.",
+            "invalidPgnFormat": "Amanaya PGN format.",
+            "emptyPgn": "Kripya ek PGN darj karein"
+        }
+    },
+    "loading": "Load ho raha hai...",
+    "profile": {
+        "league": "League",
+        "followers": "Followers",
+        "joined": "Jude",
+        "lastOnline": "Antim baar online",
+        "tacticsMax": "Tactics max",
+        "problems": "Samasyaein",
+        "puzzleRush": "Puzzle Rush",
+        "best": "Behtareen",
+        "live": "Live",
+        "offline": "Offline",
+        "user": "User",
+        "openTwitch": "Twitch kholein",
+        "avatarAlt": "avatar"
+    },
+    "about": {
+        "title": "Chess Chronicles ke baare mein",
+        "description": "Chess Chronicles ke peeche ki kahani khojein, ek project jo shatranj vishleshan aur AI vikas ko mishrit karta hai",
+        "subtitle": "Shatranj ke junoon aur takneek ka milan.",
+        "mission_title": "Mission",
+        "mission_text": "Chess Chronicles ek sadharan iccha se paida hua tha: kisi bhi khiladi, amateur ya anubhavi ko, apne khelon ka muft aur saralta se vishleshan karne ki anumati dena. Lakshya aapko apni galtiyon ko samajhne aur pragati karne ke liye tools pradan karna hai. Bahut jald, site ko shatranj ke itihas ke sabse prasiddh khelon ko samuhit karne wali ek interactive library ke saath samriddh kiya jayega.",
+        "story_title": "Insaan aur AI ka Sahyog",
+        "story_text": "Yeh project ek aadhunik vikas prayog ka phal hai. Ek developer ke roop mein, maine Artificial Intelligence tools ke saath ghanishth sahyog mein is site ke architecture ko design aur pilot kiya. Is taalmel ne vikas ko tez karne ki anumati di taaki avashyak cheezon par dhyan kendrit kiya ja sake: user experience aur shatranj vishleshan ki gunvatta.",
+        "translation_title": "Bhashaon par note",
+        "translation_text": "Main ek French developer hoon. Jabki French version mool hai aur English savdhani se review kiya gaya hai, site par uplabdh anya bhashaein AI ki madad se anuvadit ki gayi thin. Yeh sambhav hai ki kuch nuances ya takneeki shabd apurna hon. Kisi bhi galti ki report karne mein sankoch na karein!",
+        "contact_title": "Sampark aur Code",
+        "github_text": "Project open-source hai ya mere GitHub par dekhne yogya hai.",
+        "email_text": "Ek sawal? Ek sujhav? Mujhe likhein:"
+    },
+    "nav": {
+        "about": "Baare mein",
+        "home": "Home",
+        "player": "Mere Khel",
+        "game": "Khel ka Vishleshan",
+        "legendary": "Legendary Games"
+    },
+    "analysis": {
+        "title": "Vishleshan",
+        "progress": "Vishleshan",
+        "error": "Galti",
+        "excellent": "Utkrisht (Exc)",
+        "good": "Accha",
+        "theoretical": "Theoretical",
+        "inaccuracy": "Asuddhi (Impr)",
+        "mistake": "Galti (Err)",
+        "blunder": "Badi Galti (Blun)",
+        "accuracy": "Sateekta (Accuracy)",
+        "opening": "Opening",
+        "settings": {
+            "title": "Vishleshan Settings",
+            "version": "Stockfish Version",
+            "lite": "Lite",
+            "normal": "Normal",
+            "depth": "Depth (1-30)",
+            "sounds": "Sound Effects"
+        }
+    },
+    "common": {
+        "close": "Band Karein",
+        "cancel": "Cancel",
+        "save": "Save Karein",
+        "enabled": "Saksham (Enabled)",
+        "disabled": "Aksham (Disabled)"
+    },
+    "legendary": {
+        "comingSoon": "Yeh section bahut jald aa raha hai..."
+    },
+    "notFound": {
+        "title": "Page nahi mila",
+        "desc": "Maaf kijiye, jo page aap dhund rahe hain wo maujood nahi hai ya move kar diya gaya hai.",
+        "backHome": "Home par wapas"
+    },
+    "error": {
+        "details": "Vivaran",
+        "hideDetails": "Vivaran chupayein",
+        "offline": "Network connection uplabdh nahi hai. Kripya apna Internet check karein aur phir koshish karein.",
+        "userNotFound": "User Chess.com par nahi mila",
+        "statsUnavailable": "Is user ke liye aankde uplabdh nahi hain",
+        "archiveNotFound": "Archive nahi mila",
+        "tooManyRequests": "Bahut saare anurodh. Kripya kuch der mein phir koshish karein.",
+        "server": "Chess.com sewa asthayi roop se uplabdh nahi (server error)",
+        "http": "Chess.com ke saath sanchar truti (HTTP {{status}})",
+        "unknown": "Chess.com ke saath sanchar karte samay apratyashit network truti"
+    },
+    "seo": {
+        "keywords": "chess, analysis, stockfish, pgn, chess.com, lichess, game analysis, chess improvement, shatranj",
+        "profile": {
+            "description": "{{username}} ke shatranj khelon ka vishleshan karein. Stats, openings dekhein aur khel replay karein."
+        },
+        "analyze": {
+            "description": "Stockfish 16 ke saath apne shatranj khelon ka vishleshan karein. Apni chaalon ko review karein, galtiyan khojein aur apna khel sudharein."
+        },
+        "home": {
+            "description": "Apne shatranj khelon ka vishleshan karein, apni pragati track karein aur legendary games khojein. Chess Chronicles shatranj vishleshan aur sudhar ke liye aapka saathi hai."
+        }
+    }
+}

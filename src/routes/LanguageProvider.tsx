@@ -1,7 +1,6 @@
 import { Outlet, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import i18n from '../i18n';
-import { isSupported, DEFAULT_LANG, stripLangPrefix } from '../i18n';
+import i18n, { isSupported, replaceLangInPath, DEFAULT_LANG } from '../i18n';
 import { ScrollToTop } from '../components/ScrollToTop';
 
 export default function LanguageProvider() {
@@ -17,20 +16,26 @@ export default function LanguageProvider() {
       return;
     }
 
-    const targetLang = isSupported(i18n.language) ? i18n.language : DEFAULT_LANG;
+    let targetLang = DEFAULT_LANG;
 
-    const pathAfterPrefix = (() => {
-      const p = location.pathname || '/';
-      const detected = stripLangPrefix(p) !== p ? stripLangPrefix(p) : null;
-      if (detected !== null) return detected || '/';
+    const currentI18nLang = i18n.language;
 
-      const withoutFirst = p.replace(/^\/[^/]+/, '');
-      return withoutFirst === '' ? '/' : withoutFirst;
-    })();
+    const cleanedLang = currentI18nLang?.split('-')[0];
 
-    const search = location.search || '';
-    const target = `${'/'}${targetLang}${pathAfterPrefix}${search}`;
-    navigate(target, { replace: true });
+    if (cleanedLang && isSupported(cleanedLang)) {
+      targetLang = cleanedLang;
+    } else {
+      const browserLang = navigator.language?.split('-')[0];
+      if (browserLang && isSupported(browserLang)) {
+        targetLang = browserLang;
+      }
+    }
+
+    const newPath = replaceLangInPath(location.pathname, targetLang);
+    const fullPath = `${newPath}${location.search}`;
+
+    navigate(fullPath, { replace: true });
+
   }, [lng, location.pathname, location.search, navigate]);
 
   return (
