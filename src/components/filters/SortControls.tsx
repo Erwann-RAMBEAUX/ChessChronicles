@@ -14,13 +14,13 @@ type Props = {
 export function SortControls({ sortBy, sortDir, onChange, title = 'Tri' }: Props) {
   const { t } = useTranslation();
   const byOptions: Option[] = [
-    { value: 'date', label: t('filters.sortBy.date') },
-    { value: 'elo_user', label: t('filters.sortBy.eloUser') },
-    { value: 'elo_opponent', label: t('filters.sortBy.eloOpponent') },
+    { value: 'date', label: t('home.filters.sortBy.date') },
+    { value: 'elo_user', label: t('home.filters.sortBy.eloUser') },
+    { value: 'elo_opponent', label: t('home.filters.sortBy.eloOpponent') },
   ];
   const dirOptions: Option[] = [
-    { value: 'desc', label: t('filters.desc') },
-    { value: 'asc', label: t('filters.asc') },
+    { value: 'desc', label: t('home.filters.desc') },
+    { value: 'asc', label: t('home.filters.asc') },
   ];
   return (
     <FilterSection title={title}>

@@ -1,110 +1,154 @@
 {
-  "app": {
-    "title": "Chess Chronicles",
-    "logoAlt": "Chess Chronicles logo"
-  },
-  "search": {
-    "placeholder": "Ex: MagnusCarlsen",
-    "load": "Load Games",
-    "reload": "Reload",
+  "common": {
+    "appName": "Chess Chronicles",
     "loading": "Loading...",
-    "profile": "Profile",
-    "playerPlaceholder": "Player name..."
-  },
-  "filters": {
-    "heading": "Filters & Sort Options",
-    "open": "Show",
-    "close": "Hide",
-    "modes": "Game Type",
-    "results": "Result",
-    "color": "Color",
-    "month": "Month",
-    "opponent": "Opponent",
-    "sort": "Sort",
-    "asc": "ASC",
-    "desc": "DESC",
-    "all": "All",
-    "perPage": "Per page",
-    "prev": "Previous",
-    "next": "Next",
-    "monthPlaceholder": "Choose a month",
-    "searchOpponent": "Search an opponent",
-    "sortBy": {
-      "date": "Date",
-      "eloUser": "My Elo",
-      "eloOpponent": "Opponent's Elo"
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "mode": {
+      "bullet": "Bullet",
+      "blitz": "Blitz",
+      "rapid": "Rapid",
+      "daily": "Daily"
+    },
+    "result": {
+      "win": "Win",
+      "loss": "Loss",
+      "draw": "Draw"
+    },
+    "color": {
+      "all": "All",
+      "white": "White",
+      "black": "Black"
+    },
+    "error": {
+      "details": "Details",
+      "hideDetails": "Hide details",
+      "offline": "Network connection unavailable. Please check your Internet and try again.",
+      "userNotFound": "User not found on Chess.com",
+      "statsUnavailable": "Statistics unavailable for this user",
+      "archiveNotFound": "Archive not found",
+      "tooManyRequests": "Too many requests. Please try again shortly.",
+      "server": "Chess.com service temporarily unavailable (server error)",
+      "http": "Communication error with Chess.com (HTTP {{status}})",
+      "unknown": "Unexpected network error communicating with Chess.com"
     }
   },
-  "mode": {
-    "bullet": "Bullet",
-    "blitz": "Blitz",
-    "rapid": "Rapid",
-    "daily": "Daily"
-  },
-  "result": {
-    "win": "Win",
-    "loss": "Loss",
-    "draw": "Draw"
-  },
-  "color": {
-    "all": "All",
-    "white": "White",
-    "black": "Black"
-  },
-  "list": {
-    "title": "Games List",
-    "total": "{{count}} total • page {{current}}/{{total}}",
-    "loading": "(loading…)",
-    "empty": "No games to display. Search for a username."
-  },
-  "card": {
-    "date": "Date",
-    "time": "Time",
-    "type": "Type",
-    "myElo": "My Elo at the time of the game",
-    "view": "View Game",
-    "analyze": "Analyze"
+  "nav": {
+    "about": "About",
+    "home": "Home",
+    "player": "My Games",
+    "game": "Analyze a Game",
+    "legendary": "Legendary Games"
   },
   "home": {
-    "title": "Chess Chronicles",
-    "subtitle": "Analyze your Chess.com games",
-    "usernameLabel": "Chess.com Username",
-    "button": "Analyze",
+    "hero": {
+      "title": "Chess Chronicles",
+      "subtitle": "Analyze your Chess.com games",
+      "badge": "Improve your game",
+      "releaseBadge": "v1.0 Available Now"
+    },
+    "search": {
+      "placeholder": "Ex: MagnusCarlsen",
+      "button": "Analyze",
+      "loading": "Loading..."
+    },
+    "filters": {
+      "heading": "Filters & Sort Options",
+      "open": "Show",
+      "close": "Hide",
+      "modes": "Game Type",
+      "results": "Result",
+      "color": "Color",
+      "month": "Month",
+      "opponent": "Opponent",
+      "sort": "Sort",
+      "asc": "ASC",
+      "desc": "DESC",
+      "all": "All",
+      "perPage": "Per page",
+      "prev": "Previous",
+      "next": "Next",
+      "monthPlaceholder": "Choose a month",
+      "searchOpponent": "Search an opponent",
+      "sortBy": {
+        "date": "Date",
+        "eloUser": "My Elo",
+        "eloOpponent": "Opponent's Elo"
+      }
+    },
+    "list": {
+      "title": "Games List",
+      "total": "{{count}} total • page {{current}}/{{total}}",
+      "loading": "(loading…)",
+      "empty": "No games to display. Search for a username.",
+      "card": {
+        "date": "Date",
+        "time": "Time",
+        "type": "Type",
+        "myElo": "My Elo at the time of the game",
+        "view": "View Game",
+        "analyze": "Analyze"
+      }
+    },
     "info1": "Enter your Chess.com username to see your games.",
     "info2": "Select a game to analyze it in detail.",
-    "feature1": {
-      "title": "Analyze Your Games",
-      "desc": "Enter your Chess.com username to view all your games. Navigate through each move, check your stats, and identify key moments.",
-      "item1": "All your game archives",
-      "item2": "Filter by mode, color, result",
-      "item3": "Interactive board visualization",
-      "item4": "Move-by-move navigation"
-    },
-    "feature2": {
-      "title": "Master Games",
-      "desc": "Explore a gallery of the greatest chess games of all time. Analyze the strategies of the world's best players.",
-      "item1": "Famous historical games",
-      "item2": "Recent games from top players",
-      "item3": "Categorized by type and level",
-      "item4": "Discover the most beautiful combinations"
-    },
-    "engine": {
-      "title": "Stockfish Analysis",
-      "desc": "Coming soon - Analyze your mistakes with Stockfish and get recommendations to improve your game.",
-      "badge": "In Development"
+    "features": {
+      "tagline": "A complete suite of tools to dissect your game",
+      "cards": {
+        "progress": {
+          "title": "Progress Analysis",
+          "desc": "Track your Elo evolution and understand your long-term playing trends."
+        },
+        "stockfish": {
+          "title": "Stockfish Engine",
+          "desc": "Precise error detection with the world's most powerful engine."
+        },
+        "pgnviewer": {
+          "title": "PGN Viewer",
+          "desc": "Replay every move with a smooth and intuitive interface."
+        }
+      },
+      "deepDive": {
+        "title": "Features in Detail",
+        "pgn": {
+          "title": "Instant PGN Import",
+          "desc": "Copy-paste any PGN or import directly from Chess.com. Our robust parser handles all variations and comments."
+        },
+        "analysis": {
+          "title": "Move-by-Move Analysis",
+          "desc": "Easily navigate through the game history. Each move is evaluated to give you immediate feedback on its quality."
+        },
+        "stats": {
+          "title": "Game Statistics",
+          "desc": "Visualize your accuracy, number of mistakes, blunders, and brilliant moves for each analyzed game."
+        }
+      },
+      "masterGames": {
+        "title": "Master Games",
+        "desc": "Explore a gallery of the greatest chess games of all time. Analyze the strategies of the world's best players.",
+        "item1": "Famous historical games",
+        "item2": "Recent games from top players",
+        "item3": "Categorized by type and level",
+        "item4": "Discover the most beautiful combinations"
+      }
     },
     "howItWorks": "How It Works",
-    "step1": {
-      "title": "Enter a Username",
-      "desc": "Type your Chess.com username"
-    },
-    "step2": {
-      "title": "Explore Your Games",
-      "desc": "Filter and browse your complete history"
-    },
-    "step3": {
-      "title": "Analyze in Detail",
-      "desc": "Visualize every move and improve"
+    "steps": {
+      "step1": {
+        "title": "Enter a Username",
+        "desc": "Type your Chess.com username"
+      },
+      "step2": {
+        "title": "Explore Your Games",
+        "desc": "Filter and browse your complete history"
+      },
+      "step3": {
+        "title": "Analyze in Detail",
+        "desc": "Visualize every move and improve"
+      }
     },
     "about": {
       "title": "Why use Chess Chronicles?",
@@ -151,48 +195,16 @@
         "terms": "Terms"
       }
     },
-    "releaseBadge": "v1.0 Available Now",
-    "hero": {
-      "badge": "Improve your game"
-    },
-    "features": {
-      "tagline": "A complete suite of tools to dissect your game",
-      "cards": {
-        "progress": {
-          "title": "Progress Analysis",
-          "desc": "Track your Elo evolution and understand your long-term playing trends."
-        },
-        "stockfish": {
-          "title": "Stockfish Engine",
-          "desc": "Precise error detection with the world's most powerful engine."
-        },
-        "pgnviewer": {
-          "title": "PGN Viewer",
-          "desc": "Replay every move with a smooth and intuitive interface."
-        }
-      },
-      "deepDive": {
-        "title": "Features in Detail",
-        "pgn": {
-          "title": "Instant PGN Import",
-          "desc": "Copy-paste any PGN or import directly from Chess.com. Our robust parser handles all variations and comments."
-        },
-        "analysis": {
-          "title": "Move-by-Move Analysis",
-          "desc": "Easily navigate through the game history. Each move is evaluated to give you immediate feedback on its quality."
-        },
-        "stats": {
-          "title": "Game Statistics",
-          "desc": "Visualize your accuracy, number of mistakes, blunders, and brilliant moves for each analyzed game."
-        }
-      }
-    },
     "privacy": {
       "badges": {
         "openSource": "Open Source",
         "free": "100% Free",
         "noAds": "No Ads"
       }
+    },
+    "community": {
+      "title": "Join the Community",
+      "desc": "Chess Chronicles is a living project. Contribute to the code on GitHub, suggest features, or simply share your best analyzed games with your friends."
     },
     "seo": {
       "introTitle": "The ultimate tool to improve at chess",
@@ -206,15 +218,14 @@
       "advancedTitle": "For Club Players",
       "advancedText": "Refine your opening repertoire and work on converting advantages. Use analysis to verify the soundness of your sacrifices and the precision of your endgames.",
       "privacyTitle": "Privacy and Free",
-      "privacyText": "Chess Chronicles is a passionate open-source project. We do not store your personal data and the tool is entirely free. Your progress is our only priority."
-    },
-    "community": {
-      "title": "Join the Community",
-      "desc": "Chess Chronicles is a living project. Contribute to the code on GitHub, suggest features, or simply share your best analyzed games with your friends."
+      "privacyText": "Chess Chronicles is a passionate open-source project. We do not store your personal data and the tool is entirely free. Your progress is our only priority.",
+      "title": "About Chess Chronicles",
+      "text": "Chess Chronicles is the ultimate platform for chess enthusiasts to analyze games, track progress, and explore the history of legendary players. Whether you are a beginner looking to improve or a grandmaster refining your strategy, our tools provide deep insights into every move. Replay famous games, analyze your own matches with powerful engines, and discover the stories behind the greatest chess minds. Join our community and elevate your game today."
     }
   },
-  "game": {
+  "analyze": {
     "title": "Game",
+    "description": "Play chess online",
     "player": "Player",
     "date": "Date",
     "moves": "Moves",
@@ -225,12 +236,14 @@
     "or": "Or",
     "flipBoard": "Flip board",
     "analyzeGame": "Analyze this game",
-    "firstMove": "First move",
-    "previousMove": "Previous move",
-    "nextMove": "Next move",
-    "lastMove": "Last move",
-    "play": "Play",
-    "pause": "Pause",
+    "controls": {
+      "first": "First move",
+      "prev": "Previous move",
+      "next": "Next move",
+      "last": "Last move",
+      "play": "Play",
+      "pause": "Pause"
+    },
     "result": {
       "won_resignation": "won by resignation",
       "won_checkmate": "won by checkmate",
@@ -273,9 +286,29 @@
       "invalidMove": "Invalid move in PGN.",
       "invalidPgnFormat": "Invalid PGN format.",
       "emptyPgn": "Please enter a PGN"
+    },
+    "engine": {
+      "title": "Analysis",
+      "progress": "Analysis",
+      "error": "Error",
+      "excellent": "Exc",
+      "good": "Good",
+      "theoretical": "Theo",
+      "inaccuracy": "Impr",
+      "mistake": "Err",
+      "blunder": "Blun",
+      "accuracy": "Accuracy",
+      "opening": "Opening",
+      "settings": {
+        "title": "Analysis Settings",
+        "version": "Stockfish Version",
+        "lite": "Lite",
+        "normal": "Normal",
+        "depth": "Depth (1-30)",
+        "sounds": "Sound Effects"
+      }
     }
   },
-  "loading": "Loading...",
   "profile": {
     "league": "League",
     "followers": "Followers",
@@ -289,7 +322,7 @@
     "offline": "Offline",
     "user": "User",
     "openTwitch": "Open Twitch",
-    "avatarAlt": "avatar"
+    "avatarAlt": "Chess player profile avatar"
   },
   "about": {
     "title": "About Chess Chronicles",
@@ -305,41 +338,6 @@
     "github_text": "The project is open-source or viewable on my GitHub.",
     "email_text": "A question? A suggestion? Write to me:"
   },
-  "nav": {
-    "about": "About",
-    "home": "Home",
-    "player": "My Games",
-    "game": "Analyze a Game",
-    "legendary": "Legendary Games"
-  },
-  "analysis": {
-    "title": "Analysis",
-    "progress": "Analysis",
-    "error": "Error",
-    "excellent": "Exc",
-    "good": "Good",
-    "theoretical": "Theo",
-    "inaccuracy": "Impr",
-    "mistake": "Err",
-    "blunder": "Blun",
-    "accuracy": "Accuracy",
-    "opening": "Opening",
-    "settings": {
-      "title": "Analysis Settings",
-      "version": "Stockfish Version",
-      "lite": "Lite",
-      "normal": "Normal",
-      "depth": "Depth (1-30)",
-      "sounds": "Sound Effects"
-    }
-  },
-  "common": {
-    "close": "Close",
-    "cancel": "Cancel",
-    "save": "Save",
-    "enabled": "Enabled",
-    "disabled": "Disabled"
-  },
   "legendary": {
     "comingSoon": "This section is coming very soon..."
   },
@@ -348,28 +346,17 @@
     "desc": "Sorry, the page you're looking for doesn't exist or has been moved.",
     "backHome": "Back to home"
   },
-  "error": {
-    "details": "Details",
-    "hideDetails": "Hide details",
-    "offline": "Network connection unavailable. Please check your Internet and try again.",
-    "userNotFound": "User not found on Chess.com",
-    "statsUnavailable": "Statistics unavailable for this user",
-    "archiveNotFound": "Archive not found",
-    "tooManyRequests": "Too many requests. Please try again shortly.",
-    "server": "Chess.com service temporarily unavailable (server error)",
-    "http": "Communication error with Chess.com (HTTP {{status}})",
-    "unknown": "Unexpected network error communicating with Chess.com"
-  },
   "seo": {
     "keywords": "chess, analysis, stockfish, pgn, chess.com, lichess, game analysis, chess improvement",
     "profile": {
-      "description": "Analyze chess games of {{username}}. View stats, openings, and replay games."
+      "title": "{{username}} - Chess Profile & Games",
+      "description": "Analyze chess games of {{username}}. View stats, openings, and replay games.",
+      "searchTitle": "Search Chess Player Profile",
+      "searchDesc": "Search for a chess player to view their profile and stats."
     },
     "analyze": {
+      "title": "Chess Game Analysis",
       "description": "Analyze your chess games with Stockfish 16. Review your moves, find mistakes, and improve your game."
-    },
-    "home": {
-      "description": "Analyze your chess games, track your progress, and discover legendary games. Chess Chronicles is your companion for chess analysis and improvement."
     }
   }
 }

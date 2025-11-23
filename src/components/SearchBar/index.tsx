@@ -26,12 +26,12 @@ export function SearchBar({ value, onChange, compact }: SearchBarProps) {
     <form className="flex items-center gap-3" onSubmit={submit}>
       <input
         className={inputClass}
-        placeholder={t('search.placeholder')}
+        placeholder={t('home.search.placeholder')}
         value={local}
         onChange={(e) => setLocal(e.target.value)}
       />
       <button type="submit" className={buttonClass} disabled={!local.trim()}>
-        {t('search.load')}
+        {t('home.search.button')}
       </button>
     </form>
   );

@@ -1,15 +1,19 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { withLang } from '../../i18n';
-import { Header } from '../../components/Header';
+import { Layout } from '../../components/Layout';
+import { SEO } from '../../components/SEO';
 
 export default function NotFoundPage() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main className="mx-auto max-w-7xl px-4 py-6 flex items-center justify-center">
+    <Layout>
+      <SEO
+        title={t('notFound.title', 'Page non trouvée')}
+        description={t('notFound.desc', "Désolé, la page que vous recherchez n'existe pas.")}
+      />
+      <main className="mx-auto max-w-7xl px-4 py-6 flex items-center justify-center min-h-[calc(100vh-64px)]">
         <div className="text-center space-y-6 py-20">
           <div className="text-6xl font-bold text-primary">404</div>
           <h1 className="text-4xl font-bold">{t('notFound.title', 'Page non trouvée')}</h1>
@@ -27,6 +31,6 @@ export default function NotFoundPage() {
           </Link>
         </div>
       </main>
-    </div>
+    </Layout>
   );
 }

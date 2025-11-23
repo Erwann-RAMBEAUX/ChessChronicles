@@ -12,10 +12,10 @@ type Props = {
 export function ResultsFilter({ value, onChange, title = 'Result' }: Props) {
   const { t } = useTranslation();
   const options: Option[] = [
-    { value: 'all', label: t('filters.all') },
-    { value: 'win', label: t('result.win') },
-    { value: 'loss', label: t('result.loss') },
-    { value: 'draw', label: t('result.draw') },
+    { value: 'all', label: t('home.filters.all') },
+    { value: 'win', label: t('common.result.win') },
+    { value: 'loss', label: t('common.result.loss') },
+    { value: 'draw', label: t('common.result.draw') },
   ];
   return (
     <FilterSection title={title}>

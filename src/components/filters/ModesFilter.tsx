@@ -12,10 +12,10 @@ type Props = {
 export function ModesFilter({ value, onChange, title = 'Type de Partie' }: Props) {
   const { t } = useTranslation();
   const options: Option[] = [
-    { value: 'bullet', label: t('mode.bullet') },
-    { value: 'blitz', label: t('mode.blitz') },
-    { value: 'rapid', label: t('mode.rapid') },
-    { value: 'daily', label: t('mode.daily') },
+    { value: 'bullet', label: t('common.mode.bullet') },
+    { value: 'blitz', label: t('common.mode.blitz') },
+    { value: 'rapid', label: t('common.mode.rapid') },
+    { value: 'daily', label: t('common.mode.daily') },
   ];
 
   const toggleMode = (mode: string) => {

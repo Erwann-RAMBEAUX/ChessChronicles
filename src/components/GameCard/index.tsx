@@ -15,10 +15,10 @@ export function GameCard({ game }: GameCardProps) {
     <div className="bg-slate-800/30 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 flex flex-col gap-3 hover:border-primary/30 transition-colors group">
       <div className="flex items-center justify-between">
         <div className="text-sm text-gray-400">
-          {t('card.date')}: {date}
+          {t('home.list.card.date')}: {date}
         </div>
         <div className="text-xs text-gray-400">
-          {t('card.time')}: {time}
+          {t('home.list.card.time')}: {time}
         </div>
       </div>
       <div className="flex items-center gap-3">
@@ -31,17 +31,17 @@ export function GameCard({ game }: GameCardProps) {
             {game.opponent.username} {game.opponent.rating ? `(${game.opponent.rating})` : ''}
           </button>
           <div className="text-sm text-gray-400">
-            {t('card.type')}: {game.time_class}
+            {t('home.list.card.type')}: {game.time_class}
           </div>
         </div>
         <div
           className={`ml-auto px-2 py-1 rounded text-xs ${getResultBgClass(game.resultForUser)}`}
         >
-          {t(`result.${game.resultForUser}`)}
+          {t(`common.result.${game.resultForUser}`)}
         </div>
       </div>
       <div className="text-sm text-gray-300">
-        {t('card.myElo')}: {typeof myRating === 'number' ? myRating : '—'}
+        {t('home.list.card.myElo')}: {typeof myRating === 'number' ? myRating : '—'}
       </div>
       <div className="flex gap-2 mt-2">
         <button
@@ -69,7 +69,7 @@ export function GameCard({ game }: GameCardProps) {
             });
           }}
         >
-          {t('card.view')}
+          {t('home.list.card.view')}
         </button>
         <button
           className="btn-ghost"
@@ -97,7 +97,7 @@ export function GameCard({ game }: GameCardProps) {
             });
           }}
         >
-          {t('card.analyze', 'Analyser')}
+          {t('home.list.card.analyze', 'Analyser')}
         </button>
       </div>
     </div>

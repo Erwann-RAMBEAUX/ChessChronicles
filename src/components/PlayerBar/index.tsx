@@ -29,7 +29,7 @@ export const PlayerBar = ({ player, stats, position = 'top' }: PlayerBarProps) =
       >
         <img
           src={player.avatar || pawnSvg}
-          alt={player.username}
+          alt={player.username ? `${player.username} chess player avatar` : 'Chess player avatar'}
           className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover bg-black/30 flex-shrink-0"
           loading="lazy"
         />
@@ -45,7 +45,7 @@ export const PlayerBar = ({ player, stats, position = 'top' }: PlayerBarProps) =
         <div className={`w-full sm:w-auto flex ${position === 'bottom' ? 'flex-col-reverse sm:flex-col' : 'flex-col'} gap-1 text-[11px] sm:text-xs text-gray-300 items-center sm:items-start`}>
           {accuracy !== null && (
             <span className="text-[11px] sm:text-sm">
-              {t('analysis.accuracy', 'Précision')}:{' '}
+              {t('analyze.engine.accuracy', 'Précision')}:{' '}
               <span className="text-white font-semibold">{accuracy}%</span>
             </span>
           )}

@@ -100,7 +100,7 @@ export const useChessStore = create<State & Actions>()(
       setPage: (n) => set({ page: Math.max(1, Math.floor(n) || 1) }),
       setPageSize: (n) => set({ pageSize: Math.max(1, Math.floor(n) || 15), page: 1 }),
       setStockfishVersion: (v) => set({ stockfishVersion: v }),
-      setStockfishDepth: (d) => set({ stockfishDepth: Math.max(1, Math.min(30, d)) }), 
+      setStockfishDepth: (d) => set({ stockfishDepth: Math.max(1, Math.min(30, d)) }),
       setSoundsEnabled: (enabled) => set({ soundsEnabled: enabled }),
       loadGames: async () => {
         const username = get().username.trim();
@@ -194,7 +194,7 @@ export const useChessStore = create<State & Actions>()(
             if (e instanceof ApiError) {
               msg = e.code;
             } else if (/Failed to fetch/i.test(msg)) {
-              msg = 'error.offline';
+              msg = 'common.error.offline';
             }
             const stack =
               e && typeof e === 'object' && 'stack' in e

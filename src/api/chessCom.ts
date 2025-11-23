@@ -29,13 +29,13 @@ function httpErrorCode(
   context: 'archives' | 'month' | 'profile' | 'stats'
 ): { code: string; params?: Record<string, unknown> } {
   if (status === 404) {
-    if (context === 'archives' || context === 'profile') return { code: 'error.userNotFound' };
-    if (context === 'stats') return { code: 'error.statsUnavailable' };
-    return { code: 'error.archiveNotFound' };
+    if (context === 'archives' || context === 'profile') return { code: 'common.error.userNotFound' };
+    if (context === 'stats') return { code: 'common.error.statsUnavailable' };
+    return { code: 'common.error.archiveNotFound' };
   }
-  if (status === 429) return { code: 'error.tooManyRequests' };
-  if (status >= 500 && status < 600) return { code: 'error.server' };
-  return { code: 'error.http', params: { status } };
+  if (status === 429) return { code: 'common.error.tooManyRequests' };
+  if (status >= 500 && status < 600) return { code: 'common.error.server' };
+  return { code: 'common.error.http', params: { status } };
 }
 
 /**
@@ -64,11 +64,11 @@ async function safeFetchJson<T>(
   } catch (e: unknown) {
     if (getErrorName(e) === 'AbortError') throw e;
     if (e instanceof TypeError) {
-      throw new ApiError('error.offline');
+      throw new ApiError('common.error.offline');
     }
     if (e instanceof ApiError) throw e;
-    if (e instanceof Error) throw new ApiError('error.unknown');
-    throw new ApiError('error.unknown');
+    if (e instanceof Error) throw new ApiError('common.error.unknown');
+    throw new ApiError('common.error.unknown');
   }
 }
 

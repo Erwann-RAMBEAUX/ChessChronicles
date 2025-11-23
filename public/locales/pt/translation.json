@@ -1,115 +1,159 @@
 {
-    "app": {
-        "title": "Chess Chronicles",
-        "logoAlt": "Logo do Chess Chronicles"
-    },
-    "search": {
-        "placeholder": "Ex: MagnusCarlsen",
-        "load": "Carregar partidas",
-        "reload": "Recarregar",
+    "common": {
+        "appName": "Chess Chronicles",
         "loading": "Carregando...",
-        "profile": "Perfil",
-        "playerPlaceholder": "Nome do jogador..."
-    },
-    "filters": {
-        "heading": "Filtros e Opções de Ordenação",
-        "open": "Mostrar",
-        "close": "Ocultar",
-        "modes": "Tipo de Jogo",
-        "results": "Resultado",
-        "color": "Cor",
-        "month": "Mês",
-        "opponent": "Oponente",
-        "sort": "Ordenar",
-        "asc": "ASC",
-        "desc": "DESC",
-        "all": "Todos",
-        "perPage": "Por página",
-        "prev": "Anterior",
-        "next": "Próximo",
-        "monthPlaceholder": "Escolha um mês",
-        "searchOpponent": "Buscar um oponente",
-        "sortBy": {
-            "date": "Data",
-            "eloUser": "Meu Elo",
-            "eloOpponent": "Elo do Oponente"
+        "close": "Fechar",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "enabled": "Ativado",
+        "disabled": "Desativado",
+        "mode": {
+            "bullet": "Bullet",
+            "blitz": "Blitz",
+            "rapid": "Rápida",
+            "daily": "Diária"
+        },
+        "result": {
+            "win": "Vitória",
+            "loss": "Derrota",
+            "draw": "Empate"
+        },
+        "color": {
+            "all": "Todos",
+            "white": "Brancas",
+            "black": "Pretas"
+        },
+        "error": {
+            "details": "Detalhes",
+            "hideDetails": "Ocultar detalhes",
+            "offline": "Conexão de rede indisponível. Por favor, verifique sua Internet e tente novamente.",
+            "userNotFound": "Usuário não encontrado no Chess.com",
+            "statsUnavailable": "Estatísticas indisponíveis para este usuário",
+            "archiveNotFound": "Arquivo não encontrado",
+            "tooManyRequests": "Muitas requisições. Por favor, tente novamente em breve.",
+            "server": "Serviço do Chess.com temporariamente indisponível (erro no servidor)",
+            "http": "Erro de comunicação com o Chess.com (HTTP {{status}})",
+            "unknown": "Erro de rede inesperado ao comunicar com o Chess.com"
         }
     },
-    "mode": {
-        "bullet": "Bullet",
-        "blitz": "Blitz",
-        "rapid": "Rápida",
-        "daily": "Diária"
-    },
-    "result": {
-        "win": "Vitória",
-        "loss": "Derrota",
-        "draw": "Empate"
-    },
-    "color": {
-        "all": "Todos",
-        "white": "Brancas",
-        "black": "Pretas"
-    },
-    "list": {
-        "title": "Lista de Partidas",
-        "total": "{{count}} total • página {{current}}/{{total}}",
-        "loading": "(carregando…)",
-        "empty": "Nenhuma partida para exibir. Pesquise por um nome de usuário."
-    },
-    "card": {
-        "date": "Data",
-        "time": "Tempo",
-        "type": "Tipo",
-        "myElo": "Meu Elo no momento da partida",
-        "view": "Ver Jogo",
-        "analyze": "Analisar"
+    "nav": {
+        "about": "Sobre",
+        "home": "Início",
+        "player": "Meus Jogos",
+        "game": "Analisar uma Partida",
+        "legendary": "Partidas Lendárias"
     },
     "home": {
-        "title": "Chess Chronicles",
-        "subtitle": "Analise suas partidas do Chess.com",
-        "usernameLabel": "Nome de usuário do Chess.com",
-        "button": "Analisar",
+        "hero": {
+            "title": "Chess Chronicles",
+            "subtitle": "Analise suas partidas do Chess.com",
+            "badge": "Melhore seu jogo",
+            "releaseBadge": "v1.0 Disponível Agora"
+        },
+        "search": {
+            "placeholder": "Ex: MagnusCarlsen",
+            "button": "Analisar",
+            "loading": "Carregando..."
+        },
+        "filters": {
+            "heading": "Filtros e Opções de Ordenação",
+            "open": "Mostrar",
+            "close": "Ocultar",
+            "modes": "Tipo de Jogo",
+            "results": "Resultado",
+            "color": "Cor",
+            "month": "Mês",
+            "opponent": "Oponente",
+            "sort": "Ordenar",
+            "asc": "ASC",
+            "desc": "DESC",
+            "all": "Todos",
+            "perPage": "Por página",
+            "prev": "Anterior",
+            "next": "Próximo",
+            "monthPlaceholder": "Escolha um mês",
+            "searchOpponent": "Buscar um oponente",
+            "sortBy": {
+                "date": "Data",
+                "eloUser": "Meu Elo",
+                "eloOpponent": "Elo do Oponente"
+            }
+        },
+        "list": {
+            "title": "Lista de Partidas",
+            "total": "{{count}} total • página {{current}}/{{total}}",
+            "loading": "(carregando…)",
+            "empty": "Nenhuma partida para exibir. Pesquise por um nome de usuário.",
+            "card": {
+                "date": "Data",
+                "time": "Tempo",
+                "type": "Tipo",
+                "myElo": "Meu Elo no momento da partida",
+                "view": "Ver Jogo",
+                "analyze": "Analisar"
+            }
+        },
         "info1": "Insira seu nome de usuário do Chess.com para ver seus jogos.",
         "info2": "Selecione uma partida para analisá-la em detalhes.",
-        "feature1": {
-            "title": "Analise seus jogos",
-            "desc": "Insira seu nome de usuário do Chess.com para ver todas as suas partidas. Navegue lance a lance, verifique suas estatísticas e identifique momentos chave.",
-            "item1": "Todos os seus arquivos de jogos",
-            "item2": "Filtrar por modo, cor, resultado",
-            "item3": "Visualização interativa do tabuleiro",
-            "item4": "Navegação lance a lance"
-        },
-        "feature2": {
-            "title": "Partidas de Mestres",
-            "desc": "Explore uma galeria com as melhores partidas de xadrez de todos os tempos. Analise as estratégias dos melhores jogadores do mundo.",
-            "item1": "Partidas históricas famosas",
-            "item2": "Jogos recentes de jogadores top",
-            "item3": "Categorizados por tipo e nível",
-            "item4": "Descubra as combinações mais belas"
-        },
-        "engine": {
-            "title": "Análise Stockfish",
-            "desc": "Em breve - Analise seus erros com Stockfish e receba recomendações para melhorar seu jogo.",
-            "badge": "Em Desenvolvimento"
+        "features": {
+            "tagline": "Um conjunto completo de ferramentas para dissecar seu jogo",
+            "cards": {
+                "progress": {
+                    "title": "Análise de Progresso",
+                    "desc": "Acompanhe a evolução do seu Elo e entenda suas tendências de jogo a longo prazo."
+                },
+                "stockfish": {
+                    "title": "Motor Stockfish",
+                    "desc": "Detecção precisa de erros com o motor mais poderoso do mundo."
+                },
+                "pgnviewer": {
+                    "title": "Visualizador PGN",
+                    "desc": "Reproduza cada lance com uma interface fluida e intuitiva."
+                }
+            },
+            "deepDive": {
+                "title": "Recursos em Detalhe",
+                "pgn": {
+                    "title": "Importação PGN Instantânea",
+                    "desc": "Copie e cole qualquer PGN ou importe diretamente do Chess.com. Nosso robusto analisador lida com todas as variações e comentários."
+                },
+                "analysis": {
+                    "title": "Análise Lance a Lance",
+                    "desc": "Navegue facilmente pelo histórico do jogo. Cada lance é avaliado para lhe dar feedback imediato sobre sua qualidade."
+                },
+                "stats": {
+                    "title": "Estatísticas do Jogo",
+                    "desc": "Visualize sua precisão, número de erros, erros graves e lances brilhantes para cada jogo analisado."
+                }
+            },
+            "masterGames": {
+                "title": "Partidas de Mestres",
+                "desc": "Explore uma galeria com as melhores partidas de xadrez de todos os tempos. Analise as estratégias dos melhores jogadores do mundo.",
+                "item1": "Partidas históricas famosas",
+                "item2": "Jogos recentes de jogadores top",
+                "item3": "Categorizados por tipo e nível",
+                "item4": "Descubra as combinações mais belas"
+            }
         },
         "howItWorks": "Como Funciona",
-        "step1": {
-            "title": "Insira um Usuário",
-            "desc": "Digite seu nome de usuário do Chess.com"
-        },
-        "step2": {
-            "title": "Explore seus Jogos",
-            "desc": "Filtre e navegue pelo seu histórico completo"
-        },
-        "step3": {
-            "title": "Analise em Detalhe",
-            "desc": "Visualize cada lance e melhore"
+        "steps": {
+            "step1": {
+                "title": "Insira um Usuário",
+                "desc": "Digite seu nome de usuário do Chess.com"
+            },
+            "step2": {
+                "title": "Explore seus Jogos",
+                "desc": "Filtre e navegue pela sua história completa"
+            },
+            "step3": {
+                "title": "Analise em Detalhes",
+                "desc": "Visualize cada lance e melhore"
+            }
         },
         "about": {
             "title": "Por que usar o Chess Chronicles?",
-            "p1": "O Chess Chronicles nasceu de uma necessidade simples: tornar a análise de xadrez mais acessível e visual. Ao contrário das interfaces clássicas, focamos na clareza e facilidade de uso.",
-            "p2": "Nossa ferramenta recupera automaticamente seus jogos do Chess.com e permite reproduzi-los lance a lance. É a ferramenta ideal para detectar erros recorrentes, estudar suas aberturas e entender por que você venceu ou perdeu.",
+            "p1": "O Chess Chronicles nasceu de uma necessidade simples: tornar a análise de xadrez mais acessível e visual. Ao contrário de interfaces clássicas, focamos em clareza e facilidade de uso.",
+            "p2": "Nossa ferramenta recupera automaticamente seus jogos do Chess.com e permite reproduzi-los lance a lance. É a ferramenta ideal para detectar erros recorrentes, estudar aberturas e entender por que você ganhou ou perdeu.",
             "p3": "Seja você um iniciante buscando alcançar 1000 de Elo ou um jogador experiente, a chave para o progresso está na análise. O Chess Chronicles oferece este ambiente de estudo livre de distrações."
         },
         "video": {
@@ -151,48 +195,16 @@
                 "terms": "Termos"
             }
         },
-        "releaseBadge": "v1.0 Disponível Agora",
-        "hero": {
-            "badge": "Melhore seu jogo"
-        },
-        "features": {
-            "tagline": "Um conjunto completo de ferramentas para dissecar seu jogo",
-            "cards": {
-                "progress": {
-                    "title": "Análise de Progresso",
-                    "desc": "Acompanhe a evolução do seu Elo e entenda suas tendências de jogo a longo prazo."
-                },
-                "stockfish": {
-                    "title": "Motor Stockfish",
-                    "desc": "Detecção precisa de erros com o motor mais poderoso do mundo."
-                },
-                "pgnviewer": {
-                    "title": "Visualizador PGN",
-                    "desc": "Reproduza cada lance com uma interface fluida e intuitiva."
-                }
-            },
-            "deepDive": {
-                "title": "Recursos em Detalhe",
-                "pgn": {
-                    "title": "Importação PGN Instantânea",
-                    "desc": "Copie e cole qualquer PGN ou importe diretamente do Chess.com. Nosso robusto analisador lida com todas as variações e comentários."
-                },
-                "analysis": {
-                    "title": "Análise Lance a Lance",
-                    "desc": "Navegue facilmente pelo histórico do jogo. Cada lance é avaliado para lhe dar feedback imediato sobre sua qualidade."
-                },
-                "stats": {
-                    "title": "Estatísticas do Jogo",
-                    "desc": "Visualize sua precisão, número de erros, erros graves e lances brilhantes para cada jogo analisado."
-                }
-            }
-        },
         "privacy": {
             "badges": {
                 "openSource": "Código Aberto",
                 "free": "100% Grátis",
                 "noAds": "Sem Anúncios"
             }
+        },
+        "community": {
+            "title": "Junte-se à Comunidade",
+            "desc": "O Chess Chronicles é um projeto vivo. Contribua com o código no GitHub, sugira recursos ou simplesmente compartilhe seus melhores jogos analisados com seus amigos."
         },
         "seo": {
             "introTitle": "A ferramenta definitiva para melhorar no xadrez",
@@ -206,41 +218,42 @@
             "advancedTitle": "Para Jogadores de Clube",
             "advancedText": "Refine seu repertório de aberturas e trabalhe na conversão de vantagens. Use a análise para verificar a solidez dos seus sacrifícios e a precisão dos seus finais.",
             "privacyTitle": "Privacidade e Gratuito",
-            "privacyText": "O Chess Chronicles é um projeto apaixonado de código aberto. Não armazenamos seus dados pessoais e a ferramenta é totalmente gratuita. Seu progresso é nossa única prioridade."
-        },
-        "community": {
-            "title": "Junte-se à Comunidade",
-            "desc": "O Chess Chronicles é um projeto vivo. Contribua com o código no GitHub, sugira recursos ou simplesmente compartilhe seus melhores jogos analisados com seus amigos."
+            "privacyText": "O Chess Chronicles é um projeto apaixonado de código aberto. Não armazenamos seus dados pessoais e a ferramenta é totalmente gratuita. Seu progresso é nossa única prioridade.",
+            "title": "Sobre o Chess Chronicles",
+            "text": "O Chess Chronicles é a plataforma definitiva para entusiastas de xadrez que desejam analisar jogos, acompanhar seu progresso e explorar a história de jogadores lendários. Seja um iniciante buscando melhorar ou um grande mestre afinando sua estratégia, nossas ferramentas oferecem análises profundas de cada lance. Reproduza jogos famosos, analise seus próprios jogos com motores poderosos e descubra as histórias por trás das mentes mais brilhantes do xadrez. Junte-se à nossa comunidade e eleve seu nível de jogo hoje."
         }
     },
-    "game": {
+    "analyze": {
         "title": "Partida",
+        "description": "Jogue xadrez online",
         "player": "Jogador",
         "date": "Data",
         "moves": "Lances",
         "noMoves": "Nenhum lance analisado",
-        "noPGN": "Nenhuma partida",
+        "noPGN": "Nenhum jogo",
         "bestMove": "Melhor Lance",
         "analyze": "Analisar uma partida",
         "or": "Ou",
         "flipBoard": "Girar tabuleiro",
-        "analyzeGame": "Analisar esta partida",
-        "firstMove": "Primeiro lance",
-        "previousMove": "Lance anterior",
-        "nextMove": "Próximo lance",
-        "lastMove": "Último lance",
-        "play": "Reproduzir",
-        "pause": "Pausar",
+        "analyzeGame": "Analisar este jogo",
+        "controls": {
+            "first": "Primeiro lance",
+            "prev": "Lance anterior",
+            "next": "Próximo lance",
+            "last": "Último lance",
+            "play": "Reproduzir",
+            "pause": "Pausar"
+        },
         "result": {
             "won_resignation": "venceu por desistência",
             "won_checkmate": "venceu por xeque-mate",
             "won_timeout": "venceu por tempo",
             "draw_repetition": "empate por repetição",
-            "draw_stalemate": "empate por rei afogado",
+            "draw_stalemate": "empate por afogamento",
             "draw_material": "empate por material insuficiente",
             "draw_agreement": "empate por acordo",
-            "whiteWins": "Brancas vencem",
-            "blackWins": "Pretas vencem",
+            "whiteWins": "Brancas Vencem",
+            "blackWins": "Pretas Vencem",
             "white": "Brancas",
             "black": "Pretas",
             "playerWins": "{{player}} venceu",
@@ -251,14 +264,14 @@
             "checkmate": "xeque-mate",
             "time": "tempo",
             "resignation": "desistência",
-            "stalemate": "rei afogado",
+            "stalemate": "afogamento",
             "insufficient": "material insuficiente",
             "repetition": "repetição",
             "fiftyMoves": "regra dos 50 lances",
             "agreement": "acordo mútuo"
         },
         "fallback": {
-            "title": "Partida não encontrada",
+            "title": "Jogo não encontrado",
             "desc": "Tente novamente com outro ID ou cole um PGN abaixo.",
             "cancelManual": "Cancelar PGN",
             "pgnPlaceholder": "Cole um PGN completo aqui",
@@ -272,10 +285,30 @@
             "illegalMove": "O PGN contém lances inválidos.",
             "invalidMove": "Lance inválido no PGN.",
             "invalidPgnFormat": "Formato de PGN inválido.",
-            "emptyPgn": "Por favor, insira um PGN"
+            "emptyPgn": "Por favor insira um PGN"
+        },
+        "engine": {
+            "title": "Análise",
+            "progress": "Análise",
+            "error": "Erro",
+            "excellent": "Exc",
+            "good": "Bom",
+            "theoretical": "Teó",
+            "inaccuracy": "Impr",
+            "mistake": "Erro",
+            "blunder": "Grave",
+            "accuracy": "Precisão",
+            "opening": "Abertura",
+            "settings": {
+                "title": "Configurações de Análise",
+                "version": "Versão do Stockfish",
+                "lite": "Leve",
+                "normal": "Normal",
+                "depth": "Profundidade (1-30)",
+                "sounds": "Efeitos Sonoros"
+            }
         }
     },
-    "loading": "Carregando...",
     "profile": {
         "league": "Liga",
         "followers": "Seguidores",
@@ -289,7 +322,7 @@
         "offline": "Offline",
         "user": "Usuário",
         "openTwitch": "Abrir Twitch",
-        "avatarAlt": "avatar"
+        "avatarAlt": "Avatar do perfil do jogador de xadrez"
     },
     "about": {
         "title": "Sobre o Chess Chronicles",
@@ -305,41 +338,6 @@
         "github_text": "O projeto é de código aberto ou visualizável no meu GitHub.",
         "email_text": "Uma pergunta? Uma sugestão? Escreva para mim:"
     },
-    "nav": {
-        "about": "Sobre",
-        "home": "Início",
-        "player": "Meus Jogos",
-        "game": "Analisar uma Partida",
-        "legendary": "Partidas Lendárias"
-    },
-    "analysis": {
-        "title": "Análise",
-        "progress": "Análise",
-        "error": "Erro",
-        "excellent": "Exc",
-        "good": "Bom",
-        "theoretical": "Teó",
-        "inaccuracy": "Impr",
-        "mistake": "Erro",
-        "blunder": "Grave",
-        "accuracy": "Precisão",
-        "opening": "Abertura",
-        "settings": {
-            "title": "Configurações de Análise",
-            "version": "Versão do Stockfish",
-            "lite": "Leve",
-            "normal": "Normal",
-            "depth": "Profundidade (1-30)",
-            "sounds": "Efeitos Sonoros"
-        }
-    },
-    "common": {
-        "close": "Fechar",
-        "cancel": "Cancelar",
-        "save": "Salvar",
-        "enabled": "Ativado",
-        "disabled": "Desativado"
-    },
     "legendary": {
         "comingSoon": "Esta seção chegará muito em breve..."
     },
@@ -348,28 +346,17 @@
         "desc": "Desculpe, a página que você procura não existe ou foi movida.",
         "backHome": "Voltar ao início"
     },
-    "error": {
-        "details": "Detalhes",
-        "hideDetails": "Ocultar detalhes",
-        "offline": "Conexão de rede indisponível. Por favor, verifique sua Internet e tente novamente.",
-        "userNotFound": "Usuário não encontrado no Chess.com",
-        "statsUnavailable": "Estatísticas indisponíveis para este usuário",
-        "archiveNotFound": "Arquivo não encontrado",
-        "tooManyRequests": "Muitas requisições. Por favor, tente novamente em breve.",
-        "server": "Serviço do Chess.com temporariamente indisponível (erro no servidor)",
-        "http": "Erro de comunicação com o Chess.com (HTTP {{status}})",
-        "unknown": "Erro de rede inesperado ao comunicar com o Chess.com"
-    },
     "seo": {
         "keywords": "xadrez, análise, stockfish, pgn, chess.com, lichess, análise de partidas, melhoria no xadrez",
         "profile": {
-            "description": "Analise as partidas de xadrez de {{username}}. Veja estatísticas, aberturas e reproduza jogos."
+            "title": "{{username}} - Perfil e Partidas de Xadrez",
+            "description": "Analise as partidas de xadrez de {{username}}. Veja estatísticas, aberturas e reproduza partidas.",
+            "searchTitle": "Buscar Perfil de Jogador",
+            "searchDesc": "Busque um jogador de xadrez para ver seu perfil e estatísticas."
         },
         "analyze": {
+            "title": "Análise de Partida de Xadrez",
             "description": "Analise suas partidas de xadrez com Stockfish 16. Revise seus lances, encontre erros e melhore seu jogo."
-        },
-        "home": {
-            "description": "Analise suas partidas de xadrez, acompanhe seu progresso e descubra jogos lendários. O Chess Chronicles é seu companheiro para análise e melhoria no xadrez."
         }
     }
 }

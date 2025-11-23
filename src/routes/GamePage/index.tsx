@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { withLang } from '../../i18n';
 import { Layout } from '../../components/Layout';
+import { SEO } from '../../components/SEO';
 import { GameFallback } from '../../components/GameFallback';
 import { useChessStore } from '../../store';
 import { Chess } from 'chess.js';
@@ -37,7 +38,7 @@ export default function GamePage() {
     const pgnToValidate = manualPgnInput.trim();
 
     if (!pgnToValidate) {
-      setErrorMessage(t('game.error.emptyPgn', 'Veuillez saisir un PGN'));
+      setErrorMessage(t('analyze.error.emptyPgn', 'Veuillez saisir un PGN'));
       return;
     }
 
@@ -48,7 +49,7 @@ export default function GamePage() {
 
       if (moves.length === 0) {
         setErrorMessage(
-          t('game.error.noMovesFound', 'Aucun coup trouvé dans le PGN. Vérifiez le format.')
+          t('analyze.error.noMovesFound', 'Aucun coup trouvé dans le PGN. Vérifiez le format.')
         );
         return;
       }
@@ -66,7 +67,7 @@ export default function GamePage() {
       const rawError = err instanceof Error ? err.message : 'Format invalide';
 
       if (rawError.includes('Expected') && rawError.includes('found')) {
-        setErrorMessage(t('game.error.invalidPgnFormat', 'Format PGN invalide.'));
+        setErrorMessage(t('analyze.error.invalidPgnFormat', 'Format PGN invalide.'));
         return;
       }
 
@@ -74,23 +75,27 @@ export default function GamePage() {
         const moveMatch = rawError.match(/:\s*(.+)$/);
         const moveDetail = moveMatch ? moveMatch[1].trim() : '';
         const errorMsg = moveDetail
-          ? `${t('game.error.invalidMove', 'Coup invalide dans le PGN')} : ${moveDetail}`
-          : t('game.error.invalidMove', 'Coup invalide dans le PGN.');
+          ? `${t('analyze.error.invalidMove', 'Coup invalide dans le PGN')} : ${moveDetail}`
+          : t('analyze.error.invalidMove', 'Coup invalide dans le PGN.');
         setErrorMessage(errorMsg);
         return;
       }
 
       if (rawError.includes('Illegal move') || rawError.includes('illegal move')) {
-        setErrorMessage(t('game.error.illegalMove', 'Le PGN contient des coups invalides.'));
+        setErrorMessage(t('analyze.error.illegalMove', 'Le PGN contient des coups invalides.'));
         return;
       }
 
-      setErrorMessage(t('game.error.invalidPgnFormat', 'Format PGN invalide.'));
+      setErrorMessage(t('analyze.error.invalidPgnFormat', 'Format PGN invalide.'));
     }
   };
 
   return (
     <Layout>
+      <SEO
+        title={t('analyze.title', 'Jeu')}
+        description={t('analyze.description', 'Jouez aux échecs en ligne')}
+      />
       <main className="mx-auto max-w-7xl px-4 py-6">
         <section className="space-y-6">
           <GameFallback

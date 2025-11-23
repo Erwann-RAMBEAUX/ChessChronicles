@@ -44,8 +44,8 @@ export function Header() {
             to={withLang('/')}
             className="flex items-center gap-2 text-xl font-semibold hover:text-primary transition-colors"
           >
-            <img src="/favicon/favicon.svg" alt={t('app.logoAlt')} className="h-8 w-8" />
-            {t('app.title')}
+            <img src="/favicon/favicon.svg" alt="Chess Chronicles logo" className="h-8 w-8" />
+            {t('common.appName')}
           </Link>
           <div className="ml-auto flex items-center gap-6">
             <button

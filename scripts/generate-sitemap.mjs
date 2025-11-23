@@ -49,6 +49,37 @@ function generateSitemap() {
         });
     });
 
+    // Custom URLs for SEO (Force indexing of specific dynamic content)
+    const CUSTOM_URLS = [
+        '/player/Hikaru',
+        '/analyze?pgn=%5BWhite%20%22Hikaru%22%5D%20%5BBlack%20%22MagnusCarlsen%22%5D%20%5BWhiteElo%20%223402%22%5D%20%5BBlackElo%20%223296%22%5D%201.e4%20e5%202.Qh5%20Nc6%203.Bc4%20Nf6%204.Qxf7%23'
+    ];
+
+    CUSTOM_URLS.forEach((customUrl) => {
+        LANGUAGES.forEach((currentLang) => {
+            const loc = `${DOMAIN}/${currentLang}${customUrl}`;
+
+            xml += `
+  <url>
+    <loc>${loc}</loc>
+    <lastmod>${date}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>`;
+
+            LANGUAGES.forEach((altLang) => {
+                const href = `${DOMAIN}/${altLang}${customUrl}`;
+                xml += `
+    <xhtml:link rel="alternate" hreflang="${altLang}" href="${href}" />`;
+            });
+
+            xml += `
+    <xhtml:link rel="alternate" hreflang="x-default" href="${DOMAIN}/en${customUrl}" />`;
+
+            xml += `
+  </url>`;
+        });
+    });
+
     xml += `
 </urlset>`;
 

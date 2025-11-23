@@ -14,7 +14,7 @@ import { SearchBar } from '../../components/SearchBar';
 import { useChessStore } from '../../store';
 
 export default function ProfilePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { username: paramUsername } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,12 +54,56 @@ export default function ProfilePage() {
     }
   };
 
+  const jsonLd = storeUsername ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "name": storeUsername,
+        "url": `https://www.chess.com/member/${storeUsername}`,
+        "interactionStatistic": [
+          {
+            "@type": "InteractionCounter",
+            "interactionType": "https://schema.org/PlayAction",
+            "userInteractionCount": 0 // Placeholder, could be total games if available
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": t('nav.home'),
+            "item": `https://chesschronicles.com/${i18n.language}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": storeUsername,
+            "item": `https://chesschronicles.com/${i18n.language}/player/${storeUsername}`
+          }
+        ]
+      }
+    ]
+  } : undefined;
+
   return (
     <Layout>
       <SEO
-        title={decodedParamUsername ? `${decodedParamUsername}` : t('search.profile')}
-        description={decodedParamUsername ? t('seo.profile.description', { username: decodedParamUsername }) : t('home.subtitle')}
+        title={
+          storeUsername
+            ? t('seo.profile.title', { username: storeUsername })
+            : t('seo.profile.searchTitle', 'Search Chess Player Profile')
+        }
+        description={
+          storeUsername
+            ? t('seo.profile.description', { username: storeUsername })
+            : t('seo.profile.searchDesc', 'Search for any Chess.com player to analyze their games and stats.')
+        }
         type="profile"
+        jsonLd={jsonLd}
       />
       <main className="mx-auto max-w-7xl px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         <section className="lg:col-span-9 space-y-6">
@@ -69,7 +113,7 @@ export default function ProfilePage() {
 
           <Suspense
             fallback={
-              <div className="bg-slate-800/30 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 text-sm text-slate-400">{t('loading', 'Chargement...')}</div>
+              <div className="bg-slate-800/30 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 text-sm text-slate-400">{t('common.loading', 'Chargement...')}</div>
             }
           >
             <ProfileSummary />

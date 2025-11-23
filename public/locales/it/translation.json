@@ -1,110 +1,154 @@
 {
-    "app": {
-        "title": "Chess Chronicles",
-        "logoAlt": "Logo di Chess Chronicles"
-    },
-    "search": {
-        "placeholder": "Es: MagnusCarlsen",
-        "load": "Carica partite",
-        "reload": "Ricarica",
+    "common": {
+        "appName": "Chess Chronicles",
         "loading": "Caricamento...",
-        "profile": "Profilo",
-        "playerPlaceholder": "Nome giocatore..."
-    },
-    "filters": {
-        "heading": "Filtri e opzioni di ordinamento",
-        "open": "Mostra",
-        "close": "Nascondi",
-        "modes": "Tipo di gioco",
-        "results": "Risultato",
-        "color": "Colore",
-        "month": "Mese",
-        "opponent": "Avversario",
-        "sort": "Ordina",
-        "asc": "CRESC",
-        "desc": "DECRESC",
-        "all": "Tutti",
-        "perPage": "Per pagina",
-        "prev": "Precedente",
-        "next": "Successivo",
-        "monthPlaceholder": "Scegli un mese",
-        "searchOpponent": "Cerca un avversario",
-        "sortBy": {
-            "date": "Data",
-            "eloUser": "Mio Elo",
-            "eloOpponent": "Elo avversario"
+        "close": "Chiudi",
+        "cancel": "Annulla",
+        "save": "Salva",
+        "enabled": "Abilitato",
+        "disabled": "Disabilitato",
+        "mode": {
+            "bullet": "Bullet",
+            "blitz": "Blitz",
+            "rapid": "Rapid",
+            "daily": "Giornaliera"
+        },
+        "result": {
+            "win": "Vittoria",
+            "loss": "Sconfitta",
+            "draw": "Patta"
+        },
+        "color": {
+            "all": "Tutti",
+            "white": "Bianco",
+            "black": "Nero"
+        },
+        "error": {
+            "details": "Dettagli",
+            "hideDetails": "Nascondi dettagli",
+            "offline": "Connessione di rete non disponibile. Controlla la tua connessione Internet e riprova.",
+            "userNotFound": "Utente non trovato su Chess.com",
+            "statsUnavailable": "Statistiche non disponibili per questo utente",
+            "archiveNotFound": "Archivio non trovato",
+            "tooManyRequests": "Troppe richieste. Riprova tra poco.",
+            "server": "Servizio Chess.com temporaneamente non disponibile (errore server)",
+            "http": "Errore di comunicazione con Chess.com (HTTP {{status}})",
+            "unknown": "Errore di rete imprevisto durante la comunicazione con Chess.com"
         }
     },
-    "mode": {
-        "bullet": "Bullet",
-        "blitz": "Blitz",
-        "rapid": "Rapid",
-        "daily": "Giornaliera"
-    },
-    "result": {
-        "win": "Vittoria",
-        "loss": "Sconfitta",
-        "draw": "Patta"
-    },
-    "color": {
-        "all": "Tutti",
-        "white": "Bianco",
-        "black": "Nero"
-    },
-    "list": {
-        "title": "Elenco partite",
-        "total": "{{count}} totali • pagina {{current}}/{{total}}",
-        "loading": "(caricamento…)",
-        "empty": "Nessuna partita da mostrare. Cerca un nome utente."
-    },
-    "card": {
-        "date": "Data",
-        "time": "Tempo",
-        "type": "Tipo",
-        "myElo": "Mio Elo al momento della partita",
-        "view": "Vedi partita",
-        "analyze": "Analizza"
+    "nav": {
+        "about": "Chi siamo",
+        "home": "Home",
+        "player": "Le Mie Partite",
+        "game": "Analizza una Partita",
+        "legendary": "Partite Leggendarie"
     },
     "home": {
-        "title": "Chess Chronicles",
-        "subtitle": "Analizza le tue partite di Chess.com",
-        "usernameLabel": "Nome utente Chess.com",
-        "button": "Analizza",
+        "hero": {
+            "title": "Chess Chronicles",
+            "subtitle": "Analizza le tue partite di Chess.com",
+            "badge": "Migliora il tuo gioco",
+            "releaseBadge": "v1.0 Disponibile ora"
+        },
+        "search": {
+            "placeholder": "Es: MagnusCarlsen",
+            "button": "Analizza",
+            "loading": "Caricamento..."
+        },
+        "filters": {
+            "heading": "Filtri e opzioni di ordinamento",
+            "open": "Mostra",
+            "close": "Nascondi",
+            "modes": "Tipo di gioco",
+            "results": "Risultato",
+            "color": "Colore",
+            "month": "Mese",
+            "opponent": "Avversario",
+            "sort": "Ordina",
+            "asc": "CRESC",
+            "desc": "DECRESC",
+            "all": "Tutti",
+            "perPage": "Per pagina",
+            "prev": "Precedente",
+            "next": "Successivo",
+            "monthPlaceholder": "Scegli un mese",
+            "searchOpponent": "Cerca un avversario",
+            "sortBy": {
+                "date": "Data",
+                "eloUser": "Mio Elo",
+                "eloOpponent": "Elo avversario"
+            }
+        },
+        "list": {
+            "title": "Elenco partite",
+            "total": "{{count}} totali • pagina {{current}}/{{total}}",
+            "loading": "(caricamento…)",
+            "empty": "Nessuna partita da mostrare. Cerca un nome utente.",
+            "card": {
+                "date": "Data",
+                "time": "Tempo",
+                "type": "Tipo",
+                "myElo": "Mio Elo al momento della partita",
+                "view": "Vedi partita",
+                "analyze": "Analizza"
+            }
+        },
         "info1": "Inserisci il tuo nome utente di Chess.com per vedere le tue partite.",
         "info2": "Seleziona una partita per analizzarla nel dettaglio.",
-        "feature1": {
-            "title": "Analizza le tue partite",
-            "desc": "Inserisci il tuo nome utente Chess.com per visualizzare tutte le tue partite. Naviga mossa dopo mossa, controlla le tue statistiche e identifica i momenti chiave.",
-            "item1": "Tutti i tuoi archivi di partite",
-            "item2": "Filtra per modalità, colore, risultato",
-            "item3": "Visualizzazione interattiva della scacchiera",
-            "item4": "Navigazione mossa per mossa"
-        },
-        "feature2": {
-            "title": "Partite Magistrali",
-            "desc": "Esplora una galleria delle più grandi partite di scacchi di tutti i tempi. Analizza le strategie dei migliori giocatori del mondo.",
-            "item1": "Partite storiche famose",
-            "item2": "Partite recenti dei migliori giocatori",
-            "item3": "Categorizzate per tipo e livello",
-            "item4": "Scopri le combinazioni più belle"
-        },
-        "engine": {
-            "title": "Analisi Stockfish",
-            "desc": "Prossimamente - Analizza i tuoi errori con Stockfish e ricevi consigli per migliorare il tuo gioco.",
-            "badge": "In sviluppo"
+        "features": {
+            "tagline": "Una suite completa di strumenti per dissezionare il tuo gioco",
+            "cards": {
+                "progress": {
+                    "title": "Analisi dei progressi",
+                    "desc": "Traccia l'evoluzione del tuo Elo e comprendi le tue tendenze di gioco a lungo termine."
+                },
+                "stockfish": {
+                    "title": "Motore Stockfish",
+                    "desc": "Rilevamento preciso degli errori con il motore più potente al mondo."
+                },
+                "pgnviewer": {
+                    "title": "Visualizzatore PGN",
+                    "desc": "Rigioca ogni mossa con un'interfaccia fluida e intuitiva."
+                }
+            },
+            "deepDive": {
+                "title": "Funzionalità nel dettaglio",
+                "pgn": {
+                    "title": "Importazione PGN istantanea",
+                    "desc": "Copia e incolla qualsiasi PGN o importa direttamente da Chess.com. Il nostro robusto parser gestisce tutte le varianti e i commenti."
+                },
+                "analysis": {
+                    "title": "Analisi mossa per mossa",
+                    "desc": "Naviga facilmente nella cronologia della partita. Ogni mossa viene valutata per darti un feedback immediato sulla sua qualità."
+                },
+                "stats": {
+                    "title": "Statistiche partita",
+                    "desc": "Visualizza la tua precisione, il numero di errori, sviste e mosse brillanti per ogni partita analizzata."
+                }
+            },
+            "masterGames": {
+                "title": "Partite Magistrali",
+                "desc": "Esplora una galleria delle più grandi partite di scacchi di tutti i tempi. Analizza le strategie dei migliori giocatori del mondo.",
+                "item1": "Partite storiche famose",
+                "item2": "Partite recenti dei migliori giocatori",
+                "item3": "Categorizzate per tipo e livello",
+                "item4": "Scopri le combinazioni più belle"
+            }
         },
         "howItWorks": "Come funziona",
-        "step1": {
-            "title": "Inserisci un nome utente",
-            "desc": "Digita il tuo nome utente Chess.com"
-        },
-        "step2": {
-            "title": "Esplora le tue partite",
-            "desc": "Filtra e naviga nella tua cronologia completa"
-        },
-        "step3": {
-            "title": "Analizza nel dettaglio",
-            "desc": "Visualizza ogni mossa e migliora"
+        "steps": {
+            "step1": {
+                "title": "Inserisci un nome utente",
+                "desc": "Digita il tuo nome utente Chess.com"
+            },
+            "step2": {
+                "title": "Esplora le tue partite",
+                "desc": "Filtra e naviga nella tua cronologia completa"
+            },
+            "step3": {
+                "title": "Analizza nel dettaglio",
+                "desc": "Visualizza ogni mossa e migliora"
+            }
         },
         "about": {
             "title": "Perché usare Chess Chronicles?",
@@ -115,8 +159,7 @@
         "video": {
             "title": "Video Demo",
             "subtitle": "Impara a usare tutte le funzionalità in 2 minuti",
-                        "iframeTitle": "Video demo Chess Chronicles"
-
+            "iframeTitle": "Video demo Chess Chronicles"
         },
         "faq": {
             "title": "Domande Frequenti",
@@ -152,48 +195,16 @@
                 "terms": "Termini"
             }
         },
-        "releaseBadge": "v1.0 Disponibile ora",
-        "hero": {
-            "badge": "Migliora il tuo gioco"
-        },
-        "features": {
-            "tagline": "Una suite completa di strumenti per dissezionare il tuo gioco",
-            "cards": {
-                "progress": {
-                    "title": "Analisi dei progressi",
-                    "desc": "Traccia l'evoluzione del tuo Elo e comprendi le tue tendenze di gioco a lungo termine."
-                },
-                "stockfish": {
-                    "title": "Motore Stockfish",
-                    "desc": "Rilevamento preciso degli errori con il motore più potente al mondo."
-                },
-                "pgnviewer": {
-                    "title": "Visualizzatore PGN",
-                    "desc": "Rigioca ogni mossa con un'interfaccia fluida e intuitiva."
-                }
-            },
-            "deepDive": {
-                "title": "Funzionalità nel dettaglio",
-                "pgn": {
-                    "title": "Importazione PGN istantanea",
-                    "desc": "Copia e incolla qualsiasi PGN o importa direttamente da Chess.com. Il nostro robusto parser gestisce tutte le varianti e i commenti."
-                },
-                "analysis": {
-                    "title": "Analisi mossa per mossa",
-                    "desc": "Naviga facilmente nella cronologia della partita. Ogni mossa viene valutata per darti un feedback immediato sulla sua qualità."
-                },
-                "stats": {
-                    "title": "Statistiche partita",
-                    "desc": "Visualizza la tua precisione, il numero di errori, sviste e mosse brillanti per ogni partita analizzata."
-                }
-            }
-        },
         "privacy": {
             "badges": {
                 "openSource": "Open Source",
                 "free": "100% Gratis",
                 "noAds": "Nessuna pubblicità"
             }
+        },
+        "community": {
+            "title": "Unisciti alla community",
+            "desc": "Chess Chronicles è un progetto vivo. Contribuisci al codice su GitHub, suggerisci funzionalità o semplicemente condividi le tue migliori partite analizzate con i tuoi amici."
         },
         "seo": {
             "introTitle": "Lo strumento definitivo per migliorare a scacchi",
@@ -207,15 +218,14 @@
             "advancedTitle": "Per Giocatori di Club",
             "advancedText": "Affina il tuo repertorio di aperture e lavora sulla conversione dei vantaggi. Usa l'analisi per verificare la solidità dei tuoi sacrifici e la precisione dei tuoi finali.",
             "privacyTitle": "Privacy e Gratis",
-            "privacyText": "Chess Chronicles è un progetto open-source appassionato. Non memorizziamo i tuoi dati personali e lo strumento è interamente gratuito. Il tuo progresso è la nostra unica priorità."
-        },
-        "community": {
-            "title": "Unisciti alla community",
-            "desc": "Chess Chronicles è un progetto vivo. Contribuisci al codice su GitHub, suggerisci funzionalità o semplicemente condividi le tue migliori partite analizzate con i tuoi amici."
+            "privacyText": "Chess Chronicles è un progetto open-source appassionato. Non memorizziamo i tuoi dati personali e lo strumento è interamente gratuito. Il tuo progresso è la nostra unica priorità.",
+            "title": "Info su Chess Chronicles",
+            "text": "Chess Chronicles è la piattaforma definitiva per gli appassionati di scacchi che desiderano analizzare partite, seguire i loro progressi ed esplorare la storia dei giocatori leggendari. Che tu sia un principiante in cerca di miglioramenti o un gran maestro che affina la sua strategia, i nostri strumenti offrono analisi approfondite di ogni mossa. Riproduci partite famose, analizza i tuoi giochi con motori potenti e scopri le storie dietro le menti più brillanti degli scacchi. Unisciti alla nostra community ed eleva il tuo livello di gioco oggi stesso."
         }
     },
-    "game": {
+    "analyze": {
         "title": "Partita",
+        "description": "Gioca a scacchi online",
         "player": "Giocatore",
         "date": "Data",
         "moves": "Mosse",
@@ -226,12 +236,14 @@
         "or": "O",
         "flipBoard": "Ruota scacchiera",
         "analyzeGame": "Analizza questa partita",
-        "firstMove": "Prima mossa",
-        "previousMove": "Mossa precedente",
-        "nextMove": "Mossa successiva",
-        "lastMove": "Ultima mossa",
-        "play": "Riproduci",
-        "pause": "Pausa",
+        "controls": {
+            "first": "Prima mossa",
+            "prev": "Mossa precedente",
+            "next": "Mossa successiva",
+            "last": "Ultima mossa",
+            "play": "Riproduci",
+            "pause": "Pausa"
+        },
         "result": {
             "won_resignation": "vinto per abbandono",
             "won_checkmate": "vinto per scacco matto",
@@ -274,9 +286,29 @@
             "invalidMove": "Mossa non valida nel PGN.",
             "invalidPgnFormat": "Formato PGN non valido.",
             "emptyPgn": "Per favore inserisci un PGN"
+        },
+        "engine": {
+            "title": "Analisi",
+            "progress": "Analisi",
+            "error": "Errore",
+            "excellent": "Ecc",
+            "good": "Bene",
+            "theoretical": "Teo",
+            "inaccuracy": "Impr",
+            "mistake": "Err",
+            "blunder": "Svista",
+            "accuracy": "Precisione",
+            "opening": "Apertura",
+            "settings": {
+                "title": "Impostazioni Analisi",
+                "version": "Versione Stockfish",
+                "lite": "Lite",
+                "normal": "Normale",
+                "depth": "Profondità (1-30)",
+                "sounds": "Effetti Sonori"
+            }
         }
     },
-    "loading": "Caricamento...",
     "profile": {
         "league": "Lega",
         "followers": "Follower",
@@ -290,7 +322,7 @@
         "offline": "Offline",
         "user": "Utente",
         "openTwitch": "Apri Twitch",
-        "avatarAlt": "avatar"
+        "avatarAlt": "Avatar del profilo del giocatore di scacchi"
     },
     "about": {
         "title": "Info su Chess Chronicles",
@@ -306,41 +338,6 @@
         "github_text": "Il progetto è open-source o visibile sul mio GitHub.",
         "email_text": "Una domanda? Un suggerimento? Scrivimi:"
     },
-    "nav": {
-        "about": "Chi siamo",
-        "home": "Home",
-        "player": "Le Mie Partite",
-        "game": "Analizza una Partita",
-        "legendary": "Partite Leggendarie"
-    },
-    "analysis": {
-        "title": "Analisi",
-        "progress": "Analisi",
-        "error": "Errore",
-        "excellent": "Ecc",
-        "good": "Bene",
-        "theoretical": "Teo",
-        "inaccuracy": "Impr",
-        "mistake": "Err",
-        "blunder": "Svista",
-        "accuracy": "Precisione",
-        "opening": "Apertura",
-        "settings": {
-            "title": "Impostazioni Analisi",
-            "version": "Versione Stockfish",
-            "lite": "Lite",
-            "normal": "Normale",
-            "depth": "Profondità (1-30)",
-            "sounds": "Effetti Sonori"
-        }
-    },
-    "common": {
-        "close": "Chiudi",
-        "cancel": "Annulla",
-        "save": "Salva",
-        "enabled": "Abilitato",
-        "disabled": "Disabilitato"
-    },
     "legendary": {
         "comingSoon": "Questa sezione arriverà molto presto..."
     },
@@ -349,28 +346,17 @@
         "desc": "Spiacenti, la pagina che cerchi non esiste o è stata spostata.",
         "backHome": "Torna alla home"
     },
-    "error": {
-        "details": "Dettagli",
-        "hideDetails": "Nascondi dettagli",
-        "offline": "Connessione di rete non disponibile. Controlla la tua connessione Internet e riprova.",
-        "userNotFound": "Utente non trovato su Chess.com",
-        "statsUnavailable": "Statistiche non disponibili per questo utente",
-        "archiveNotFound": "Archivio non trovato",
-        "tooManyRequests": "Troppe richieste. Riprova tra poco.",
-        "server": "Servizio Chess.com temporaneamente non disponibile (errore server)",
-        "http": "Errore di comunicazione con Chess.com (HTTP {{status}})",
-        "unknown": "Errore di rete imprevisto durante la comunicazione con Chess.com"
-    },
     "seo": {
-        "keywords": "scacchi, analisi, stockfish, pgn, chess.com, lichess, analisi partite, migliorare a scacchi",
+        "keywords": "scacchi, analisi, stockfish, pgn, chess.com, lichess, analisi partite, miglioramento scacchi",
         "profile": {
-            "description": "Analizza le partite di scacchi di {{username}}. Guarda le statistiche, le aperture e rigioca le partite."
+            "title": "{{username}} - Profilo e Partite di Scacchi",
+            "description": "Analizza le partite di scacchi di {{username}}. Visualizza statistiche, aperture e riproduci partite.",
+            "searchTitle": "Cerca Profilo Giocatore",
+            "searchDesc": "Cerca un giocatore di scacchi per vedere il suo profilo e le statistiche."
         },
         "analyze": {
-            "description": "Analizza le tue partite di scacchi con Stockfish 16. Rivedi le tue mosse, trova gli errori e migliora il tuo gioco."
-        },
-        "home": {
-            "description": "Analizza le tue partite di scacchi, traccia i tuoi progressi e scopri partite leggendarie. Chess Chronicles è il tuo compagno per l'analisi e il miglioramento negli scacchi."
+            "title": "Analisi Partita di Scacchi",
+            "description": "Analizza le tue partite di scacchi con Stockfish 16. Rivedi le tue mosse, trova errori e migliora il tuo gioco."
         }
     }
 }

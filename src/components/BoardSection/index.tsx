@@ -103,7 +103,7 @@ export const BoardSection = ({
           {currentMoveClassification && badgePosition && (
             <img
               src={`/img/classification/${String(currentMoveClassification).toLowerCase()}.png`}
-              alt={String(currentMoveClassification)}
+              alt={`${String(currentMoveClassification)} move classification`}
               className="absolute pointer-events-none"
               style={{
                 width: `${Math.ceil(badgePosition.squareSize * 0.35)}px`,

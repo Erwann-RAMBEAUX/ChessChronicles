@@ -10,6 +10,7 @@ interface SEOProps {
     keywords?: string;
     image?: string;
     type?: 'website' | 'article' | 'profile';
+    jsonLd?: Record<string, any>;
 }
 
 const DOMAIN = 'https://chesschronicles.com';
@@ -18,8 +19,9 @@ export const SEO: React.FC<SEOProps> = ({
     title,
     description,
     keywords,
-    image = '/img/og-image.jpg',
+    image = '/favicon/web-app-manifest-512x512.png',
     type = 'website',
+    jsonLd,
 }) => {
     const { i18n } = useTranslation();
     const location = useLocation();
@@ -33,8 +35,7 @@ export const SEO: React.FC<SEOProps> = ({
     if (!purePath) purePath = '/';
 
     const getUrlForLang = (lang: string) => {
-        const langPrefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
-
+        const langPrefix = `/${lang}`;
         const suffix = purePath === '/' ? '' : purePath;
 
         return `${DOMAIN}${langPrefix}${suffix}`;
@@ -82,6 +83,11 @@ export const SEO: React.FC<SEOProps> = ({
                 hrefLang="x-default"
                 href={getUrlForLang(DEFAULT_LANG)}
             />
+            {jsonLd && (
+                <script type="application/ld+json">
+                    {JSON.stringify(jsonLd)}
+                </script>
+            )}
         </Helmet>
     );
 };

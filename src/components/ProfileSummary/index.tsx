@@ -127,7 +127,7 @@ export function ProfileSummary() {
     };
   }, [twitch?.url]);
 
-  if (!username || error === 'error.userNotFound' || storeError === 'error.userNotFound')
+  if (!username || error === 'common.error.userNotFound' || storeError === 'common.error.userNotFound')
     return null;
 
   return (
@@ -201,8 +201,8 @@ export function ProfileSummary() {
       <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {/* Bullet */}
         <StatsTile
-          icon={<GiBulletBill title={t('mode.bullet')} className="h-6 w-6 text-yellow-400" />}
-          label={t('mode.bullet')}
+          icon={<GiBulletBill title={t('common.mode.bullet')} className="h-6 w-6 text-yellow-400" />}
+          label={t('common.mode.bullet')}
           current={ratingLast('chess_bullet')}
           best={ratingBest('chess_bullet')}
           bestDate={bestDate('chess_bullet')}
@@ -210,8 +210,8 @@ export function ProfileSummary() {
         />
         {/* Blitz */}
         <StatsTile
-          icon={<SiStackblitz title={t('mode.blitz')} className="h-6 w-6 text-yellow-400" />}
-          label={t('mode.blitz')}
+          icon={<SiStackblitz title={t('common.mode.blitz')} className="h-6 w-6 text-yellow-400" />}
+          label={t('common.mode.blitz')}
           current={ratingLast('chess_blitz')}
           best={ratingBest('chess_blitz')}
           bestDate={bestDate('chess_blitz')}
@@ -219,8 +219,8 @@ export function ProfileSummary() {
         />
         {/* Rapid */}
         <StatsTile
-          icon={<FaStopwatch title={t('mode.rapid')} className="h-6 w-6 text-green-400" />}
-          label={t('mode.rapid')}
+          icon={<FaStopwatch title={t('common.mode.rapid')} className="h-6 w-6 text-green-400" />}
+          label={t('common.mode.rapid')}
           current={ratingLast('chess_rapid')}
           best={ratingBest('chess_rapid')}
           bestDate={bestDate('chess_rapid')}
@@ -228,8 +228,8 @@ export function ProfileSummary() {
         />
         {/* Daily */}
         <StatsTile
-          icon={<FiSun title={t('mode.daily')} className="h-6 w-6 text-yellow-400" />}
-          label={t('mode.daily')}
+          icon={<FiSun title={t('common.mode.daily')} className="h-6 w-6 text-yellow-400" />}
+          label={t('common.mode.daily')}
           current={ratingLast('chess_daily')}
           best={ratingBest('chess_daily')}
           bestDate={bestDate('chess_daily')}
@@ -263,7 +263,7 @@ export function ProfileSummary() {
         />
       </div>
 
-      {loading && <div className="mt-2 text-xs text-gray-400">{t('loading', 'Chargement...')}</div>}
+      {loading && <div className="mt-2 text-xs text-gray-400">{t('common.loading', 'Chargement...')}</div>}
     </div>
   );
 }

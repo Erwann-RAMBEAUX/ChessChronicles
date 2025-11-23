@@ -5,7 +5,6 @@ import ProfilePage from './routes/ProfilePage';
 import LegendaryPage from './routes/LegendaryPage';
 import NotFoundPage from './routes/NotFoundPage';
 import LanguageProvider from './routes/LanguageProvider';
-import i18n from './i18n';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import GamePage from './routes/GamePage';

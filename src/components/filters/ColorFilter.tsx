@@ -12,9 +12,9 @@ type Props = {
 export function ColorFilter({ value, onChange, title = 'Couleur' }: Props) {
   const { t } = useTranslation();
   const options: Option[] = [
-    { value: 'all', label: t('filters.all') },
-    { value: 'white', label: t('color.white') },
-    { value: 'black', label: t('color.black') },
+    { value: 'all', label: t('home.filters.all') },
+    { value: 'white', label: t('common.color.white') },
+    { value: 'black', label: t('common.color.black') },
   ];
   return (
     <FilterSection title={title}>

@@ -12,31 +12,31 @@ export function formatGameResult(
   if (lower.includes('won')) {
     if (lower.includes('resignation')) {
       const winner = result.split(' won')[0];
-      return t ? `${winner} ${t('game.result.won_resignation')}` : result;
+      return t ? `${winner} ${t('analyze.result.won_resignation')}` : result;
     }
     if (lower.includes('checkmate')) {
       const winner = result.split(' won')[0];
-      return t ? `${winner} ${t('game.result.won_checkmate')}` : result;
+      return t ? `${winner} ${t('analyze.result.won_checkmate')}` : result;
     }
     if (lower.includes('timeout')) {
       const winner = result.split(' won')[0];
-      return t ? `${winner} ${t('game.result.won_timeout')}` : result;
+      return t ? `${winner} ${t('analyze.result.won_timeout')}` : result;
     }
     return result;
   }
 
   if (lower.includes('draw')) {
     if (lower.includes('repetition')) {
-      return t ? t('game.result.draw_repetition') : result;
+      return t ? t('analyze.result.draw_repetition') : result;
     }
     if (lower.includes('pat') || lower.includes('stalemate')) {
-      return t ? t('game.result.draw_stalemate') : result;
+      return t ? t('analyze.result.draw_stalemate') : result;
     }
     if (lower.includes('insufficient') || lower.includes('material')) {
-      return t ? t('game.result.draw_material') : result;
+      return t ? t('analyze.result.draw_material') : result;
     }
     if (lower.includes('agreement')) {
-      return t ? t('game.result.draw_agreement') : result;
+      return t ? t('analyze.result.draw_agreement') : result;
     }
     return null;
   }

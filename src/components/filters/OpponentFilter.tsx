@@ -38,7 +38,7 @@ export function OpponentFilter({ query, suggestions, onChange, title = 'Adversai
         <input
           ref={inputRef}
           className="w-full bg-slate-900/50 border border-slate-700/50 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
-          placeholder={t('filters.searchOpponent')}
+          placeholder={t('home.filters.searchOpponent')}
           value={query}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setOpen(true)}

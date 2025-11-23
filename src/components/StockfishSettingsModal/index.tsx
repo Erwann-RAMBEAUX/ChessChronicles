@@ -33,7 +33,7 @@ export function StockfishSettingsModal({ isOpen, onClose }: StockfishSettingsMod
         <div className="flex justify-center mb-6">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
             <SlSettings className="h-5 w-5 text-primary" />
-            {t('analysis.settings.title', "Réglages de l'analyse")}
+            {t('analyze.engine.settings.title', "Réglages de l'analyse")}
           </h2>
         </div>
 
@@ -41,7 +41,7 @@ export function StockfishSettingsModal({ isOpen, onClose }: StockfishSettingsMod
           {/* Version Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-3">
-              {t('analysis.settings.version', 'Version de Stockfish')}
+              {t('analyze.engine.settings.version', 'Version de Stockfish')}
             </label>
             <div className="flex gap-3">
               <button

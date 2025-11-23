@@ -58,8 +58,7 @@ export default function AnalyzePage() {
   const { currentGame, setCurrentGame } = useChessStore();
 
   const username = state.username || currentGame?.username;
-
-  const [manualPgn] = useState<string | null>(state.pgn || currentGame?.pgn || null);
+  const effectivePgn = state.pgn || currentGame?.pgn || null;
 
   const [isAnalyzing, setIsAnalyzing] = useState(() => {
     if (state.analyze) return true;
@@ -69,12 +68,12 @@ export default function AnalyzePage() {
   });
 
   useEffect(() => {
-    if (!manualPgn && !currentGame?.pgn) {
+    if (!effectivePgn) {
       navigate(withLang('/game'), { replace: true });
     }
-  }, [manualPgn, currentGame, navigate, i18n.language]);
+  }, [effectivePgn, navigate, i18n.language]);
 
-  const gameData = useGameData(t, manualPgn);
+  const gameData = useGameData(t, effectivePgn);
   const {
     pgn,
     error,
@@ -119,10 +118,10 @@ export default function AnalyzePage() {
   ]);
 
   useEffect(() => {
-    if (error && manualPgn) {
-      navigate(withLang('/game'), { state: { pgn: manualPgn, error }, replace: true });
+    if (error && effectivePgn) {
+      navigate(withLang('/game'), { state: { pgn: effectivePgn, error }, replace: true });
     }
-  }, [error, manualPgn, navigate, i18n.language]);
+  }, [error, effectivePgn, navigate, i18n.language]);
 
   const effectiveMoves = moves;
   const [orientation, setOrientation] = useState<'white' | 'black'>('white');
@@ -325,17 +324,51 @@ export default function AnalyzePage() {
     return (
       <Layout>
         <main className="mx-auto max-w-7xl lg:max-w-screen-2xl px-4 sm:px-6 lg:px-6 xl:px-4 2xl:px-8 py-4 sm:py-6 lg:py-6 xl:py-4 2xl:py-6">
-          <div className="text-center text-gray-400">{t('loading', 'Chargement...')}</div>
+          <div className="text-center text-gray-400">{t('common.loading', 'Chargement...')}</div>
         </main>
       </Layout>
     );
   }
 
+  const jsonLd = pgnFromQuery ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Game",
+        "name": whiteFromQuery && blackFromQuery ? `${whiteFromQuery.username} vs ${blackFromQuery.username}` : "Chess Game Analysis",
+        "description": "Chess game analysis powered by Stockfish",
+        "numberOfPlayers": 2,
+        "character": [
+          whiteFromQuery ? { "@type": "Person", "name": whiteFromQuery.username } : undefined,
+          blackFromQuery ? { "@type": "Person", "name": blackFromQuery.username } : undefined
+        ].filter(Boolean)
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": t('nav.home'),
+            "item": `https://chesschronicles.com/${i18n.language}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": t('nav.analyze'),
+            "item": `https://chesschronicles.com/${i18n.language}/analyze`
+          }
+        ]
+      }
+    ]
+  } : undefined;
+
   return (
     <Layout>
       <SEO
-        title={t('analysis.title')}
+        title={t('seo.analyze.title', 'Chess Game Analysis')}
         description={t('seo.analyze.description')}
+        jsonLd={jsonLd}
       />
       <main className="w-full px-0 sm:px-0 lg:px-6 xl:px-2 2xl:px-4 py-0 sm:py-0 lg:py-6 xl:py-2 2xl:py-4 min-h-[calc(100vh-64px)] flex flex-col">
         <section className="flex-1 flex flex-col lg:block space-y-0 sm:space-y-0">
@@ -372,7 +405,7 @@ export default function AnalyzePage() {
                   <div className="w-full mt-2 space-y-0.5 block sm:hidden">
                     <div className="flex items-center justify-between px-1">
                       <span className="text-xs text-gray-400">
-                        {t('analysis.progress', 'Analyse')}: {Math.round(progress?.progress || 0)}%
+                        {t('analyze.engine.progress', 'Analyse')}: {Math.round(progress?.progress || 0)}%
                       </span>
                     </div>
                     <div className="w-full h-0.5 bg-gray-700 rounded-full overflow-hidden">
@@ -391,7 +424,7 @@ export default function AnalyzePage() {
                 <button
                   onClick={() => setOrientation((o) => (o === 'white' ? 'black' : 'white'))}
                   className="w-12 h-12 sm:w-8 sm:h-8 lg:w-7 lg:h-7 xl:w-9 xl:h-9 2xl:w-10 2xl:h-10 flex items-center justify-center bg-white/15 hover:bg-white/25 border border-white/30 hover:border-white/50 rounded-xl sm:rounded transition-all shadow-lg sm:shadow-none"
-                  title={t('game.flipBoard', 'Retourner le plateau')}
+                  title={t('analyze.flipBoard', 'Retourner le plateau')}
                 >
                   <MdOutlineLoop className="w-6 h-6 sm:w-4 sm:h-4 lg:w-3.5 lg:h-3.5 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6 text-gray-200 hover:text-white rotate-90" />
                 </button>
@@ -400,7 +433,7 @@ export default function AnalyzePage() {
                   <button
                     onClick={() => setIsAnalyzing(true)}
                     className="w-12 h-12 sm:w-8 sm:h-8 lg:w-7 lg:h-7 xl:w-9 xl:h-9 2xl:w-10 2xl:h-10 flex items-center justify-center bg-white/15 hover:bg-white/25 border border-white/30 hover:border-white/50 rounded-xl sm:rounded transition-all shadow-lg sm:shadow-none"
-                    title={t('game.analyzeGame', 'Analyser cette partie')}
+                    title={t('analyze.analyzeGame', 'Analyser cette partie')}
                   >
                     <BiSearch className="w-6 h-6 sm:w-4 sm:h-4 lg:w-3.5 lg:h-3.5 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6 text-gray-200 hover:text-white" />
                   </button>
@@ -413,7 +446,7 @@ export default function AnalyzePage() {
                 <Suspense
                   fallback={
                     <div className="text-xs sm:text-sm text-gray-400">
-                      {t('loading', 'Chargement...')}
+                      {t('common.loading', 'Chargement...')}
                     </div>
                   }
                 >
@@ -429,10 +462,10 @@ export default function AnalyzePage() {
                     openingName={result?.openingName}
                     height={boardHeight}
                     labels={{
-                      moves: t('game.moves', 'Coups'),
-                      loading: t('loading', 'Chargement...'),
-                      noMoves: t('game.noMoves', 'Aucun coup parsé'),
-                      noPGN: t('game.noPGN', 'Aucune partie'),
+                      moves: t('analyze.moves', 'Coups'),
+                      loading: t('common.loading', 'Chargement...'),
+                      noMoves: t('analyze.noMoves', 'Aucun coup parsé'),
+                      noPGN: t('analyze.noPGN', 'Aucune partie'),
                     }}
                     analysisData={
                       result
@@ -450,7 +483,7 @@ export default function AnalyzePage() {
                   <div className="w-full mt-0.5 sm:mt-1 lg:mt-0.5 xl:mt-0 2xl:mt-0.5 space-y-0.5 hidden sm:block">
                     <div className="flex items-center justify-between px-1">
                       <span className="text-xs text-gray-400">
-                        {t('analysis.progress', 'Analyse')}: {Math.round(progress?.progress || 0)}%
+                        {t('analyze.engine.progress', 'Analyse')}: {Math.round(progress?.progress || 0)}%
                       </span>
                     </div>
                     <div className="w-full h-0.5 bg-gray-700 rounded-full overflow-hidden">

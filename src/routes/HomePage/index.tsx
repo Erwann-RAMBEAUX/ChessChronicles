@@ -14,6 +14,7 @@ import {
   FaLightbulb,
   FaChessBoard,
   FaTrophy,
+  FaInfoCircle,
 } from 'react-icons/fa';
 
 const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answer: string; isOpen: boolean; onClick: () => void }) => {
@@ -42,7 +43,7 @@ const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answ
 };
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
@@ -58,9 +59,39 @@ export default function HomePage() {
   return (
     <Layout>
       <SEO
-        title={t('app.title')}
-        description={t('seo.home.description', t('home.subtitle'))}
+        title={t('common.appName')}
+        description={t('seo.home.description', t('home.hero.subtitle'))}
         keywords={t('seo.keywords')}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'WebSite',
+              name: 'Chess Chronicles',
+              url: 'https://chesschronicles.com',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: `https://chesschronicles.com/${i18n.language}/player/{search_term_string}`,
+                },
+                'query-input': 'required name=search_term_string',
+              },
+              inLanguage: ['fr', 'en', 'es', 'it', 'pt', 'hi', 'ru'],
+            },
+            {
+              '@type': 'FAQPage',
+              mainEntity: [1, 2, 3, 4, 5, 6].map((i) => ({
+                '@type': 'Question',
+                name: t(`home.faq.q${i}`),
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: t(`home.faq.a${i}`),
+                },
+              })),
+            },
+          ],
+        }}
       />
       <main className="space-y-24 md:space-y-32 pb-24">
         <section className="relative pt-32 pb-20 px-4 overflow-hidden">
@@ -70,15 +101,15 @@ export default function HomePage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              {t('home.releaseBadge')}
+              {t('home.hero.releaseBadge')}
             </div>
 
             <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-8 animate-in fade-in zoom-in duration-700 leading-[0.9] bg-gradient-to-b from-white via-white to-slate-400 bg-clip-text text-transparent drop-shadow-2xl pb-2 pr-2">
-              {t('app.title')}
+              {t('common.appName')}
             </h1>
 
             <p className="text-xl md:text-3xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-light mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-              {t('home.subtitle')}
+              {t('home.hero.subtitle')}
             </p>
 
             <div className="max-w-2xl mx-auto relative group animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
@@ -89,7 +120,7 @@ export default function HomePage() {
                 </div>
                 <input
                   type="text"
-                  placeholder={t('search.placeholder')}
+                  placeholder={t('home.search.placeholder')}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-lg text-white placeholder:text-slate-600 px-4 py-3" />
@@ -98,7 +129,7 @@ export default function HomePage() {
                   disabled={!username.trim()}
                   className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary/20"
                 >
-                  {t('home.button')}
+                  {t('home.search.button')}
                 </button>
               </form>
             </div>
@@ -172,8 +203,8 @@ export default function HomePage() {
                   <FaTrophy size={32} />
                 </div>
                 <div className="text-center md:text-left">
-                  <h3 className="text-2xl font-bold text-white mb-2">{t('home.feature2.title')}</h3>
-                  <p className="text-slate-400 max-w-2xl">{t('home.feature2.desc')}</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">{t('home.features.masterGames.title')}</h3>
+                  <p className="text-slate-400 max-w-2xl">{t('home.features.masterGames.desc')}</p>
                 </div>
               </div>
             </div>
@@ -187,8 +218,8 @@ export default function HomePage() {
 
             <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-20 group">
               <div className="md:w-1/2 text-center md:text-right order-2 md:order-1">
-                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{t('home.step1.title')}</h3>
-                <p className="text-slate-400">{t('home.step1.desc')}</p>
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors">{t('home.steps.step1.title')}</h3>
+                <p className="text-slate-400">{t('home.steps.step1.desc')}</p>
               </div>
               <div className="relative z-10 flex-shrink-0 order-1 md:order-2">
                 <div className="w-16 h-16 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-[0_0_20px_rgba(var(--primary),0.3)] group-hover:border-primary transition-colors duration-300">
@@ -206,15 +237,15 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="md:w-1/2 order-2 md:order-3 text-center md:text-left">
-                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">{t('home.step2.title')}</h3>
-                <p className="text-slate-400">{t('home.step2.desc')}</p>
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">{t('home.steps.step2.title')}</h3>
+                <p className="text-slate-400">{t('home.steps.step2.desc')}</p>
               </div>
             </div>
 
             <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-16 group">
               <div className="md:w-1/2 text-center md:text-right order-2 md:order-1">
-                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-purple-500 transition-colors">{t('home.step3.title')}</h3>
-                <p className="text-slate-400">{t('home.step3.desc')}</p>
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-purple-500 transition-colors">{t('home.steps.step3.title')}</h3>
+                <p className="text-slate-400">{t('home.steps.step3.desc')}</p>
               </div>
               <div className="relative z-10 flex-shrink-0 order-1 md:order-2">
                 <div className="w-16 h-16 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.3)] group-hover:border-purple-500 transition-colors duration-300">
@@ -246,7 +277,7 @@ export default function HomePage() {
               <div className="relative aspect-video w-full bg-black rounded-2xl overflow-hidden shadow-lg ring-1 ring-white/10 group">
                 <iframe
                   className="w-full h-full"
-                  src="https://www.youtube.com/embed/znWmcO8lrKU?modestbranding=1&rel=0" 
+                  src="https://www.youtube.com/embed/znWmcO8lrKU?modestbranding=1&rel=0"
                   title={t('home.video.iframeTitle')}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -275,6 +306,22 @@ export default function HomePage() {
                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
               />
             ))}
+          </div>
+        </section>
+
+        {/* SEO Content Section */}
+        <section className="max-w-6xl mx-auto px-4 py-20">
+          <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-3xl p-8 md:p-12 shadow-2xl">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  {t('home.seo.title')}
+                </h2>
+              </div>
+              <p className="text-lg text-slate-300 leading-relaxed text-center">
+                {t('home.seo.text')}
+              </p>
+            </div>
           </div>
         </section>
       </main>

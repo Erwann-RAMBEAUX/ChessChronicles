@@ -35,7 +35,7 @@ export function useGameData(t: TFunction, pgnOverride?: string | null) {
             'Aucun coup trouvé dans le PGN. Vérifiez le format.'
           );
         } else {
-          errorMsg = t('game.error.illegalMove', 'Le PGN contient des coups invalides.');
+          errorMsg = t('analyze.error.illegalMove', 'Le PGN contient des coups invalides.');
         }
         return { moves: [], headers: {}, error: errorMsg, gameResult: null };
       }
@@ -53,7 +53,7 @@ export function useGameData(t: TFunction, pgnOverride?: string | null) {
       const rawError = err instanceof Error ? err.message : 'Format invalide';
 
       if (rawError.includes('Expected') && rawError.includes('found')) {
-        const errorMsg = t('game.error.invalidPgnFormat', 'Format PGN invalide.');
+        const errorMsg = t('analyze.error.invalidPgnFormat', 'Format PGN invalide.');
         return { moves: [], headers: {}, error: errorMsg, gameResult: null };
       }
 
@@ -61,8 +61,8 @@ export function useGameData(t: TFunction, pgnOverride?: string | null) {
         const moveMatch = rawError.match(/:\s*(.+)$/);
         const moveDetail = moveMatch ? moveMatch[1].trim() : '';
         const errorMsg = moveDetail
-          ? `${t('game.error.invalidMove', 'Coup invalide dans le PGN')} : ${moveDetail}`
-          : t('game.error.invalidMove', 'Coup invalide dans le PGN.');
+          ? `${t('analyze.error.invalidMove', 'Coup invalide dans le PGN')} : ${moveDetail}`
+          : t('analyze.error.invalidMove', 'Coup invalide dans le PGN.');
         return { moves: [], headers: {}, error: errorMsg, gameResult: null };
       }
 
@@ -70,7 +70,7 @@ export function useGameData(t: TFunction, pgnOverride?: string | null) {
         return {
           moves: [],
           headers: {},
-          error: t('game.error.illegalMove', 'Le PGN contient des coups invalides.'),
+          error: t('analyze.error.illegalMove', 'Le PGN contient des coups invalides.'),
           gameResult: null,
         };
       }
@@ -78,7 +78,7 @@ export function useGameData(t: TFunction, pgnOverride?: string | null) {
       return {
         moves: [],
         headers: {},
-        error: t('game.error.invalidPgnFormat', 'Format PGN invalide.'),
+        error: t('analyze.error.invalidPgnFormat', 'Format PGN invalide.'),
         gameResult: null,
       };
     }
@@ -174,8 +174,8 @@ export function useGameData(t: TFunction, pgnOverride?: string | null) {
 
     const { result, termination } = gameResult;
     const headersRecord = headers as Record<string, string>;
-    const whitePlayer = headersRecord['White'] || t('game.result.white', 'Les blancs');
-    const blackPlayer = headersRecord['Black'] || t('game.result.black', 'Les noirs');
+    const whitePlayer = headersRecord['White'] || t('analyze.result.white', 'Les blancs');
+    const blackPlayer = headersRecord['Black'] || t('analyze.result.black', 'Les noirs');
 
     const message = parseGameResult(result, termination, whitePlayer, blackPlayer, t);
     setResultMessage(message);

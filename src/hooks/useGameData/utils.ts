@@ -16,33 +16,33 @@ export const parseGameResult = (
 
   if (result === '1-0') {
     winner = whitePlayer;
-    message = t('game.result.playerWins', { player: winner });
+    message = t('analyze.result.playerWins', { player: winner });
   } else if (result === '0-1') {
     winner = blackPlayer;
-    message = t('game.result.playerWins', { player: winner });
+    message = t('analyze.result.playerWins', { player: winner });
   } else if (result === '1/2-1/2') {
-    message = t('game.result.draw');
+    message = t('analyze.result.draw');
   }
 
   if (termination) {
     const terminationLower = termination.toLowerCase();
 
     if (terminationLower.includes('checkmate')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.checkmate', 'échec et mat')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.checkmate', 'échec et mat')}`;
     } else if (terminationLower.includes('time')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.time', 'au temps')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.time', 'au temps')}`;
     } else if (terminationLower.includes('resignation')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.resignation', 'abandon')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.resignation', 'abandon')}`;
     } else if (terminationLower.includes('stalemate')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.stalemate', 'pat')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.stalemate', 'pat')}`;
     } else if (terminationLower.includes('insufficient')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.insufficient', 'matériel insuffisant')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.insufficient', 'matériel insuffisant')}`;
     } else if (terminationLower.includes('repetition')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.repetition', 'répétition')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.repetition', 'répétition')}`;
     } else if (terminationLower.includes('50')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.fiftyMoves', 'règle des 50 coups')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.fiftyMoves', 'règle des 50 coups')}`;
     } else if (terminationLower.includes('agreement')) {
-      message += ` ${t('game.termination.by', 'par')} ${t('game.termination.agreement', 'accord mutuel')}`;
+      message += ` ${t('analyze.termination.by', 'par')} ${t('analyze.termination.agreement', 'accord mutuel')}`;
     }
   }
 

@@ -51,13 +51,13 @@ export function FiltersPanel({
     return (
       <div className={`bg-slate-800/30 backdrop-blur-md border border-slate-700/50 rounded-xl p-2 ${className}`}>
         <div className="flex items-center justify-between">
-          <div className="text-sm font-medium">{t('filters.heading')}</div>
+          <div className="text-sm font-medium">{t('home.filters.heading')}</div>
           <button
             className="flex items-center gap-2 text-sm text-gray-300 hover:text-white"
             onClick={() => setCollapsed(false)}
             aria-expanded={false}
           >
-            <span>{t('filters.open', { defaultValue: 'Afficher' })}</span>
+            <span>{t('home.filters.open', { defaultValue: 'Afficher' })}</span>
             <LuChevronDown className="w-4 h-4" />
           </button>
         </div>
@@ -68,14 +68,14 @@ export function FiltersPanel({
   return (
     <div className={`bg-slate-800/30 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 sticky top-20 ${className}`}>
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-lg mb-3">{t('filters.heading')}</h3>
+        <h3 className="font-semibold text-lg mb-3">{t('home.filters.heading')}</h3>
         {!isLarge && (
           <button
             className="flex items-center gap-2 text-sm text-gray-300 hover:text-white"
             onClick={() => setCollapsed(true)}
             aria-expanded={!collapsed}
           >
-            <span>{t('filters.close', { defaultValue: 'Réduire' })}</span>
+            <span>{t('home.filters.close', { defaultValue: 'Réduire' })}</span>
             <LuChevronUp className="w-4 h-4" />
           </button>
         )}
@@ -83,35 +83,35 @@ export function FiltersPanel({
 
       <div className="space-y-4">
         <ModesFilter
-          title={t('filters.modes')}
+          title={t('home.filters.modes')}
           value={filters.modes}
           onChange={(m) => updateFilters({ modes: m })}
         />
         <ResultsFilter
-          title={t('filters.results')}
+          title={t('home.filters.results')}
           value={filters.results}
           onChange={(r) => updateFilters({ results: r })}
         />
         <ColorFilter
-          title={t('filters.color')}
+          title={t('home.filters.color')}
           value={filters.color}
           onChange={(c) => updateFilters({ color: c })}
         />
         <MonthFilter
-          title={t('filters.month')}
-          allLabel={t('filters.all')}
+          title={t('home.filters.month')}
+          allLabel={t('home.filters.all')}
           months={months}
           value={filters.month}
           onChange={(m) => updateFilters({ month: m })}
         />
         <OpponentFilter
-          title={t('filters.opponent')}
+          title={t('home.filters.opponent')}
           query={filters.opponentQuery}
           suggestions={suggestions}
           onChange={(q) => updateFilters({ opponentQuery: q })}
         />
         <SortControls
-          title={t('filters.sort')}
+          title={t('home.filters.sort')}
           sortBy={filters.sortBy}
           sortDir={filters.sortDir}
           onChange={(p) => updateFilters(p)}

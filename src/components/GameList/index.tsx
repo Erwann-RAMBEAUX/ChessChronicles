@@ -16,9 +16,9 @@ export function GameList() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-4">
-        <h3 className="font-semibold text-lg">{t('list.title')}</h3>
+        <h3 className="font-semibold text-lg">{t('home.list.title')}</h3>
         <div className="flex items-center gap-3 text-sm text-gray-300">
-          <label className="hidden sm:block">{t('filters.perPage')}</label>
+          <label className="hidden sm:block">{t('home.filters.perPage')}</label>
           <div className="relative w-20">
             <select
               value={pageSize.toString()}
@@ -38,8 +38,8 @@ export function GameList() {
             </div>
           </div>
           <div className="text-gray-400">
-            {t('list.total', { count: games.length, current, total: totalPages })}{' '}
-            {loading ? t('list.loading') : ''}
+            {t('home.list.total', { count: games.length, current, total: totalPages })}{' '}
+            {loading ? t('home.list.loading') : ''}
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ export function GameList() {
             <div key={i} className="bg-slate-800/30 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 animate-pulse h-32" />
           ))}
       </div>
-      {!all.length && !loading && <div className="text-gray-400">{t('list.empty')}</div>}
+      {!all.length && !loading && <div className="text-gray-400">{t('home.list.empty')}</div>}
       {games.length > 0 && (
         <div className="flex items-center justify-between pt-2">
           <button
@@ -61,7 +61,7 @@ export function GameList() {
             onClick={() => setPage(current - 1)}
             disabled={current <= 1}
           >
-            {t('filters.prev')}
+            {t('home.filters.prev')}
           </button>
           <div className="flex items-center gap-2">
             {paginationItems.map((it, idx) =>
@@ -73,8 +73,8 @@ export function GameList() {
                 <button
                   key={it}
                   className={`h-9 w-9 rounded-lg text-sm font-medium transition-all ${current === it
-                      ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                      : 'text-slate-400 hover:text-white hover:bg-white/10'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                    : 'text-slate-400 hover:text-white hover:bg-white/10'
                     }`}
                   onClick={() => setPage(it)}
                 >
@@ -88,7 +88,7 @@ export function GameList() {
             onClick={() => setPage(current + 1)}
             disabled={current >= totalPages}
           >
-            {t('filters.next')}
+            {t('home.filters.next')}
           </button>
         </div>
       )}
