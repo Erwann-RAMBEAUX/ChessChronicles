@@ -84,7 +84,6 @@ function generateSitemap() {
 </urlset>`;
 
     fs.writeFileSync(path.join(PUBLIC_DIR, 'sitemap.xml'), xml);
-    console.log('✅ Sitemap generated successfully with ' + (PAGES.length * LANGUAGES.length) + ' URLs.');
 }
 
 generateSitemap();
