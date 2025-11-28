@@ -184,10 +184,10 @@
                 "discord": "Discord"
             },
             "product": {
-                "title": "Product",
+                "title": "उत्पाद",
                 "features": "Suvidhayen",
                 "pricing": "Keemat",
-                "changelog": "Changelog"
+                "changelog": "परिवर्तन लॉग"
             },
             "legal": {
                 "title": "Kaanooni",
@@ -197,7 +197,7 @@
         },
         "privacy": {
             "badges": {
-                "openSource": "Open Source",
+                "openSource": "ओपन सोर्स",
                 "free": "100% Muft",
                 "noAds": "Koi Ads Nahi"
             }
@@ -261,14 +261,14 @@
         },
         "termination": {
             "by": "se",
-            "checkmate": "checkmate",
-            "time": "time",
-            "resignation": "abandon",
-            "stalemate": "stalemate",
-            "insufficient": "insufficient material",
-            "repetition": "repetition",
-            "fiftyMoves": "50-move rule",
-            "agreement": "mutual agreement"
+            "checkmate": "शह और मात",
+            "time": "समय",
+            "resignation": "हार मान लेना",
+            "stalemate": "गतिरोध",
+            "insufficient": "अपर्याप्त सामग्री",
+            "repetition": "दोहराव",
+            "fiftyMoves": "50-चाल नियम",
+            "agreement": "पारस्परिक समझौता"
         },
         "fallback": {
             "title": "Khel nahi mila",
@@ -293,7 +293,7 @@
             "error": "Error",
             "excellent": "Shreshth",
             "good": "Acchi",
-            "theoretical": "Theoretical",
+            "theoretical": "सैद्धांतिक",
             "inaccuracy": "Ashuddhi",
             "mistake": "Galti",
             "blunder": "Badi Galti",
@@ -310,17 +310,17 @@
         }
     },
     "profile": {
-        "league": "League",
-        "followers": "Followers",
+        "league": "लीग",
+        "followers": "अनुयायी",
         "joined": "Shamil Hue",
         "lastOnline": "Aakhri baar online",
-        "tacticsMax": "Max tactics",
-        "problems": "Problems",
-        "puzzleRush": "Puzzle Rush",
+        "tacticsMax": "अधिकतम रणनीति",
+        "problems": "समस्याएं",
+        "puzzleRush": "पज़ल रश",
         "best": "Sabse Accha",
-        "live": "Live",
-        "offline": "Offline",
-        "user": "User",
+        "live": "लाइव",
+        "offline": "ऑफलाइन",
+        "user": "उपयोगकर्ता",
         "openTwitch": "Twitch Kholein",
         "avatarAlt": "शतरंज खिलाड़ी प्रोफ़ाइल अवतार"
     },

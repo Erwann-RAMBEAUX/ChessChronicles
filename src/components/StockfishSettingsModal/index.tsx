@@ -69,7 +69,7 @@ export function StockfishSettingsModal({ isOpen, onClose }: StockfishSettingsMod
           <div>
             <label htmlFor="depth-input" className="block text-sm font-medium text-gray-300 mb-3">
               {t(
-                'analysis.settings.depth',
+                'analyze.engine.settings.depth',
                 `Profondeur (${STOCKFISH_DEPTH_LIMITS.min}-${STOCKFISH_DEPTH_LIMITS.max})`
               )}
             </label>
